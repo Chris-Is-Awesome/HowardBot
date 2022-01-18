@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoHotkey.Interop;
+using System;
 using System.Diagnostics;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -12,10 +13,12 @@ namespace HowardPlays
 {
 	class Bot
 	{
-		TwitchClient twitchClient;
+		AutoHotkeyEngine ahk;
+		static TwitchClient twitchClient;
 		TwitchPubSub pubSubClient;
 		public static string howardToken;
 		public static string pubsubToken;
+		public static string channelName;
 		public static string channelId;
 		public static string clientId;
 		Stopwatch timer = new Stopwatch();
@@ -29,8 +32,12 @@ namespace HowardPlays
 			DotNetEnv.Env.Load();
 			howardToken = Environment.GetEnvironmentVariable("HOWARD_TOKEN");
 			pubsubToken = Environment.GetEnvironmentVariable("PUBSUB_TOKEN");
+			channelName = Environment.GetEnvironmentVariable("CHANNEL_NAME");
 			channelId = Environment.GetEnvironmentVariable("CHANNEL_ID");
 			clientId = Environment.GetEnvironmentVariable("CLIENT_ID");
+
+			// Initialize AHK
+			ahk = AutoHotkeyEngine.Instance;
 
 			// Initialize Twitch client
 			ConnectionCredentials credentials = new ConnectionCredentials("The_goat_howard", howardToken);
@@ -54,7 +61,7 @@ namespace HowardPlays
 
 			// Initialize event handlers
 			MessageHandler messageHandler = new(twitchClient);
-			RewardHandler rewardHandler = new(pubSubClient);
+			RewardHandler rewardHandler = new(pubSubClient, ahk);
 
 			// Connect
 			twitchClient.Connect();
@@ -63,7 +70,7 @@ namespace HowardPlays
 
 		public static string GetTimestamp()
 		{
-			return $"<< [{ DateTime.Now.ToShortTimeString()}] -";
+			return $"<< [{ DateTime.Now.ToShortTimeString()}]";
 		}
 
 		private void OnListenResponse(object sender, OnListenResponseArgs e)
@@ -97,7 +104,12 @@ namespace HowardPlays
 			Console.WriteLine($"\n>> Joined channel ChrisIsAwesome!");
 			Console.WriteLine($"[Connection took {timer.Elapsed.Milliseconds}ms]\n");
 			Console.WriteLine("Event log:\n");
-			//twitchClient.SendMessage(e.Channel, "/me Tackles wyrm and herds him into barn");
+			SendMessage("/me Tackles wyrm and herds him into barn");
+		}
+
+		public static void SendMessage(string message)
+		{
+			twitchClient.SendMessage(channelName, message);
 		}
 	}
 }
