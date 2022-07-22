@@ -13,19 +13,20 @@ namespace HowardPlays
 {
 	class Bot
 	{
-		AutoHotkeyEngine ahk;
+		readonly AutoHotkeyEngine ahk;
 		static TwitchClient twitchClient;
-		TwitchPubSub pubSubClient;
+		readonly TwitchPubSub pubSubClient;
 		public static string howardToken;
 		public static string pubsubToken;
 		public static string channelName;
 		public static string channelId;
 		public static string clientId;
-		Stopwatch timer = new Stopwatch();
+		private readonly Stopwatch timer;
 
 		public Bot()
 		{
 			// Start timer
+			timer = new Stopwatch();
 			timer.Start();
 
 			// Load env vars
@@ -40,7 +41,7 @@ namespace HowardPlays
 			ahk = AutoHotkeyEngine.Instance;
 
 			// Initialize Twitch client
-			ConnectionCredentials credentials = new ConnectionCredentials("The_goat_howard", howardToken);
+			ConnectionCredentials credentials = new ConnectionCredentials("The_Goat_Howard", howardToken);
 			var clientOptions = new ClientOptions
 			{
 				MessagesAllowedInPeriod = 750,
@@ -68,32 +69,24 @@ namespace HowardPlays
 			pubSubClient.Connect();
 		}
 
-		public static string GetTimestamp()
+		private void OnConnected(object sender, OnConnectedArgs e)
 		{
-			return $"<< [{ DateTime.Now.ToShortTimeString()}]";
+			Debug.Log($">> Connected to Twitch!");
+		}
+
+
+		private void OnPubSubConnected(object sender, EventArgs e)
+		{
+			Debug.Log(">> Connected to PubSub!");
+			pubSubClient.SendTopics(pubsubToken);
 		}
 
 		private void OnListenResponse(object sender, OnListenResponseArgs e)
 		{
 			if (!e.Successful)
-			{
-				Console.WriteLine($">> Failed to listen to <{e.Topic}> ({e.Response.Error})");
-			}
+				Debug.LogError($">> Failed to listen to <{e.Topic}> ({e.Response.Error})");
 			else
-			{
-				Console.WriteLine($">> Listening to PubSub topic <{e.Topic}>...");
-			}
-		}
-
-		private void OnPubSubConnected(object sender, EventArgs e)
-		{
-			Console.WriteLine(">> Connected to PubSub!");
-			pubSubClient.SendTopics(pubsubToken);
-		}
-
-		private void OnConnected(object sender, OnConnectedArgs e)
-		{
-			Console.WriteLine($">> Connected to Twitch!\n");
+				Debug.Log($">> Listening to PubSub topic <{e.Topic}>...");
 		}
 
 		private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
@@ -101,10 +94,10 @@ namespace HowardPlays
 			// Stop timer
 			timer.Stop();
 
-			Console.WriteLine($"\n>> Joined channel ChrisIsAwesome!");
-			Console.WriteLine($"[Connection took {timer.Elapsed.Milliseconds}ms]\n");
-			Console.WriteLine("Event log:\n");
-			SendMessage("/me Tackles wyrm and herds him into barn");
+			// Howard is ready for action!
+			Debug.Log($">> Joined channel ChrisIsAwesome!\n[Connection took {timer.Elapsed.Milliseconds}ms]");
+			Debug.Log("Event log:", false);
+			SendMessage("/me Rushes out of barn and violently tackles everyone.");
 		}
 
 		public static void SendMessage(string message)

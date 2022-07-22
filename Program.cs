@@ -6,8 +6,8 @@ namespace HowardPlays
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"[Bot started at {DateTime.Now}]");
-            Bot bot = new();
+            Debug.Log($"[Bot started at {DateTime.Now}]");
+            new Bot();
             Console.ReadLine();
         }
     }
