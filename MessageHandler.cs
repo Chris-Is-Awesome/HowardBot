@@ -19,11 +19,13 @@ namespace HowardPlays
 		{
 			public string name;
 			public ICommand command;
+			public bool sendMessage;
 
-			public CommandInfo(string name, ICommand command)
+			public CommandInfo(string name, ICommand command, bool sendMessage = true)
 			{
 				this.name = name;
 				this.command = command;
+				this.sendMessage = sendMessage;
 			}
 		}
 
@@ -41,7 +43,11 @@ namespace HowardPlays
 			if (TryParseCommand(chat, out CommandInfo commandInfo, out string[] args))
 			{
 				Debug.Log($"[Chat - Command] Command '{commandInfo.name}' executed by '{chat.DisplayName}'.");
-				commandInfo.command.Run(args, chat.DisplayName);
+
+				if (commandInfo.sendMessage)
+					Bot.SendMessage(commandInfo.command.Run(args, chat.DisplayName));
+				else
+					commandInfo.command.Run(args, chat.DisplayName);
 			}
 		}
 
