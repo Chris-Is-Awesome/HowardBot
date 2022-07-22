@@ -32,7 +32,10 @@ namespace HowardPlays
 		private readonly TwitchClient client;
 		private delegate void CommandFunc(string[] args);
 		private readonly char prefix = '!';
-		private readonly List<CommandInfo> commands = new List<CommandInfo>();
+		private readonly List<CommandInfo> commands = new List<CommandInfo>()
+		{
+			{ new CommandInfo("whoop", new WhoopCommand()) }
+		};
 
 		private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
 		{
@@ -61,7 +64,6 @@ namespace HowardPlays
 				// Split words to get command name and args separately
 				string[] splitMessage = message.Substring(1, message.Length - 1).Split(' ');
 				string commandName = splitMessage[0].ToLower();
-				Bot.SendMessage(commandName);
 				command = commands.Find(x => x.name == commandName);
 
 				// If is a valid command
