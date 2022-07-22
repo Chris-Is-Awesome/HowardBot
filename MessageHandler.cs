@@ -1,11 +1,11 @@
-﻿using HowardPlays.Commands;
+﻿using HowardBot.Commands;
 using System.Collections.Generic;
 using System.Linq;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 
-namespace HowardPlays
+namespace HowardBot
 {
 	class MessageHandler
 	{

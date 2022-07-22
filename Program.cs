@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HowardPlays
+namespace HowardBot
 {
     class Program
     {

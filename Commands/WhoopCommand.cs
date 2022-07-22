@@ -1,4 +1,4 @@
-﻿namespace HowardPlays.Commands
+﻿namespace HowardBot.Commands
 {
 	class WhoopCommand : ICommand
 	{

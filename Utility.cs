@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace HowardPlays
+namespace HowardBot
 {
 	public static class Utility
 	{

@@ -8,7 +8,7 @@ using TwitchLib.PubSub.Events;
 using TwitchLib.PubSub.Models.Responses.Messages;
 using TwitchLib.PubSub.Models.Responses.Messages.Redemption;
 
-namespace HowardPlays
+namespace HowardBot
 {
 	class RewardHandler
 	{

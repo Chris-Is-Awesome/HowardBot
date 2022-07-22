@@ -1,4 +1,4 @@
-﻿namespace HowardPlays
+﻿namespace HowardBot
 {
 	interface ICommand
 	{

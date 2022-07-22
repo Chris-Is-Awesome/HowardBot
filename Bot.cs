@@ -9,7 +9,7 @@ using TwitchLib.Communication.Models;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 
-namespace HowardPlays
+namespace HowardBot
 {
 	class Bot
 	{

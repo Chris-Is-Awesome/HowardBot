@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace HowardPlays
+namespace HowardBot
 {
     static class Debug
     {
