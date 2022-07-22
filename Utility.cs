@@ -13,10 +13,10 @@ namespace HowardPlays
 			}
 		}
 
-		public static int GetRandomNumberInRange(int min, int max)
+		public static int GetRandomNumberInRange(int min, int max, bool maxInclusive = true)
 		{
 			Random rand = new Random();
-			return rand.Next(min, max);
+			return rand.Next(min, maxInclusive ? max++ : max);
 		}
 
 		public static async Task WaitForSeconds(float seconds)

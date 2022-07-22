@@ -99,7 +99,7 @@ namespace HowardPlays
 			// Parse rewards for custom events
 			if (reward.Title == "Random Visual Effect")
 			{
-				int randNum = Utility.GetRandomNumberInRange(0, visualEffects.Count);
+				int randNum = Utility.GetRandomNumberInRange(0, visualEffects.Count - 1);
 				VisualEffect effect = visualEffects[randNum];
 				await TryVisualEffect(effect, reward, userWhoRedeemed, true);
 			}
