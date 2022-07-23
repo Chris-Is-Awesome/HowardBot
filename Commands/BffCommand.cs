@@ -10,7 +10,7 @@ namespace HowardBot.Commands
 			data = Utility.DeserializeJSON<BffData>(@".\Data\BffData.json");
 		}
 
-		public struct BffData
+		private struct BffData
 		{
 			public struct GameData
 			{
