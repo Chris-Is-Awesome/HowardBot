@@ -1,0 +1,188 @@
+{
+	"Games": [
+		{
+			"Game": "Legend of Zelda series",
+			"Friends": [
+				"Link", "Princess Zelda", "Ganondorf", "Tingle", "the Great Deku Tree", "Impa", "Beedle", "the Postman", "Epona", "Dampe", "the Great Fairy", "Eldin", "Lanayru", "Faron", "Skull Kid", "Dark Link", "Tetra"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: Twilight Princess",
+			"Friends": [
+				"Hero's Spirit", "Impaz", "King Bulblin", "Midna", "Ooccoo", "Ooccoo Jr.", "Zant", "Beth", "Colin", "Fado", "Hanch", "Ilia", "Jaggle", "Malo", "Mayor Bo", "Ordona", "Pergie", "Rusl", "Sera", "Talo", "Uli", "Coro", "Ook", "Trill", "Barnes", "Luda", "Renado", "Shad", "Darbus", "Gor Amoto", "Gor Coron", "Gor Ebizo", "Gor Liggs", "Auru", "Falbi", "Fyer", "Plumm", "Hena", "Iza", "Purdy", "Prince Ralis", "Rutela", "Agitha", "Charlo", "Chudley", "Dr. Borville", "Gengle", "Hannah", "Jovani", "Kili", "Louise", "Madame Fanadi", "Misha", "Purlo", "Soal", "Telma", "Ashei", "Yeta", "Yeto", "Hugo", "Jamal", "Jake", "Leroy", "Deku Toad", "Death Sword", "Dangoro", "Twilit Bloat", "Darkhammer", "Diababa", "Fyrus", "Morpheel", "Stallord", "Blizzeta", "Armogohma", "Argorok", "Howard"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: Skyward Sword",
+			"Friends": [
+				"Demise", "Groose", "Fi", "LD-301S Scrapper", "Levias", "Strich", "Batraeux", "Bertie", "Cawlin", "Croo", "Dovos", "Eagus", "Fledge", "Gaepora", "Gondo", "Goselle", "Greba", "Gully", "Henya", "Horg", "Horwell", "Janka", "Jakamar", "Karane", "Kukiel", "Luv", "Mallara", "Orielle", "Owlan", "Parrow", "Peater", "Peatrice", "Phoeni", "Piper", "Pipit", "Rupin", "Sparrot", "Toby", "Wyrna", "Keet", "Kina", "Pumm", "Rusta", "Dodoh", "Ghirahim", "Gorko", "Bucha", "Eria", "Lopsa", "Machi", "oolo", "Yerbal", "Bronzi", "Cobal", "Guld", "Kortz", "Ledd", "Merco", "Nackle", "Plats", "Silva", "Tubert", "Tyto", "Zanc", "Golo", "Gorttram", "LD-301N Skipper", "LD-002G Scervo", "LD-003D Dreadfuse", "Moldarch", "the Imprisoned", "Scaldera", "Koloktos", "Tentalus"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: Ocarina of Time",
+			"Friends": [
+				"Ichiro", "Jiro", "Kaepora Gaebora", "Navi", "Pierre", "Rauru", "the Running Man", "Saburu", "Sheik", "Shiro", "Fado", "Mido", "Saria", "Madamu Yan", "the Poe Collector", "Professor Shikashi", "Ingo", "Malon", "Talon", "Biggoron", "Darunia", "Medigoron", "the Bean Seller", "Princess Ruto", "King Zora", "Lord Jabu-Jabu", "Bonooru", "Kotake", "Koume", "Nabooru", "Dead Hand", "Gohma", "King Dodongo", "Barinade", "Phantom Ganon", "Volvagia", "Morpha", "Bongo Bongo", "Twinrova"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: The Wind Waker",
+			"Friends": [
+				"Mothula", "Phantom Ganon", "Gohma", "Kalle Demos", "Gohdan", "the Helmaroc King", "Jalhalla", "Molgera", "Puppet Ganon", "Cyclos", "Daphnes Nohansen Hyrule", "Fado", "the Queen of Fairies", "Fishman", "Gonzo", "the King of Red Lions", "Laruto", "Loot", "Mako", "Niko", "Nudge", "Old Man Ho Ho", "the Salvage Corp", "Senza","Zephos", "Zuko", "Abe", "Aryll", "Grandma", "Jabun", "Joel", "Mesa", "Link (the pig)", "Orca", "Rose", "Sturgeon", "Sue-Belle", "Zill", "Anton", "Candy", "Dampa", "Doc Bandam", "Garrickson", "Gillian", "Gossack", "Gummy", "Joanna", "Kamo", "Kane", "Kreeb", "Lenzo", "Linda", "Maggie", "Maggie's Father", "Mila", "Mila's Father", "Minenco", "Missy", "Mrs. Marie", "Pompie", "Vera", "Potova", "Salvatore", "Tott", "Zunari", "Sam", "Ivan", "Jun-Roberto", "Jin", "Jan", "Baito", "Basht",  "Bisht", "Hoskit", "Koboli", "Kogoli", "Medli", "Namali", "Obil", "Pashli", "Komali", "Quill", "the Rito Chieftain", "Skett", "Akoot", "Willi", "Valoo", "Aldo", "Carlov", "Drona", "Elma", "Hollo", "Irch", "Linder", "Manny", "Oakin", "Olivio", "Rown", "Makar", "Ankle", "David Jr.", "Knuckle"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: A Link Between Worlds",
+			"Friends": [
+				"Yuga", "Margomil", "Gemasaur King", "Arrghus", "Knucklemaster", "Stalblind", "Zaganaga", "Dharkstare", "Grinexx", "Gramps", "Princess Hilda", "Gulley", "Seres", "Osfala", "Irene", "Oren", "Rosso", "the Blacksmith", "the Blacksmith's Wife", "Sahasrahla", "Mother Maiamai", "Thief Girl", "the Bee Guy", "Ravio"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: Breath of the Wild",
+			"Friends": [
+				"a Hinox", "a Talus", "a Molduga", "a Stalnox", "Windblight Ganon", "Fireblight Ganon", "Thunderblight Ganon", "Calamity Ganon", "Waterblight Ganon", "Urbosa", "Mipha", "Revali", "Daruk", "Kilton", "Kass", "Hetsu", "King Rhoam", "Robbie", "Yunobo", "Riju", "Master Kohga", "Sidon", "Paya"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: Phantom Hourglass",
+			"Friends": [
+				"Blaaz", "Cyclok", "Crayk", "Dongorongo", "Gleeok", "Eox", "Bellum", "Bellumbeck", "Oshus", "Linebeck", "Ciela", "Leaf", "Neri", "Astrid", "Biggoron", "Salvatore", "Jolene"
+			]
+		},
+		{
+			"Game": "Legend of Zelda: Spirit Tracks",
+			"Friends": [
+				"Mothula", "Stagnox", "Fraaz", "Phytops", "Cragma", "Byrne", "Skeldritch", "Cole", "Malladus", "Rael", "Anjean", "Ferrus", "Alfonzo", "Niko", "Linebeck III", "Joynas", "Bunnio", "Honcho"
+			]
+		},
+		{
+			"Game": "Witcher 3",
+			"Friends": [
+				"Geralt of Rivia", "Keira Metz", "Vesemir", "Dandelion", "Ciri of Cintra", "Yennefer of Vengerberg", "Eskel", "Triss Merigold", "Gaunter O'Dimm", "Eredin", "Dijkstra"
+			]
+		},
+		{
+			"Game": "Ittle Dew series",
+			"Friends": [
+				"Ittle", "Tippsie", "Apathetic Frog", "Old Man"
+			]
+		},
+		{
+			"Game": "Ittle Dew",
+			"Friends": [
+				"Ultra Fishbunjin 3000", "Jenny Bird", "Jenny Bunny", "Lichious Turnip", "Itan Carver", "Masked Ruby", "Jenny Fox", "Jenny Deer", "Jenny Frog", "Jenny Tiger"
+			]
+		},
+		{
+			"Game": "Ittle Dew 2",
+			"Friends": [
+				"Cyber Jenny", "Osalig", "Jenny Cat", "Jenny Mermaid", "Jenny Mole", "Le Biadlo", "Lenny", "Mapman", "Safety Jenny", "Slayer Jenny", "Simulacrum", "Rich Turnip", "Passel Carver", "Mechabun", "Jenny Berry", "Jenny Bun", "Magic Crystal", "Jenny Lemon", "Jenny Shark", "Apathetic Jenny", "Jenny Flower", "Dream Rock", "Business Casual Man", "That Guy"
+			]
+		},
+		{
+			"Game": "Paper Mario: The Thousand-Year Door",
+			"Friends": [
+				"Admiral Bobbery", "Madame Flurrie", "Marilyn", "Beldam", "Merlon", "Bumpty", "Ms. Mowz", "Pennington", "Flavio", "Goombella", "Shadow Queen", "Heff T.", "Jolene", "Vivian", "Koops", "Yoshi", "Puni", "Rawk Hawk", "Professor Frankly"
+			]
+		},
+		{
+			"Game": "Ori Series",
+			"Friends": [
+				"Ori", "Gumo", "Sein", "Naru", "Ku", "Kuro"
+			]
+		},
+		{
+			"Game": "Ori and the Will of the Wisps",
+			"Friends": [
+				"Baur", "Grom", "Motay", "Opher", "Seir", "Shriek", "Kil", "Kwolok", "Lupo", "Twillen", "Tuley", "Tokk", "Mora", "Mokk the Brave", "Howl"
+			]
+		},
+		{
+			"Game": "A Hat in Time",
+			"Friends": [
+				"Badge Seller", "Mustache Girl", "DJ Grooves", "the Conductor", "Hat Kid", "Toilet of Doom", "the Snatcher", "Mafia Boss", "Bow Kid", "Queen Vanessa", "The Empress", "Bow Kid", "the Walrus Captain"
+			]
+		},
+		{
+			"Game": "Celeste",
+			"Friends": [
+				"Madeline", "Theo", "Badeline", "Granny", "Mr. Oshiro", "Bird", "Alex", "Carlos"
+			]
+		},
+		{
+			"Game": "Stardew Valley",
+			"Friends": [
+				"Alex", "Elliot", "Harvey", "Sam", "Sebastian", "Shane", "Abigail", "Emily", "Haley", "Leah", "Maru", "Penny", "Caroline", "Cint", "Demetrius", "Dwarf", "Evelyn", "George", "Gus", "Jas", "Jodi", "Kent", "Krobus", "Leo", "Lewis", "Linus", "Marnie", "Pam", "Pierre", "Robin", "Sandy", "Vincent", "Willy", "Wizard", "Grandpa", "Mr. Qi"
+			]
+		},
+		{
+			"Game": "Hollow Knight",
+			"Friends": [
+				"Charm Lover Salubra", "Iselda", "Millibelle the Banker", "Leg Eater", "Sly", "the Last Stag", "Relic Seeker Lemm", "Cloth", "Cornifer", "Hornet", "Mister Mushroom", "Quirrel", "Tiso", "Zote the Mighty", "Bretta", "Grubfather", "Seer", "Troupe Master Grimm", "Dung Defender", "Elderbug", "Eternal Emilitia", "the Mask Maker", "Midwife", "Snail Shaman", "White Lady", "the Collector", "Brooding Mawlek", "Crystal Guardian", "Broken Vessel", "False Knight", "Flukemarm", "Gruz Mother", "God Tamer", "Hive Knight", "Hollow Knight", "the Mantis Lords", "Nosk", "the Radiance", "Uumuu", "Soul Master", "Watcher Knight", "Elder Hu", "Galien", "Gorb", "Markoth", "Marmu", "No Eyes", "Xero", "Winged Nosk", "White Defender", "Soul Tyrant", "the Sisters of Battle", "Hornet Sentinel", "Lost Kin", "Nightmare King Grim", "Pure Vessel", "Grey Prince Zote", "Failed Champion", "Enranged Guardian", "the Absolute Radiance", "the Knight"
+			]
+		},
+		{
+			"Game": "Hyrule Warriors",
+			"Friends": [
+				"Lana", "Cia", "Volga", "Wizzro", "Linkle", "Proxi"
+			]
+		},
+		{
+			"Game": "Mario Series",
+			"Friends": [
+				"Mario", "Luigi", "Bowser", "Princess Peach", "Princess Daisy", "Toad", "Toadsworth", "Yoshi", "King Boo", "Rosalina", "Bowser Jr.", "Pauline", "Toadette", "Captain Toad", "Wario", "Kamek", "Waluigi", "Donkey Kong", "Diddy Kong", "Birdo", "Nabbit", "Cappy", "F.L.U.D.D."
+			]
+		},
+		{
+			"Game": "Portal series",
+			"Friends": [
+				"Chell", "GLaDOS", "Wheatley", "a Companion Cube", "Cave Johnson", "ATLAS", "P-body"
+			]
+		},
+		{
+			"Game": "Metroid series",
+			"Friends": [
+				"Samus Aran", "Kraid", "Ridley", "Deorem", "Mua", "Imango", "Adam"
+			]
+		},
+		{
+			"Game": "Blue Fire",
+			"Friends": [
+				"Umbra", "Von", "Orip", "Burok", "Fara", "Barri", "Paulale", "Kin", "Orom", "Nuno", "Mon", "Onari", "Nilo", "Mia", "Leech", "Dweller", "Forest Dweller", "Steam House Dweller", "Gruh, the Corrupted Guardian", "Croh, the Corrupted Guardian", "Sirion, Lord of Flames", "Samael, Grotesque Lord", "Beira,  Lady of Ice", "The Queen of Darkness", "Spirit Hunter", "Mork", "Poi", "Nuos, God of Knowledge", "Uthas, God of Water", "Dina, Goddess of Land", "Tolon, God of Win", "Duron, God of Fire", "the Sixth God"
+			]
+		},
+		{
+			"Game": "The Darkest Tales",
+			"Friends": [
+				"Teddy", "Lightie", "Alicia", "Red Riding Hood"
+			]
+		},
+		{
+			"Game": "Outer Wilds",
+			"Friends": [
+				"the Hatchling", "Esker", "Riebeck", "Gabbro", "Feldspar", "Chert", "Hal", "Hornfels", "Solonum", "Slate", "the scout"
+			]
+		},
+		{
+			"Game": "Death's Door",
+			"Friends": [
+				"the Grey Crow", "Death", "Baul Plart, Head of Security", "Agatha, the Typist", "Darwin, the Vault Keeper", "Vaga", "Chandler the Handler", "the Last Lord, the Lord of Doors", "Clever Grunt", "Bard, the Bard", "Jefferson", "Pothead", "the Witch of Urns", "the King of the Swamp", "Betty", "the Grave Digger", "Rook", "Badger, the Reaper", "Corvus", "Raven"
+			]
+		}
+	],
+	"Outcomes": {
+		"Accept": [
+			"You're the bestest of friends!",
+			"You're in love with each other! How sweet!",
+			"Though you're not the strongest of friends.",
+			"You play games together until they lose, at which time the friendship abruptly ends...",
+			"You become best friends, but days later, {name} gets kidnapped by {randName}! What will you do?!"
+		],
+		"Reject": [
+			"You're arch enemies now, you better watch your back...",
+			"They're not interested in making new friends at this time...",
+			"And suddenly they come out of the bushes and stab you in the back!",
+			"They instead befriend your arch enemy, {randName}, and play games without you!",
+			"They were really nice with the rejection though so you don't feel so bad."
+		]
+	}
+}

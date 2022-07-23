@@ -20,12 +20,14 @@ namespace HowardBot
 			public string name;
 			public ICommand command;
 			public bool sendMessage;
+			public bool reply;
 
-			public CommandInfo(string name, ICommand command, bool sendMessage = true)
+			public CommandInfo(string name, ICommand command, bool reply = true, bool sendMessage = true)
 			{
 				this.name = name;
 				this.command = command;
 				this.sendMessage = sendMessage;
+				this.reply = reply;
 			}
 		}
 
@@ -34,7 +36,8 @@ namespace HowardBot
 		private readonly char prefix = '!';
 		private readonly List<CommandInfo> commands = new List<CommandInfo>()
 		{
-			{ new CommandInfo("whoop", new WhoopCommand()) }
+			{ new CommandInfo("whoop", new WhoopCommand()) },
+			{ new CommandInfo("bff", new BffCommand()) }
 		};
 
 		private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
@@ -48,9 +51,12 @@ namespace HowardBot
 				Debug.Log($"[Chat - Command] Command '{commandInfo.name}' executed by '{chat.DisplayName}'.");
 
 				if (commandInfo.sendMessage)
-					Bot.SendMessage(commandInfo.command.Run(args, chat.DisplayName));
+					if (commandInfo.reply)
+						Bot.SendReply(chat.Id, commandInfo.command.Run(args));
+					else
+						Bot.SendMessage(commandInfo.command.Run(args));
 				else
-					commandInfo.command.Run(args, chat.DisplayName);
+					commandInfo.command.Run(args);
 			}
 		}
 
@@ -74,7 +80,7 @@ namespace HowardBot
 				}
 				// If invalid command
 				else
-					Bot.SendMessage($"@{chat.DisplayName} No command named '{commandName}' was found. Either you made a typo or Chris is dumber than a Stupid Bee.");
+					Bot.SendReply(chat.Id, $"No command named '{commandName}' was found. Either you made a typo or Chris is dumber than a Stupid Bee.");
 			}
 
 			command = null;
