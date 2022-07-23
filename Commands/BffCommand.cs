@@ -8,6 +8,7 @@ namespace HowardBot.Commands
 		public BffCommand()
 		{
 			data = Utility.DeserializeJSON<BffData>(@".\Data\BffData.json");
+			DebugStats();
 		}
 
 		private struct BffData
@@ -93,7 +94,19 @@ namespace HowardBot.Commands
 
 		private void DebugStats()
 		{
-			Debug.Log($"[Stats for: {nameof(BffCommand)}]", false);
+			int gamesCount = data.Games.Count;
+			int friendsCount = 0;
+			string output = $"[Stats for: {nameof(BffCommand)}]\n" +
+							$"Games: {gamesCount}\n";
+
+			for (int i = 0; i < gamesCount; i++)
+			{
+				friendsCount += data.Games[i].Friends.Count;
+			}
+
+			output += $"Friends: {friendsCount}";
+
+			Debug.Log(output, false);
 		}
 	}
 }
