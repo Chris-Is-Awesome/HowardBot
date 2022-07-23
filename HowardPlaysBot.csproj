@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="AutoHotkey.Interop" Version="1.0.0.1" />
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="TwitchLib" Version="3.3.0" />
   </ItemGroup>
 
