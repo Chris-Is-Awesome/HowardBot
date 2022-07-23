@@ -104,5 +104,10 @@ namespace HowardBot
 		{
 			twitchClient.SendMessage(channelName, message);
 		}
+
+		public static void SendReply(string messageId, string message)
+		{
+			twitchClient.SendReply(channelName, messageId, message);
+		}
 	}
 }
