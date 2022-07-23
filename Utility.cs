@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace HowardBot
@@ -27,6 +30,12 @@ namespace HowardBot
 		public static async Task WaitForMilliseconds(float milliseconds)
 		{
 			await Task.Delay(TimeSpan.FromMilliseconds(milliseconds));
+		}
+
+		public static T DeserializeJSON<T>(string filePath)
+		{
+			string json = JObject.Parse(File.ReadAllText(filePath)).ToString();
+			return JsonConvert.DeserializeObject<T>(json);
 		}
 	}
 }
