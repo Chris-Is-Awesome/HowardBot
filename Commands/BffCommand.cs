@@ -35,6 +35,10 @@ namespace HowardBot.Commands
 			string randGame = GetRandomGame();
 			string randFriend = GetRandomFriend(randGame);
 
+			// If Howard
+			if (randGame.EndsWith("Twilight Princess") && randFriend == "Howard")
+				return "/me You try to befriend... me?! W-Why, I'm so honored! But no, fuck you. *tackles*";
+
 			bool doFriend = Convert.ToBoolean(Utility.GetRandomNumberInRange(0, 1));
 			string outcome = $"/me You try to befriend {randFriend} ({randGame})... ";
 
