@@ -16,7 +16,7 @@ namespace HowardBot
 		public static int GetRandomNumberInRange(int min, int max, bool maxInclusive = true)
 		{
 			Random rand = new Random();
-			return rand.Next(min, maxInclusive ? max++ : max);
+			return rand.Next(min, maxInclusive ? max + 1 : max);
 		}
 
 		public static async Task WaitForSeconds(float seconds)
