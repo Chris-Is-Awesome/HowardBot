@@ -13,33 +13,27 @@ namespace HowardBot
 		{
 			client = twitchClient;
 			client.OnMessageReceived += OnMessageReceived;
-		}
 
-		private class CommandInfo
-		{
-			public string name;
-			public ICommand command;
-			public bool sendMessage;
-			public bool reply;
-
-			public CommandInfo(string name, ICommand command, bool reply = true, bool sendMessage = true)
+			// Define & initialize commands
+			commands = new List<CommandInfo>()
 			{
-				this.name = name;
-				this.command = command;
-				this.sendMessage = sendMessage;
-				this.reply = reply;
-			}
+				{ new CommandInfo("whoop", new WhoopCommand()) },
+				{ new CommandInfo("bff", new BffCommand()) },
+				{ new CommandInfo("trivia", new TriviaCommand()) }
+			};
 		}
 
 		private readonly TwitchClient client;
-		private delegate void CommandFunc(string[] args);
+		private readonly List<CommandInfo> commands;
 		private readonly char prefix = '!';
-		private readonly List<CommandInfo> commands = new List<CommandInfo>()
+
+		private delegate void CommandFunc(string[] args);
+
+		public void RunCommand(string commandName, string[] args = null)
 		{
-			{ new CommandInfo("whoop", new WhoopCommand()) },
-			{ new CommandInfo("bff", new BffCommand()) },
-			{ new CommandInfo("trivia", new TriviaCommand()) }
-		};
+			if (TryParseCommand($"!{commandName}", out CommandInfo commandInfo))
+				Bot.SendMessage(commandInfo.command.Run(args));
+		}
 
 		private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
 		{
@@ -61,32 +55,71 @@ namespace HowardBot
 			}
 		}
 
-		private bool TryParseCommand(ChatMessage chat, out CommandInfo command, out string[] args)
+		private bool TryParseCommand(ChatMessage chat, out CommandInfo commandInfo, out string[] args)
 		{
 			string message = chat.Message;
 
 			// If starts with prefix
 			if (message.StartsWith(prefix))
-			{  
+			{
 				// Split words to get command name and args separately
 				string[] splitMessage = message.Substring(1, message.Length - 1).Split(' ');
 				string commandName = splitMessage[0].ToLower();
-				command = commands.Find(x => x.name == commandName);
+				commandInfo = commands.Find(x => x.name == commandName);
 
-				// If is a valid command
-				if (command != null)
+				// If command valid
+				if (commandInfo != null)
 				{
 					args = splitMessage.Skip(1).ToArray();
 					return true;
 				}
-				// If invalid command
+				// If command invalid
 				else
 					Bot.SendReply(chat.Id, $"No command named '{commandName}' was found. Either you made a typo or Chris is dumber than a Stupid Bee.");
 			}
 
-			command = null;
+			commandInfo = null;
 			args = null;
 			return false;
+
+		}
+
+		private bool TryParseCommand(string text, out CommandInfo commandInfo)
+		{
+			// If starts with prefix
+			if (text.StartsWith(prefix))
+			{
+				// Split words to get command name and args separately
+				string[] splitMessage = text.Substring(1, text.Length - 1).Split(' ');
+				string commandName = splitMessage[0].ToLower();
+				commandInfo = commands.Find(x => x.name == commandName);
+
+				// If command valid
+				if (commandInfo != null)
+					return true;
+				// If command invalid
+				else
+					Debug.LogError($"Tried to run invalid command {commandName}.");
+			}
+
+			commandInfo = null;
+			return false;
+		}
+
+		private class CommandInfo
+		{
+			public string name;
+			public ICommand command;
+			public bool sendMessage;
+			public bool reply;
+
+			public CommandInfo(string name, ICommand command, bool reply = true, bool sendMessage = true)
+			{
+				this.name = name;
+				this.command = command;
+				this.sendMessage = sendMessage;
+				this.reply = reply;
+			}
 		}
 	}
 }
