@@ -37,7 +37,8 @@ namespace HowardBot
 		private readonly List<CommandInfo> commands = new List<CommandInfo>()
 		{
 			{ new CommandInfo("whoop", new WhoopCommand()) },
-			{ new CommandInfo("bff", new BffCommand()) }
+			{ new CommandInfo("bff", new BffCommand()) },
+			{ new CommandInfo("trivia", new TriviaCommand()) }
 		};
 
 		private void OnMessageReceived(object sender, OnMessageReceivedArgs e)
@@ -66,7 +67,7 @@ namespace HowardBot
 
 			// If starts with prefix
 			if (message.StartsWith(prefix))
-			{
+			{  
 				// Split words to get command name and args separately
 				string[] splitMessage = message.Substring(1, message.Length - 1).Split(' ');
 				string commandName = splitMessage[0].ToLower();
