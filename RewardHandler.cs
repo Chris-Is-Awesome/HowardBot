@@ -25,7 +25,6 @@ namespace HowardBot
 			public string name;
 			public int id;
 			public float duration;
-			public bool isActive;
 
 			public VisualEffect(string name, int id, float duration)
 			{
@@ -40,7 +39,7 @@ namespace HowardBot
 
 				await Utility.WaitForSeconds(1);
 
-				ahk.ExecRaw($"Send {{Ctrl down}} {{0 down}} {{{id} down}} {{Left}} ");
+				ahk.ExecRaw($"Send {{Ctrl down}} {{0 down}} {{{id} down}}");
 				await Utility.WaitForMilliseconds(10);
 				ahk.ExecRaw($"Send {{Ctrl up}} {{0 up}} {{{id} up}}");
 
@@ -53,7 +52,7 @@ namespace HowardBot
 
 			public async Task Stop()
 			{
-				ahk.ExecRaw($"Send {{Ctrl down}} {{0 down}} {{{id} down}} {{Right}}");
+				ahk.ExecRaw($"Send {{Ctrl down}} {{0 down}} {{{id} down}}");
 				await Utility.WaitForMilliseconds(10);
 				ahk.ExecRaw($"Send {{Ctrl up}} {{0 up}} {{{id} up}}");
 
@@ -67,14 +66,14 @@ namespace HowardBot
 		private static List<VisualEffect> effectsInQueue = new List<VisualEffect>();
 		private List<VisualEffect> visualEffects = new List<VisualEffect>()
 		{
-			{ new VisualEffect("qilʇnɘɘɿɔƧ", 1, 60) },
-			{ new VisualEffect("【﻿Ｗ　Ｉ　Ｄ　Ｅ】Mode", 2, 60) },
-			{ new VisualEffect("Pinhole", 3, 60) },
-			{ new VisualEffect("Pixelate", 4, 60) },
-			{ new VisualEffect("Inversion", 5, 60) },
-			{ new VisualEffect("Black & White", 6, 60) },
-			{ new VisualEffect("Cell-Shaded", 7, 60) },
-			{ new VisualEffect("VHS", 8, 60) }
+			{ new VisualEffect("qilʇnɘɘɿɔƧ", 1, 10) },
+			{ new VisualEffect("【﻿Ｗ　Ｉ　Ｄ　Ｅ】Mode", 2, 10) },
+			{ new VisualEffect("Pinhole", 3, 10) },
+			{ new VisualEffect("Pixelate", 4, 10) },
+			{ new VisualEffect("Inversion", 5, 10) },
+			{ new VisualEffect("Black & White", 6, 10) },
+			{ new VisualEffect("Cell-Shaded", 7, 10) },
+			{ new VisualEffect("VHS", 8, 10) }
 		};
 		private Timer timer;
 
