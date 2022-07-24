@@ -17,7 +17,7 @@ namespace HowardBot
 			// Define & initialize commands
 			commands = new List<CommandInfo>()
 			{
-				{ new CommandInfo("whoop", new WhoopCommand()) },
+				{ new CommandInfo("whoop", new WhoopCommand(), new string[] { "w" }) },
 				{ new CommandInfo("bff", new BffCommand()) },
 				{ new CommandInfo("trivia", new TriviaCommand()) }
 			};
@@ -65,7 +65,7 @@ namespace HowardBot
 				// Split words to get command name and args separately
 				string[] splitMessage = message.Substring(1, message.Length - 1).Split(' ');
 				string commandName = splitMessage[0].ToLower();
-				commandInfo = commands.Find(x => x.name == commandName);
+				commandInfo = GetCommandInfo(commandName);
 
 				// If command valid
 				if (commandInfo != null)
@@ -92,7 +92,7 @@ namespace HowardBot
 				// Split words to get command name and args separately
 				string[] splitMessage = text.Substring(1, text.Length - 1).Split(' ');
 				string commandName = splitMessage[0].ToLower();
-				commandInfo = commands.Find(x => x.name == commandName);
+				commandInfo = GetCommandInfo(commandName);
 
 				// If command valid
 				if (commandInfo != null)
@@ -106,17 +106,24 @@ namespace HowardBot
 			return false;
 		}
 
+		private CommandInfo GetCommandInfo(string name)
+		{
+			return commands.Find(x => x.name == name || (x.aliases != null && x.aliases.Contains(name)));
+		}
+
 		private class CommandInfo
 		{
 			public string name;
 			public ICommand command;
+			public string[] aliases;
 			public bool sendMessage;
 			public bool reply;
 
-			public CommandInfo(string name, ICommand command, bool reply = true, bool sendMessage = true)
+			public CommandInfo(string name, ICommand command, string[] aliases = null, bool reply = true, bool sendMessage = true)
 			{
 				this.name = name;
 				this.command = command;
+				this.aliases = aliases;
 				this.sendMessage = sendMessage;
 				this.reply = reply;
 			}
