@@ -34,8 +34,11 @@ namespace HowardBot
 
 		public static T DeserializeJSON<T>(string filePath)
 		{
-			string json = JObject.Parse(File.ReadAllText(filePath)).ToString();
-			return JsonConvert.DeserializeObject<T>(json);
+			using (StreamReader file = File.OpenText(filePath))
+			{
+				JsonSerializer serializer = new JsonSerializer();
+				return  (T)serializer.Deserialize(file, typeof(T));
+			}
 		}
 	}
 }
