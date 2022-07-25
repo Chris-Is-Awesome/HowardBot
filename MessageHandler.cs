@@ -22,7 +22,8 @@ namespace HowardBot
 				{ new CommandInfo("bff", new BffCommand()) },
 				{ new CommandInfo("trivia", new TriviaCommand()) },
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
-				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }) }
+				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }) },
+				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }) }
 			};
 		}
 
