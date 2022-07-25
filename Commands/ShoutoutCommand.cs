@@ -39,7 +39,7 @@ namespace HowardBot.Commands
 
 					// Add game
 					if (!string.IsNullOrEmpty(game))
-						output += $"They were last playing {game}!";
+						output += $" They were last playing {game}!";
 
 					return output;
 				}
