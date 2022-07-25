@@ -59,6 +59,9 @@ namespace HowardBot
 			PubSubClient.OnPubSubServiceConnected += OnPubSubConnected;
 			PubSubClient.OnListenResponse += OnListenResponse;
 
+			// Initialize AHK
+			AHK = AutoHotkeyEngine.Instance;
+
 			// Initialize event handlers
 			messageHandler = new(TwitchClient);
 			RewardHandler rewardHandler = new();
@@ -66,9 +69,6 @@ namespace HowardBot
 			// Connect
 			TwitchClient.Connect();
 			PubSubClient.Connect();
-
-			// Initialize AHK
-			AHK = AutoHotkeyEngine.Instance;
 		}
 
 		#region Public Methods
