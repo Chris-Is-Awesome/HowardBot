@@ -1,4 +1,4 @@
-{
+﻿{
 	"Games": [
 		{
 			"Game": "Legend of Zelda series",
@@ -171,18 +171,17 @@
 	],
 	"Outcomes": {
 		"Accept": [
-			"You're the bestest of friends!",
-			"You're in love with each other! How sweet!",
+			"You're the bestest of friends! FeelsGoodMan",
+			"You're in love with each other! How sweet! ♥",
 			"Though you're not the strongest of friends.",
-			"You play games together until they lose, at which time the friendship abruptly ends...",
-			"You become best friends, but days later, {name} gets kidnapped by {randName}! What will you do?!"
+			"You play games together until they lose, at which time the friendship abruptly ends... :(",
+			"You become best friends, but days later, {name} gets kidnapped by {randName}! D: What will you do?!"
 		],
 		"Reject": [
-			"You're arch enemies now, you better watch your back...",
-			"They're not interested in making new friends at this time...",
-			"And suddenly they come out of the bushes and stab you in the back!",
-			"They instead befriend your arch enemy, {randName}, and play games without you!",
-			"They were really nice with the rejection though so you don't feel so bad."
-		]
+			"You're arch enemies now, you better watch your back... monkaS",
+			"They're not interested in making new friends at this time... :(",
+			"And suddenly they come out of the bushes and stab you in the back! D:",
+			"They instead befriend your arch enemy, {randName}, and play games without you! D:",
+			"They were really nice with the rejection though so you don't feel so bad. FeelsOkayMan"		]
 	}
 }
