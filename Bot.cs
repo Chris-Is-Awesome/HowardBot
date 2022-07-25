@@ -13,15 +13,18 @@ namespace HowardBot
 {
 	class Bot
 	{
-		readonly AutoHotkeyEngine ahk;
-		static TwitchClient twitchClient;
-		readonly TwitchPubSub pubSubClient;
-		public static string howardToken;
-		public static string pubsubToken;
-		public static string channelName;
-		public static string channelId;
-		public static string clientId;
+		private readonly API api;
+		private readonly MessageHandler messageHandler;
 		private readonly Stopwatch timer;
+
+		public static AutoHotkeyEngine AHK { get; private set; }
+		public static TwitchPubSub PubSubClient { get; private set; }
+		public static TwitchClient TwitchClient { get; private set; }
+		public static string HowardToken { get; private set; }
+		public static string PubsubToken { get; private set; }
+		public static string ChannelName { get; private set; }
+		public static string ChannelId { get; private set; }
+		public static string ClientId { get; private set; }
 
 		public Bot()
 		{
@@ -30,57 +33,83 @@ namespace HowardBot
 			timer.Start();
 
 			// Load env vars
-			DotNetEnv.Env.Load();
-			howardToken = Environment.GetEnvironmentVariable("HOWARD_TOKEN");
-			pubsubToken = Environment.GetEnvironmentVariable("PUBSUB_TOKEN");
-			channelName = Environment.GetEnvironmentVariable("CHANNEL_NAME");
-			channelId = Environment.GetEnvironmentVariable("CHANNEL_ID");
-			clientId = Environment.GetEnvironmentVariable("CLIENT_ID");
+			LoadEnvVars();
 
-			// Initialize AHK
-			ahk = AutoHotkeyEngine.Instance;
+			// Initialize API
+			api = API.Instance;
 
 			// Initialize Twitch client
-			ConnectionCredentials credentials = new ConnectionCredentials("The_Goat_Howard", howardToken);
+			ConnectionCredentials credentials = new ConnectionCredentials("The_Goat_Howard", HowardToken);
 			var clientOptions = new ClientOptions
 			{
 				MessagesAllowedInPeriod = 750,
 				ThrottlingPeriod = TimeSpan.FromSeconds(30)
 			};
 			WebSocketClient customClient = new WebSocketClient(clientOptions);
-			twitchClient = new TwitchClient(customClient);
-			twitchClient.Initialize(credentials, "ChrisIsAwesome");
+			TwitchClient = new TwitchClient(customClient);
+			TwitchClient.Initialize(credentials, "ChrisIsAwesome");
 
 			// Initialize PubSub client
-			pubSubClient = new TwitchPubSub();
+			PubSubClient = new TwitchPubSub();
 
 			// Base event subscriptions
-			twitchClient.OnConnected += OnConnected;
-			twitchClient.OnJoinedChannel += OnJoinedChannel;
-			pubSubClient.OnPubSubServiceConnected += OnPubSubConnected;
-			pubSubClient.OnListenResponse += OnListenResponse;
+			TwitchClient.OnConnected += OnConnected;
+			TwitchClient.OnJoinedChannel += OnJoinedChannel;
+  			TwitchClient.OnRaidNotification += OnRaid;
+			PubSubClient.OnPubSubServiceConnected += OnPubSubConnected;
+			PubSubClient.OnListenResponse += OnListenResponse;
 
 			// Initialize event handlers
-			MessageHandler messageHandler = new(twitchClient);
-			RewardHandler rewardHandler = new(pubSubClient, ahk);
+			messageHandler = new(TwitchClient);
+			RewardHandler rewardHandler = new();
 
 			// Connect
-			twitchClient.Connect();
-			pubSubClient.Connect();
+			TwitchClient.Connect();
+			PubSubClient.Connect();
+
+			// Initialize AHK
+			AHK = AutoHotkeyEngine.Instance;
 		}
 
+		#region Public Methods
+
+		/// <summary>
+		/// Sends a message to chat as the bot.
+		/// </summary>
+		/// <param name="message">The text to send</param>
+		public static void SendMessage(string message)
+		{
+			TwitchClient.SendMessage(ChannelName, message);
+		}
+
+		/// <summary>
+		/// Replies to a user in chat as the bot.
+		/// </summary>
+		/// <param name="messageId">The ID of the message to reply to</param>
+		/// <param name="message">The text to send</param>
+		public static void SendReply(string messageId, string message)
+		{
+			TwitchClient.SendReply(ChannelName, messageId, message);
+		}
+
+		#endregion
+
+		#region Event Methods
+
+		// When bot is connected to Twitch
 		private void OnConnected(object sender, OnConnectedArgs e)
 		{
 			Debug.Log($">> Connected to Twitch!");
 		}
 
-
+		// When bot is connected to PubSub service
 		private void OnPubSubConnected(object sender, EventArgs e)
 		{
 			Debug.Log(">> Connected to PubSub!");
-			pubSubClient.SendTopics(pubsubToken);
+			PubSubClient.SendTopics(PubsubToken);
 		}
 
+		// When bot tries to connect to a PubSub topic
 		private void OnListenResponse(object sender, OnListenResponseArgs e)
 		{
 			if (!e.Successful)
@@ -89,25 +118,42 @@ namespace HowardBot
 				Debug.Log($">> Listening to PubSub topic <{e.Topic}>...");
 		}
 
+		// When bot has connected to my channel and is ready for action
 		private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
 		{
 			// Stop timer
 			timer.Stop();
 
 			// Howard is ready for action!
-			Debug.Log($">> Joined channel ChrisIsAwesome!\n[Connection took {timer.Elapsed.Milliseconds}ms]");
+			Debug.Log($">> Joined channel {e.Channel} as {e.BotUsername}!\n[Connection took {timer.Elapsed.Milliseconds}ms]");
 			Debug.Log("Event log:", false);
 			SendMessage("/me Rushes out of barn and violently tackles everyone.");
 		}
 
-		public static void SendMessage(string message)
+		// When someone raids my channel
+		private void OnRaid(object sender, OnRaidNotificationArgs e)
 		{
-			twitchClient.SendMessage(channelName, message);
+			SendMessage($"{e.RaidNotification.DisplayName} brought {e.RaidNotification.MsgParamViewerCount} goats into the barn! 🐐");
+			messageHandler.RunCommand("shoutout", new string[] { e.RaidNotification.UserId });
 		}
 
-		public static void SendReply(string messageId, string message)
+		#endregion
+
+		#region Private Methods
+
+		/// <summary>
+		/// Loads environment variables from the .env file.
+		/// </summary>
+		private void LoadEnvVars()
 		{
-			twitchClient.SendReply(channelName, messageId, message);
+			DotNetEnv.Env.Load();
+			HowardToken = Environment.GetEnvironmentVariable("HOWARD_TOKEN");
+			PubsubToken = Environment.GetEnvironmentVariable("PUBSUB_TOKEN");
+			ChannelName = Environment.GetEnvironmentVariable("CHANNEL_NAME");
+			ChannelId = Environment.GetEnvironmentVariable("CHANNEL_ID");
+			ClientId = Environment.GetEnvironmentVariable("CLIENT_ID");
 		}
+
+		#endregion
 	}
 }

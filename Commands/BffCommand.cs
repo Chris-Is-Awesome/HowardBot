@@ -3,35 +3,16 @@ using System.Collections.Generic;
 
 namespace HowardBot.Commands
 {
-	class BffCommand : ICommand
+	class BffCommand : Command
 	{
 		public BffCommand()
 		{
-			data = Utility.DeserializeJSON<BffData>(@".\Data\BffData.json");
-			DebugStats();
+			data = Utility.DeserializeJSON<Data>(@".\Data\BffData.json");
 		}
 
-		private struct BffData
-		{
-			public struct GameData
-			{
-				public string Game { get; set; }
-				public List<string> Friends { get; set; }
-			}
+		private readonly Data data;
 
-			public struct OutcomeData
-			{
-				public List<string> Accept { get; set; }
-				public List<string> Reject { get; set; }
-			}
-
-			public List<GameData> Games { get; set; }
-			public OutcomeData Outcomes { get; set; }
-		}
-
-		private readonly BffData data;
-
-		public string Run(string[] args)
+		public override string Run(string[] args)
 		{
 			string randGame = GetRandomGame();
 			string randFriend = GetRandomFriend(randGame);
@@ -53,16 +34,16 @@ namespace HowardBot.Commands
 			// If accept
 			if (doFriend)
 			{
-				List<string> outcomes = data.Outcomes.Accept;
-				int randOutcomeId = Utility.GetRandomNumberInRange(0, outcomes.Count - 1);
+				string[] outcomes = data.outcomes.accept;
+				int randOutcomeId = Utility.GetRandomNumberInRange(0, outcomes.Length - 1);
 				string randOutcome = outcomes[randOutcomeId];
 				outcome += "They accept! " + randOutcome;
 			}
 			// If reject
 			else
 			{
-				List<string> outcomes = data.Outcomes.Reject;
-				int randOutcomeId = Utility.GetRandomNumberInRange(0, outcomes.Count - 1);
+				string[] outcomes = data.outcomes.reject;
+				int randOutcomeId = Utility.GetRandomNumberInRange(0, outcomes.Length - 1);
 				string randOutcome = outcomes[randOutcomeId];
 				outcome += "They reject! " + randOutcome;
 			}
@@ -73,7 +54,7 @@ namespace HowardBot.Commands
 			if (outcome.Contains("{randName}"))
 			{
 				string otherRandFriend = GetRandomFriend();
-				string otherRandFriendGame = data.Games.Find(x => x.Friends.Contains(otherRandFriend)).Game;
+				string otherRandFriendGame = data.games.Find(x => Array.Exists(x.friends, y => y == otherRandFriend)).game;
 
 				outcome = outcome.Replace("{randName}", $"{otherRandFriend} ({otherRandFriendGame})");
 			}
@@ -83,8 +64,8 @@ namespace HowardBot.Commands
 
 		private string GetRandomGame()
 		{
-			int randGameId = Utility.GetRandomNumberInRange(0, data.Games.Count - 1);
-			return data.Games[randGameId].Game;
+			int randGameId = Utility.GetRandomNumberInRange(0, data.games.Count - 1);
+			return data.games[randGameId].game;
 		}
 
 		private string GetRandomFriend(string game = "")
@@ -94,26 +75,46 @@ namespace HowardBot.Commands
 				return GetRandomFriend(GetRandomGame());
 
 			// Get a friend from specified game
-			List<string> friends = data.Games.Find(x => x.Game == game).Friends;
-			int randFriendId = Utility.GetRandomNumberInRange(0, friends.Count - 1);
+			string[] friends = data.games.Find(x => x.game == game).friends;
+			int randFriendId = Utility.GetRandomNumberInRange(0, friends.Length - 1);
+
 			return friends[randFriendId];
 		}
 
-		private void DebugStats()
+		private struct Data
 		{
-			int gamesCount = data.Games.Count;
-			int friendsCount = 0;
-			string output = $"[Stats for: {nameof(BffCommand)}]\n" +
-							$"Games: {gamesCount}\n";
-
-			for (int i = 0; i < gamesCount; i++)
+			public struct GameData
 			{
-				friendsCount += data.Games[i].Friends.Count;
+				public readonly string game;
+				public readonly string[] friends;
+
+				public GameData(string game, string[] friends)
+				{
+					this.game = game;
+					this.friends = friends;
+				}
 			}
 
-			output += $"Friends: {friendsCount}";
+			public struct OutcomeData
+			{
+				public readonly string[] accept;
+				public readonly string[] reject;
 
-			Debug.Log(output, false);
+				public OutcomeData(string[] accept, string[] reject)
+				{
+					this.accept = accept;
+					this.reject = reject;
+				}
+			}
+
+			public readonly List<GameData> games;
+			public readonly OutcomeData outcomes;
+
+			public Data(List<GameData> games, OutcomeData outcomes)
+			{
+				this.games = games;
+				this.outcomes = outcomes;
+			}
 		}
 	}
 }

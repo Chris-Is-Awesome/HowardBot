@@ -4,10 +4,14 @@ namespace HowardBot
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             Debug.Log($"[Bot started at {DateTime.Now}]");
+
+            // Initialize bot
             new Bot();
+
+            // Keep persistent
             Console.ReadLine();
         }
     }
