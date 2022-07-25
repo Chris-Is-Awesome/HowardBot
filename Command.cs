@@ -4,6 +4,14 @@ namespace HowardBot
 {
 	class Command
 	{
+		private bool _enabled = true;
+
+		public bool Enabled
+		{
+			get { return _enabled; }
+			set { _enabled = value; }
+		}
+
 		/// <summary>
 		/// Runs the command.
 		/// </summary>

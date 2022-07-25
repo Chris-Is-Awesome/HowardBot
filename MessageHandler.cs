@@ -91,15 +91,40 @@ namespace HowardBot
 			if (message.StartsWith(prefix))
 			{
 				// Split words to get command name and args separately
-				string[] splitMessage = message.Substring(1, message.Length - 1).Split(' ');
-				string commandName = splitMessage[0].ToLower();
+				string[] splitMessage = message.ToLower().Substring(1, message.Length - 1).Split(' ');
+				string commandName = GetCommandName(splitMessage[0]);
 				commandInfo = GetCommandInfo(commandName);
 
 				// If command valid
 				if (commandInfo != null)
 				{
+					Command command = commandInfo.command;
 					args = splitMessage.Skip(1).ToArray();
-					return true;
+					bool justDisabled = false;
+
+					// If enabling or disabling
+					if (chat.UserId == Bot.ChannelId && args != null && args.Length > 0)
+					{
+						// Enable
+						if (args[0] == "enable" && !command.Enabled)
+						{
+							command.Enabled = true;
+							Bot.SendReply(chat.Id, $"The command {commandName} has been enabled.");
+						}
+						// Disable
+						else if (args[0] == "disable" && command.Enabled)
+						{
+							command.Enabled = false;
+							justDisabled = true;
+							Bot.SendReply(chat.Id, $"The command {commandName} has been disabled.");
+						}
+					}
+
+					// If command is enabled
+					if (command.Enabled)
+						return true;
+					else if (!justDisabled)
+						Bot.SendReply(chat.Id, $"The command '{commandName}' is disabled.");
 				}
 				// If command invalid
 				else
@@ -148,6 +173,26 @@ namespace HowardBot
 		private CommandInfo GetCommandInfo(string name)
 		{
 			return commands.Find(x => x.name == name || (x.aliases != null && x.aliases.Contains(name)));
+		}
+
+		/// <summary>
+		/// Gets the CommandInfo object from the command's class.
+		/// </summary>
+		/// <param name="command">The Command class for the command</param>
+		/// <returns>[CommandInfo] The CommandInfo object if it exists, null otherwise.</returns>
+		private CommandInfo GetCommandInfo(Command command)
+		{
+			return commands.Find(x => x.command == command);
+		}
+
+		/// <summary>
+		/// Gets the name of the command. Useful for getting full name of command from one of its aliases.
+		/// </summary>
+		/// <param name="text">The name or alias of the command</param>
+		/// <returns>[string] The name of the command</returns>
+		private string GetCommandName(string text)
+		{
+			return commands.Find(x => x.name == text || x.aliases.Contains(text)).name;
 		}
 
 		/// <summary>
