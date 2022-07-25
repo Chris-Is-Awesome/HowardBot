@@ -21,7 +21,8 @@ namespace HowardBot
 				{ new CommandInfo("whoop", new WhoopCommand(), new string[] { "w" }) },
 				{ new CommandInfo("bff", new BffCommand()) },
 				{ new CommandInfo("trivia", new TriviaCommand()) },
-				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) }
+				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
+				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }) }
 			};
 		}
 
@@ -192,7 +193,7 @@ namespace HowardBot
 		/// <returns>[string] The name of the command</returns>
 		private string GetCommandName(string text)
 		{
-			return commands.Find(x => x.name == text || x.aliases.Contains(text)).name;
+			return commands.Find(x => x.name == text || x.aliases != null && x.aliases.Contains(text)).name;
 		}
 
 		/// <summary>
