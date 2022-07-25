@@ -1,6 +1,8 @@
 ﻿using HowardBot.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -22,15 +24,23 @@ namespace HowardBot
 				{ new CommandInfo("bff", new BffCommand()) },
 				{ new CommandInfo("trivia", new TriviaCommand()) },
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
-				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }) },
-				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }) }
+				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, 60, new string[] { "youtube" }, false) },
+				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, 60, new string[] { "discord" }, false) }
 			};
+
+			// Start timer to handle commands on timers
+			timer = new Timer((e) =>
+			{
+				CheckTimerCommands();
+			}, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 		}
 
 		private static MessageHandler _instance;
+		private static List<CommandInfo> timerCommands = new List<CommandInfo>();
 
 		private readonly TwitchClient client;
 		private readonly List<CommandInfo> commands;
+		private readonly Timer timer;
 		private readonly char prefix = '!';
 
 		public static MessageHandler Instance
@@ -211,23 +221,76 @@ namespace HowardBot
 				return commandInfo.command.Run(args);
 		}
 
+		/// <summary>
+		/// Handles running all timer commands. Runs once per minute.
+		/// </summary>
+		private async void CheckTimerCommands()
+		{
+			foreach (CommandInfo commandInfo in timerCommands)
+			{
+				double timeSince = (DateTime.Now - commandInfo.timerLastFired).TotalMinutes;
+
+				// Check if timerInterval time has passed since command last ran
+				if (timeSince >= commandInfo.timerInterval)
+				{
+					CommandInfo commandToRun = commandInfo;
+					DateTime oldestTime = commandToRun.timerLastFired;
+
+					// Check if command alternates with any and run the one that ran the earliest
+					foreach (string commandName in commandInfo.timerCommandsToAlternate)
+					{
+						CommandInfo altCommand = GetCommandInfo(commandName);
+
+						if (altCommand.timerLastFired < oldestTime)
+						{
+							commandToRun = altCommand;
+							oldestTime = altCommand.timerLastFired;
+						}
+
+						altCommand.timerLastFired = DateTime.Now;
+					}
+
+					// Run command
+					Bot.SendMessage(await DoRunCommand(commandToRun, null));
+
+					// Update timerLastFired to current time
+					commandToRun.timerLastFired = DateTime.Now;
+				}
+			}
+		}
+
 		private class CommandInfo
 		{
+			// Initialization
 			public string name;
 			public Command command;
 			public string[] aliases;
 			public bool async;
+			public float timerInterval;
+			public string[] timerCommandsToAlternate;
 			public bool sendMessage;
 			public bool reply;
 
-			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, bool reply = true, bool sendMessage = true)
+			// Timer
+			public DateTime timerLastFired;
+
+			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, float timerInterval = 0, string[] timerCommandsToAlternate = null, bool reply = true, bool sendMessage = true)
 			{
 				this.name = name;
 				this.command = command;
 				this.aliases = aliases;
 				this.async = async;
+				this.timerInterval = timerInterval;
+				this.timerCommandsToAlternate = timerCommandsToAlternate;
 				this.sendMessage = sendMessage;
 				this.reply = reply;
+
+				// Add to list of timers
+				if (timerInterval > 0)
+				{
+					timerCommands.Add(this);
+					timerLastFired = DateTime.Now;
+				}
 			}
 		}
 	}
