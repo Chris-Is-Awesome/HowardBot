@@ -58,6 +58,8 @@ namespace HowardBot
   			TwitchClient.OnRaidNotification += OnRaid;
 			PubSubClient.OnPubSubServiceConnected += OnPubSubConnected;
 			PubSubClient.OnListenResponse += OnListenResponse;
+			PubSubClient.OnStreamUp += OnStreamStarted;
+			PubSubClient.OnStreamDown += OnStreamEnded;
 
 			// Initialize AHK
 			AHK = AutoHotkeyEngine.Instance;
@@ -128,6 +130,20 @@ namespace HowardBot
 			Debug.Log($">> Joined channel {e.Channel} as {e.BotUsername}!\n[Connection took {timer.Elapsed.Milliseconds}ms]");
 			Debug.Log("Event log:", false);
 			SendMessage("/me Rushes out of barn and violently tackles everyone.");
+		}
+
+		// When my stream is started
+		private void OnStreamStarted(object sender, OnStreamUpArgs e)
+		{
+			SendMessage($"[test] Stream started! Play delay: {e.PlayDelay}, server time: {e.ServerTime}");
+			Debug.Log($"[test] Stream started! Play delay: {e.PlayDelay}, server time: {e.ServerTime}");
+		}
+
+		// When my stream has ended
+		private void OnStreamEnded(object sender, OnStreamDownArgs e)
+		{
+			SendMessage($"[test] Stream ended! Server time: {e.ServerTime}");
+			Debug.Log($"[test] Stream ended! Server time: {e.ServerTime}");
 		}
 
 		// When someone raids my channel

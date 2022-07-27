@@ -30,6 +30,16 @@ namespace HowardBot
 		}
 
 		/// <summary>
+		/// Checks if I'm currently live
+		/// </summary>
+		/// <returns>[bool] Am I live or not?</returns>
+		public async Task<bool> AmILive()
+		{
+			var response = await helix.Streams.GetStreamsAsync(userIds: new List<string> { Bot.ChannelId });
+			return response.Streams.Length > 0; // Endpoint returns null if not live
+		}
+
+		/// <summary>
 		/// Gets a user's DisplayName from their <paramref name="userId"/>.
 		/// </summary>
 		/// <param name="userId">The ID for the user. Can use <see cref="GetUserIdFromName(string)"/> to get a user's ID from their DisplayName.</param>
