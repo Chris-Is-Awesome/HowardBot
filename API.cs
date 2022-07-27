@@ -2,6 +2,9 @@
 using System.Threading.Tasks;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix;
+using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
+using TwitchLib.Api.Helix.Models.Streams.GetStreams;
+using TwitchLib.Api.Helix.Models.Users.GetUsers;
 
 namespace HowardBot
 {
@@ -29,9 +32,48 @@ namespace HowardBot
 			}
 		}
 
-		/// <summary>
-		/// Checks if I'm currently live
-		/// </summary>
+		#region Users
+
+		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/> to get a user's ID from their DisplayName.</param>
+		/// <returns>[string] The user's DisplayName or an empty string if no user with <paramref name="userId"/> was found.</returns>
+		public async Task<User> GetUserByID(string userId)
+		{
+			var response = await helix.Users.GetUsersAsync(new List<string> { userId });
+
+			if (response.Users != null && response.Users.Length > 0)
+				return response.Users[0];
+
+			return null;
+		}
+
+		/// <param name="name">The DisplayName for the user. Can use <see cref="GetUserByID(string)"/> to get a user's DisplayName from their ID.</param>
+		/// <returns>[User] The User object or null if no user with <paramref name="name"/> was found.</returns>
+		public async Task<User> GetUserByName(string name)
+		{
+			var response = await helix.Users.GetUsersAsync(null, new List<string> { name });
+
+			if (response.Users != null && response.Users.Length > 0)
+				return response.Users[0];
+
+			return null;
+		}
+
+		#endregion
+
+		#region Streams
+
+		/// <param name="userId">User ID for the streamer</param>
+		/// <returns>[Stream] The Stream object for the user's current stream, null if they're not live.</returns>
+		public async Task<Stream> GetStreamForUser(string userId)
+		{
+			var response = await helix.Streams.GetStreamsAsync(userIds: new List<string> { userId });
+
+			if (response.Streams != null && response.Streams.Length > 0)
+				return response.Streams[0];
+
+			return null;
+		}
+
 		/// <returns>[bool] Am I live or not?</returns>
 		public async Task<bool> AmILive()
 		{
@@ -39,37 +81,22 @@ namespace HowardBot
 			return response.Streams.Length > 0; // Endpoint returns null if not live
 		}
 
-		/// <summary>
-		/// Gets a user's DisplayName from their <paramref name="userId"/>.
-		/// </summary>
-		/// <param name="userId">The ID for the user. Can use <see cref="GetUserIdFromName(string)"/> to get a user's ID from their DisplayName.</param>
-		/// <returns>[string] The user's DisplayName or an empty string if no user with <paramref name="userId"/> was found.</returns>
-		public async Task<string> GetUserNameFromId(string userId)
-		{
-			var response = await helix.Users.GetUsersAsync(new List<string> { userId });
-			return response.Users[0].DisplayName;
-		}
+		#endregion
 
-		/// <summary>
-		/// Gets a user's ID from their <paramref name="name"/>.
-		/// </summary>
-		/// <param name="name">The DisplayName for the user. Can use <see cref="GetUserNameFromId(string)"/> to get a user's DisplayName from their ID.</param>
-		/// <returns>[string] The user's ID or an empty string if no user with <paramref name="name"/> was found.</returns>
-		public async Task<string> GetUserIdFromName(string name)
-		{
-			var response = await helix.Users.GetUsersAsync(null, new List<string> { name });
-			return response.Users[0].Id;
-		}
+		#region Channels
 
-		/// <summary>
-		/// Gets the name of the last played game on the user's channel.
-		/// </summary>
-		/// <param name="userId">The ID for the user. Can use <see cref="GetUserIdFromName(string)"/> to get a user's ID from their DisplayName.</param>
-		/// <returns>[string] The name of the last played game on the user's channel or an empty string if the user has not played any game.</returns>
-		public async Task<string> GetLastPlayedGameForUser(string userId)
+		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/> to get a user's ID from their DisplayName.</param>
+		/// <returns>[ChannelInformation] The ChannelInformation object for the user, or null if user not found.</returns>
+		public async Task<ChannelInformation> GetChannelInfo(string userId)
 		{
 			var response = await helix.Channels.GetChannelInformationAsync(userId);
-			return response.Data[0].GameName;
+
+			if (response != null && response.Data.Length > 0)
+				return response.Data[0];
+
+			return null;
 		}
+
+		#endregion
 	}
 }

@@ -9,9 +9,6 @@ namespace HowardBot.Commands
 
 		public override async Task<string> RunAsync(string[] args)
 		{
-			// Parse @ChrisIsAwesome to channelId
-			// Also accept direct channelId
-
 			if (args != null)
 			{
 				string arg0 = args[0];
@@ -20,26 +17,40 @@ namespace HowardBot.Commands
 				if (arg0.StartsWith('@'))
 				{
 					var name = arg0.Substring(1);
-					var id = await API.Instance.GetUserIdFromName(name);
-					var game = await API.Instance.GetLastPlayedGameForUser(id);
-					string output = $"Let's give a round of applause to {name}!";
+					var user = await API.Instance.GetUserByName(name);
+					string output;
 
-					// Add game
-					if (!string.IsNullOrEmpty(game))
-						output += $"They were last playing {game}!";
+					if (user != null)
+					{
+						var channelInfo = await API.Instance.GetChannelInfo(user.Id);
+						output = $"Let's give a round of applause to {name}!";
+
+						// Add game
+						if (!string.IsNullOrEmpty(channelInfo.GameName))
+							output += $" They were last playing {channelInfo.GameName}!";
+					}
+					else
+						output = $"No user with name '{name}' was found. A typo perhaps?";
 
 					return output;
 				}
 				// If ID given
 				else if (arg0.All(char.IsDigit))
 				{
-					var name = await API.Instance.GetUserNameFromId(arg0);
-					var game = await API.Instance.GetLastPlayedGameForUser(arg0);
-					string output = $"Let's give a round of applause to {name}!";
+					var user = await API.Instance.GetUserByID(arg0);
+					string output;
 
-					// Add game
-					if (!string.IsNullOrEmpty(game))
-						output += $" They were last playing {game}!";
+					if (user != null)
+					{
+						var channelInfo = await API.Instance.GetChannelInfo(user.Id);
+						output = $"Let's give a round of applause to {user.DisplayName}!";
+
+						// Add game
+						if (!string.IsNullOrEmpty(channelInfo.GameName))
+							output += $" They were last playing {channelInfo.GameName}!";
+					}
+					else
+						output = $"No user with ID '{arg0}' was found. A typo perhaps?";
 
 					return output;
 				}
