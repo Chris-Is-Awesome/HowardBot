@@ -108,13 +108,6 @@ namespace HowardBot
 			return null;
 		}
 
-		/// <returns>[bool] Am I live or not?</returns>
-		public async Task<bool> AmILive()
-		{
-			var response = await helix.Streams.GetStreamsAsync(userIds: new List<string> { Bot.ChannelId });
-			return response.Streams.Length > 0; // Endpoint returns null if not live
-		}
-
 		#endregion
 
 		#region Channels
