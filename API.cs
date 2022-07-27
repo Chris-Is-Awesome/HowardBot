@@ -21,6 +21,9 @@ namespace HowardBot
 		private static API _instance;
 		private readonly Helix helix;
 
+		// Refs
+		private Stream myCurrentStream;
+
 		public static API Instance
 		{
 			get
@@ -66,10 +69,21 @@ namespace HowardBot
 		/// <returns>[Stream] The Stream object for the user's current stream, null if they're not live.</returns>
 		public async Task<Stream> GetStreamForUser(string userId)
 		{
+			bool myChannel = userId == Bot.ChannelId;
+
+			// If looking for my own channel, grab reference
+			if (myChannel && myCurrentStream != null)
+				return myCurrentStream;
+
 			var response = await helix.Streams.GetStreamsAsync(userIds: new List<string> { userId });
 
 			if (response.Streams != null && response.Streams.Length > 0)
+			{
+				// If my stream, save to local var
+				if (myChannel) myCurrentStream = response.Streams[0];
+
 				return response.Streams[0];
+			}
 
 			return null;
 		}
