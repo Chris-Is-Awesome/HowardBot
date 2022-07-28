@@ -24,8 +24,8 @@ namespace HowardBot
 				{ new CommandInfo("bff", new BffCommand()) },
 				{ new CommandInfo("trivia", new TriviaCommand()) },
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
-				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, 60, new string[] { "youtube" }, false) },
-				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, 60, new string[] { "discord" }, false) }
+				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, false, 60, new string[] { "youtube" }, false) },
+				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 60, new string[] { "discord" }, false) }
 			};
 
 			// Start timer to handle commands on timers
@@ -103,8 +103,8 @@ namespace HowardBot
 			if (message.StartsWith(prefix))
 			{
 				// Split words to get command name and args separately
-				string[] splitMessage = message.ToLower().Substring(1, message.Length - 1).Split(' ');
-				string commandName = GetCommandName(splitMessage[0]);
+				string[] splitMessage = message.Substring(1, message.Length - 1).Split(' ');
+				string commandName = GetCommandName(splitMessage[0].ToLower());
 				commandInfo = GetCommandInfo(commandName);
 
 				// If command valid
@@ -113,6 +113,11 @@ namespace HowardBot
 					Command command = commandInfo.command;
 					args = splitMessage.Skip(1).ToArray();
 					bool justDisabled = false;
+
+					// Lowercase args
+					if (!commandInfo.argsCaseSensitive)
+						for (int i = 0; i < args.Length; i++)
+							args[i] = args[i].ToLower();
 
 					// If enabling or disabling
 					if (chat.UserId == Bot.ChannelId && args != null && args.Length > 0)
@@ -266,6 +271,7 @@ namespace HowardBot
 			public Command command;
 			public string[] aliases;
 			public bool async;
+			public bool argsCaseSensitive;
 			public float timerInterval;
 			public string[] timerCommandsToAlternate;
 			public bool sendMessage;
@@ -274,12 +280,13 @@ namespace HowardBot
 			// Timer
 			public DateTime timerLastFired;
 
-			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, float timerInterval = 0, string[] timerCommandsToAlternate = null, bool reply = true, bool sendMessage = true)
+			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, bool argsCaseSensitive = false, float timerInterval = 0, string[] timerCommandsToAlternate = null, bool reply = true, bool sendMessage = true)
 			{
 				this.name = name;
 				this.command = command;
 				this.aliases = aliases;
 				this.async = async;
+				this.argsCaseSensitive = argsCaseSensitive;
 				this.timerInterval = timerInterval;
 				this.timerCommandsToAlternate = timerCommandsToAlternate;
 				this.sendMessage = sendMessage;
