@@ -40,7 +40,10 @@ namespace HowardBot.Commands
 				foreach (char c in string.Join(' ', args))
 				{
 					if (char.IsLetter(c) && char.IsLower(c))
+					{
 						allUpper = false;
+						break;
+					}
 				}
 
 				if (allUpper)
