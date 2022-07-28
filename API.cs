@@ -89,15 +89,14 @@ namespace HowardBot
 		}
 
 		/// <param name="userId">The user ID for whom is streaming</param>
-		/// <returns>[List[string]] List of tags for the stream by <paramref name="userId"/>; null if stream is not active.</returns>
+		/// <returns>[List[string]] List of tags for the stream by <paramref name="userId"/>; empty List if stream is not active.</returns>
 		public async Task<List<string>> GetStreamTags(string userId)
 		{
+			List<string> tags = new List<string>();
 			var response = await helix.Streams.GetStreamTagsAsync(userId, Bot.HowardToken);
 
 			if (response.Data != null && response.Data.Length > 0)
 			{
-				List<string> tags = new List<string>();
-
 				// Get localized name for each tag
 				for (int i = 0; i < response.Data.Length; i++)
 					tags.Add(response.Data[i].LocalizationNames["en-us"]);
@@ -105,7 +104,7 @@ namespace HowardBot
 				return tags;
 			}
 
-			return null;
+			return tags;
 		}
 
 		#endregion
