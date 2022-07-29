@@ -40,40 +40,59 @@ namespace HowardBot
 		private readonly List<VisualEffect> visualEffects;
 
 		private Timer timer;
+		private int redemptionsThisStream;
+		private int pointsSpentThisStream;
 
 		// When a user redeems a channel point reward
 		private async void OnRewardRedeemed(object sender, OnChannelPointsRewardRedeemedArgs args)
 		{
-			Redemption redemption = args.RewardRedeemed.Redemption;
-			Reward reward = redemption.Reward;
-			User userWhoRedeemed = redemption.User;
-			string userInput = redemption.UserInput;
-
-			Debug.Log($"[Redemption] {userWhoRedeemed.DisplayName} redeemed {reward.Title}");
-
-			// Start timer to handle effect queue
-			if (timer == null)
+			if (Bot.AmILive)
 			{
-				timer = new Timer((e) =>
+				Redemption redemption = args.RewardRedeemed.Redemption;
+				Reward reward = redemption.Reward;
+				User userWhoRedeemed = redemption.User;
+				string userInput = redemption.UserInput;
+				pointsSpentThisStream += reward.Cost;
+
+				LogRedemption(reward, userWhoRedeemed);
+
+				// Start timer to handle effect queue
+				if (timer == null)
 				{
-					CheckEffectsInQueue();
-				}, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
-			}
+					timer = new Timer((e) =>
+					{
+						CheckEffectsInQueue();
+					}, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+				}
 
-			// Parse rewards for custom events
-			if (reward.Title == "Random Visual Effect")
-			{
-				int randNum = Utility.GetRandomNumberInRange(0, visualEffects.Count - 1);
-				VisualEffect effect = visualEffects[randNum];
-				await TryVisualEffect(effect, reward, userWhoRedeemed, true);
-			}
-			else
-			{
-				VisualEffect effect = visualEffects.Find(x => x.name == reward.Title);
+				// Parse rewards for custom events
+				if (reward.Title == "Random Visual Effect")
+				{
+					int randNum = Utility.GetRandomNumberInRange(0, visualEffects.Count - 1);
+					VisualEffect effect = visualEffects[randNum];
+					await TryVisualEffect(effect, reward, userWhoRedeemed, true);
+				}
+				else
+				{
+					VisualEffect effect = visualEffects.Find(x => x.name == reward.Title);
 
-				if (effect != null)
-					await TryVisualEffect(effect, reward, userWhoRedeemed, false);
+					if (effect != null)
+						await TryVisualEffect(effect, reward, userWhoRedeemed, false);
+				}
 			}
+		}
+
+		private void LogRedemption(Reward reward, User user)
+		{
+			// Update stats
+			redemptionsThisStream++;
+
+			// Log text
+			Bot.Instance.ReplaceLineInFile("Channel point redemptions", $"Channel point redemptions: {redemptionsThisStream}");
+			Bot.Instance.ReplaceLineInFile("Channel points spent", $"Channel points spent: {pointsSpentThisStream}");
+			Bot.Instance.AppendToLogFile($"[Redemption] {user.DisplayName} redeemed {reward.Title}");
+
+			Debug.Log($"[Redemption] {user.DisplayName} redeemed {reward.Title}");
 		}
 
 		/// <summary>

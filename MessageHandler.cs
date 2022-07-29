@@ -44,6 +44,10 @@ namespace HowardBot
 		private readonly Timer timer;
 		private readonly char prefix = '!';
 
+		private List<string> uniqueChatters = new List<string>();
+		private int messagesThisStream;
+		private int commandsThisStream;
+
 		public static MessageHandler Instance
 		{
 			get
@@ -72,7 +76,6 @@ namespace HowardBot
 		private async void OnMessageReceived(object sender, OnMessageReceivedArgs e)
 		{
 			ChatMessage chat = e.ChatMessage;
-			Debug.Log($"[Chat] {chat.DisplayName}: {chat.Message}");
 
 			// Handle commands
 			if (TryParseCommand(chat, out CommandInfo commandInfo, out string[] args))
@@ -86,7 +89,11 @@ namespace HowardBot
 						Bot.SendMessage(await DoRunCommand(commandInfo, args));
 				else
 					await DoRunCommand(commandInfo, args);
+
+				if (Bot.AmILive) LogMessage(chat, commandInfo);
 			}
+			else
+				if (Bot.AmILive) LogMessage(chat, null);
 		}
 
 		/// <summary>
@@ -228,39 +235,65 @@ namespace HowardBot
 		}
 
 		/// <summary>
+		/// Logs chat messages to a text file
+		/// </summary>
+		/// <param name="chat">The ChatMessage sent</param>
+		private void LogMessage(ChatMessage chat, CommandInfo commandInfo)
+		{
+			// Update stats
+			messagesThisStream++;
+			if (commandInfo != null) commandsThisStream++;
+
+			if (!uniqueChatters.Contains(chat.DisplayName))
+				uniqueChatters.Add(chat.DisplayName);
+
+			// Log text
+			Bot.Instance.ReplaceLineInFile("Messages sent", $"Messages sent: {messagesThisStream}");
+			Bot.Instance.ReplaceLineInFile("Unique chatters", $"Unique chatters: {uniqueChatters.Count}");
+			Bot.Instance.ReplaceLineInFile("Bot commands used", $"Bot commands used: {commandsThisStream}");
+			Bot.Instance.AppendToLogFile($"[Chat] {chat.DisplayName}: {chat.Message}");
+			if (commandInfo != null) Bot.Instance.AppendToLogFile($"[Chat - Command] Command '{commandInfo.name}' executed by '{chat.DisplayName}'");
+
+			Debug.Log($"[Chat] {chat.DisplayName}: {chat.Message}");
+		}
+
+		/// <summary>
 		/// Handles running all timer commands. Runs once per minute.
 		/// </summary>
 		private async void CheckTimerCommands()
 		{
-			foreach (CommandInfo commandInfo in timerCommands)
+			if (Bot.AmILive)
 			{
-				double timeSince = (DateTime.Now - commandInfo.timerLastFired).TotalMinutes;
-
-				// Check if timerInterval time has passed since command last ran
-				if (timeSince >= commandInfo.timerInterval)
+				foreach (CommandInfo commandInfo in timerCommands)
 				{
-					CommandInfo commandToRun = commandInfo;
-					DateTime oldestTime = commandToRun.timerLastFired;
+					double timeSince = (DateTime.Now - commandInfo.timerLastFired).TotalMinutes;
 
-					// Check if command alternates with any and run the one that ran the earliest
-					foreach (string commandName in commandInfo.timerCommandsToAlternate)
+					// Check if timerInterval time has passed since command last ran
+					if (timeSince >= commandInfo.timerInterval)
 					{
-						CommandInfo altCommand = GetCommandInfo(commandName);
+						CommandInfo commandToRun = commandInfo;
+						DateTime oldestTime = commandToRun.timerLastFired;
 
-						if (altCommand.timerLastFired < oldestTime)
+						// Check if command alternates with any and run the one that ran the earliest
+						foreach (string commandName in commandInfo.timerCommandsToAlternate)
 						{
-							commandToRun = altCommand;
-							oldestTime = altCommand.timerLastFired;
+							CommandInfo altCommand = GetCommandInfo(commandName);
+
+							if (altCommand.timerLastFired < oldestTime)
+							{
+								commandToRun = altCommand;
+								oldestTime = altCommand.timerLastFired;
+							}
+
+							altCommand.timerLastFired = DateTime.Now;
 						}
 
-						altCommand.timerLastFired = DateTime.Now;
+						// Run command
+						Bot.SendMessage(await DoRunCommand(commandToRun, null));
+
+						// Update timerLastFired to current time
+						commandToRun.timerLastFired = DateTime.Now;
 					}
-
-					// Run command
-					Bot.SendMessage(await DoRunCommand(commandToRun, null));
-
-					// Update timerLastFired to current time
-					commandToRun.timerLastFired = DateTime.Now;
 				}
 			}
 		}
