@@ -13,7 +13,8 @@ namespace HowardBot.Commands
 
 			foreach (MessageHandler.CommandInfo command in commands)
 			{
-				output += $"!{command.name} ";
+				if (!command.isDev)
+					output += $"!{command.name} ";
 			}
 
 			return output;

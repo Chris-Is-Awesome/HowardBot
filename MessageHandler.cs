@@ -29,7 +29,8 @@ namespace HowardBot
 				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 60, new string[] { "discord" }, false) },
 				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 60, new string[] { "youtube", "discord" }) },
 				{ new CommandInfo("help", new HelpCommand()) },
-				{ new CommandInfo("commands", new CommandsCommand()) }
+				{ new CommandInfo("commands", new CommandsCommand()) },
+				{ new CommandInfo("test", new TestCommand(), new string[] { "t" }, false, false, 0, null, true, true, true) }
 			};
 
 			// Start timer to handle commands on timers
@@ -84,17 +85,20 @@ namespace HowardBot
 			// Handle commands
 			if (TryParseCommand(chat, out CommandInfo commandInfo, out string[] args))
 			{
-				Debug.Log($"[Chat - Command] Command '{commandInfo.name}' executed by '{chat.DisplayName}'.");
+				if (!commandInfo.isDev || (commandInfo.isDev && chat.UserId == Bot.ChannelId))
+				{
+					Debug.Log($"[Chat - Command] Command '{commandInfo.name}' executed by '{chat.DisplayName}'.");
 
-				if (commandInfo.sendMessage)
-					if (commandInfo.reply)
-						Bot.SendReply(chat.Id, await DoRunCommand(commandInfo, args));
+					if (commandInfo.sendMessage)
+						if (commandInfo.reply)
+							Bot.SendReply(chat.Id, await DoRunCommand(commandInfo, args));
+						else
+							Bot.SendMessage(await DoRunCommand(commandInfo, args));
 					else
-						Bot.SendMessage(await DoRunCommand(commandInfo, args));
-				else
-					await DoRunCommand(commandInfo, args);
+						await DoRunCommand(commandInfo, args);
 
-				if (Bot.AmILive) LogMessage(chat, commandInfo);
+					if (Bot.AmILive) LogMessage(chat, commandInfo);
+				}
 			}
 			else
 				if (Bot.AmILive) LogMessage(chat, null);
@@ -314,11 +318,12 @@ namespace HowardBot
 			public string[] timerCommandsToAlternate;
 			public bool sendMessage;
 			public bool reply;
+			public bool isDev;
 
 			// Timer
 			public DateTime timerLastFired;
 
-			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, bool argsCaseSensitive = false, float timerInterval = 0, string[] timerCommandsToAlternate = null, bool reply = true, bool sendMessage = true)
+			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, bool argsCaseSensitive = false, float timerInterval = 0, string[] timerCommandsToAlternate = null, bool reply = true, bool sendMessage = true, bool isDev = false)
 			{
 				this.name = name;
 				this.command = command;
@@ -329,6 +334,7 @@ namespace HowardBot
 				this.timerCommandsToAlternate = timerCommandsToAlternate;
 				this.sendMessage = sendMessage;
 				this.reply = reply;
+				this.isDev = isDev;
 
 				// Add to list of timers
 				if (timerInterval > 0)
