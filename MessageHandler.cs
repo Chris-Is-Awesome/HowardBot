@@ -26,7 +26,8 @@ namespace HowardBot
 				{ new CommandInfo("trivia", new TriviaCommand()) },
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
 				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, false, 60, new string[] { "youtube" }, false) },
-				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 60, new string[] { "discord" }, false) }
+				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 60, new string[] { "discord" }, false) },
+				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 60, new string[] { "youtube", "discord" }) }
 			};
 
 			// Start timer to handle commands on timers
