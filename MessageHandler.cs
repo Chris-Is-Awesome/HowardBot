@@ -27,7 +27,9 @@ namespace HowardBot
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
 				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, false, 60, new string[] { "youtube" }, false) },
 				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 60, new string[] { "discord" }, false) },
-				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 60, new string[] { "youtube", "discord" }) }
+				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 60, new string[] { "youtube", "discord" }) },
+				{ new CommandInfo("help", new HelpCommand()) },
+				{ new CommandInfo("commands", new CommandsCommand()) }
 			};
 
 			// Start timer to handle commands on timers
@@ -37,11 +39,12 @@ namespace HowardBot
 			}, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 		}
 
+		public readonly List<CommandInfo> commands;
+
 		private static MessageHandler _instance;
 		private static List<CommandInfo> timerCommands = new List<CommandInfo>();
 
 		private readonly TwitchClient client;
-		private readonly List<CommandInfo> commands;
 		private readonly Timer timer;
 		private readonly char prefix = '!';
 
@@ -299,7 +302,7 @@ namespace HowardBot
 			}
 		}
 
-		private class CommandInfo
+		public class CommandInfo
 		{
 			// Initialization
 			public string name;
