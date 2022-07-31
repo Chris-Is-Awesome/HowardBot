@@ -30,7 +30,8 @@ namespace HowardBot
 				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 60, new string[] { "youtube", "discord" }) },
 				{ new CommandInfo("help", new HelpCommand()) },
 				{ new CommandInfo("commands", new CommandsCommand()) },
-				{ new CommandInfo("test", new TestCommand(), new string[] { "t" }, false, false, 0, null, true, true, true) }
+				{ new CommandInfo("test", new TestCommand(), new string[] { "t" }, false, false, 0, null, true, true, true) },
+				{ new CommandInfo("stopaudio", new StopAudioCommand(), new string[] { "stopsongs", "stopsounds" }, false, false, 0, null, true, true, true) }
 			};
 
 			// Start timer to handle commands on timers

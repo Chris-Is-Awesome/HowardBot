@@ -21,6 +21,8 @@ namespace HowardBot
 		private const string musicDir = @".\Audio\Music\";
 		private const string soundsDir = @".\Audio\Sounds\";
 
+		private List<WaveOutEvent> activeAudioOutputs = new List<WaveOutEvent>();
+
 		public static AudioPlayer Instance
 		{
 			get
@@ -64,6 +66,11 @@ namespace HowardBot
 
 			SoundData sound = allSounds[Utility.GetRandomNumberInRange(0, allSounds.Count - 1)];
 			PlaySound(sound);
+		}
+
+		public void StopAllSounds()
+		{
+			activeAudioOutputs.ForEach(x => x.Stop());
 		}
 
 		private List<SoundData> CreateSoundObjects(string dir)
@@ -113,11 +120,13 @@ namespace HowardBot
 						outputDevice.Init(audioFile);
 						outputDevice.Volume = sound.volume;
 						outputDevice.Play();
+						activeAudioOutputs.Add(outputDevice);
 
 						// Keep sound playing for its duration
 						while (outputDevice.PlaybackState == PlaybackState.Playing)
 						{
 							Thread.Sleep(audioFile.TotalTime);
+							activeAudioOutputs.Remove(outputDevice);
 						}
 					}
 				}
