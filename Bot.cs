@@ -86,7 +86,7 @@ namespace HowardBot
 		public static string ChannelName { get; private set; }
 		public static string ChannelId { get; private set; }
 		public static string ClientId { get; private set; }
-		public static bool AmILive { get; private set; } = false; // Set to true when I'm testing live stuff
+		public static bool AmILive { get; private set; } = true; // Set to true when I'm testing live stuff
 
 		#region Public Methods
 
@@ -195,23 +195,6 @@ namespace HowardBot
 			CreateLogFile();
 		}
 
-		// Recheck if I'm live in case where PubSub OnStreamStarted event doesn't run (eg. in case of bot crash during stream)
-		private async void RecheckIfLive()
-		{
-			await Utility.WaitForSeconds(10);
-
-			if (!AmILive)
-			{
-				var response = await api.GetStreamForUser(ChannelId);
-
-				if (response != null)
-				{
-					AmILive = true;
-					Debug.Log("Bot reconnected, detected stream as live");  
-				}
-			}
-		}
-
 		// When my stream has ended
 		private void OnStreamEnded(object sender, OnStreamDownArgs e)
 		{
@@ -219,10 +202,13 @@ namespace HowardBot
 
 			DateTime endTime = DateTime.Now;
 			TimeSpan duration = endTime - streamStartTime;
-			string durationStr = $"{duration.TotalHours} hours {duration.TotalMinutes} minutes {duration.TotalSeconds} seconds";
+			string durationStr = $"{(int)duration.TotalHours} hours {(int)duration.TotalMinutes} minutes {(int)duration.TotalSeconds} seconds";
 
-			ReplaceLineInFile("Ended at", endTime.ToString("dddd, dd MMMM yyyy"));
+			ReplaceLineInFile("Ended at", endTime.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt"));
 			ReplaceLineInFile("Stream duration", $"Stream duration: {durationStr}");
+
+			// Terminate bot
+			Environment.Exit(0);
 		}
 
 		// When someone raids my channel
@@ -235,6 +221,25 @@ namespace HowardBot
 		#endregion
 
 		#region Private Methods
+
+		/// <summary>
+		/// Recheck if I'm live in case where PubSub OnStreamStarted event doesn't run (eg. in case of bot crash during stream)
+		/// </summary>
+		private async void RecheckIfLive()
+		{
+			await Utility.WaitForSeconds(10);
+
+			if (!AmILive)
+			{
+				var response = await api.GetStreamForUser(ChannelId);
+
+				if (response != null)
+				{
+					AmILive = true;
+					Debug.Log("Bot reconnected, detected stream as live");
+				}
+			}
+		}
 
 		/// <summary>
 		/// Loads environment variables from the .env file.
@@ -265,7 +270,7 @@ namespace HowardBot
 			{
 				sw.WriteLine($"Title: {response.Title}");
 				sw.WriteLine($"Game: {response.GameName}");
-				sw.WriteLine($"Started at: {streamStartTime.ToString("dddd, MMMM dd yyyy, h:mm:ss tt")}");
+				sw.WriteLine($"Started at: {streamStartTime.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt")}");
 				sw.WriteLine("Ended at: TBD");
 				sw.WriteLine("Stream duration: TBD\n");;
 				sw.WriteLine("Messages sent: 0");
