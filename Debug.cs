@@ -31,9 +31,11 @@ namespace HowardBot
         /// Logs an error to the console.
         /// </summary>
         /// <param name="message">The message to log</param>
-        public static void LogError(object message)
+        public static void LogError(object message, bool postStackTrace = true)
         {
-            Console.WriteLine($"{Utility.Timestamp} ERROR: {message}\n{new StackTrace()}\n");
+            string output = $"{Utility.Timestamp} ERROR: {message}\n";
+            if (postStackTrace) output += new StackTrace() + "\n";
+            Console.WriteLine(output);
         }
     }
 }

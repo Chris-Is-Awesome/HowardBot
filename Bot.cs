@@ -59,6 +59,7 @@ namespace HowardBot
 
 			// Initialize event handlers
 			messageHandler = new(TwitchClient);
+			new AudioPlayer();
 			RewardHandler rewardHandler = new();
 
 			// Connect
