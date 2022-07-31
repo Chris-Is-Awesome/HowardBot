@@ -36,12 +36,12 @@ namespace HowardBot
 
 		public void PlaySong(string songName)
 		{
-			PlaySound(GetSong(songName));
+			PlaySound(GetSong(songName.ToLower()));
 		}
 
 		public void PlaySound(string soundName)
 		{
-			PlaySound(GetSound(soundName));
+			PlaySound(GetSound(soundName.ToLower()));
 		}
 
 		public void PlayRandomSong()
@@ -95,7 +95,10 @@ namespace HowardBot
 				return null;
 			}
 
-			return allSongs.Find(x => x.name == songName);
+			SoundData song = allSongs.Find(x => x.name == songName);
+
+			if (song == null) Debug.LogError($"No sound with name '{songName}' was found. A typo perhaps?", false);
+			return song;
 		}
 
 		private SoundData GetSound(string soundName)
@@ -106,31 +109,37 @@ namespace HowardBot
 				return null;
 			}
 
-			return allSounds.Find(x => x.name == soundName);
+			SoundData sound = allSounds.Find(x => x.name == soundName);
+
+			if (sound == null) Debug.LogError($"No sound with name '{soundName}' was found. A typo perhaps?", false);
+			return sound;
 		}
 
 		private void PlaySound(SoundData sound)
 		{
-			new Thread(() =>
+			if (sound != null)
 			{
-				using (var audioFile = new AudioFileReader(sound.path))
+				new Thread(() =>
 				{
-					using (var outputDevice = new WaveOutEvent())
+					using (var audioFile = new AudioFileReader(sound.path))
 					{
-						outputDevice.Init(audioFile);
-						outputDevice.Volume = sound.volume;
-						outputDevice.Play();
-						activeAudioOutputs.Add(outputDevice);
-
-						// Keep sound playing for its duration
-						while (outputDevice.PlaybackState == PlaybackState.Playing)
+						using (var outputDevice = new WaveOutEvent())
 						{
-							Thread.Sleep(audioFile.TotalTime);
-							activeAudioOutputs.Remove(outputDevice);
+							outputDevice.Init(audioFile);
+							outputDevice.Volume = sound.volume;
+							outputDevice.Play();
+							activeAudioOutputs.Add(outputDevice);
+
+							// Keep sound playing for its duration
+							while (outputDevice.PlaybackState == PlaybackState.Playing)
+							{
+								Thread.Sleep(audioFile.TotalTime);
+								activeAudioOutputs.Remove(outputDevice);
+							}
 						}
 					}
-				}
-			}).Start();
+				}).Start();
+			}
 		}
 
 		private class SoundData
@@ -141,7 +150,7 @@ namespace HowardBot
 
 			public SoundData(string name, string path, float volume = 1)
 			{
-				this.name = name;
+				this.name = name.ToLower();
 				this.path = path;
 				this.volume = volume;
 			}
