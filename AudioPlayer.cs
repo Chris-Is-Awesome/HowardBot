@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace HowardBot
 {
 	class AudioPlayer
 	{
-		public AudioPlayer()
-		{
-			_instance = this;
-			allSongs = CreateSoundObjects(musicDir);
-			allSounds = CreateSoundObjects(soundsDir);
-		}
+		public delegate void Func();
+
+		public event Func OnStopped;
 
 		private static AudioPlayer _instance;
 
@@ -22,6 +20,13 @@ namespace HowardBot
 		private const string soundsDir = @".\Audio\Sounds\";
 
 		private List<WaveOutEvent> activeAudioOutputs = new List<WaveOutEvent>();
+
+		public AudioPlayer()
+		{
+			_instance = this;
+			allSongs = CreateSoundObjects(musicDir);
+			allSounds = CreateSoundObjects(soundsDir);
+		}
 
 		public static AudioPlayer Instance
 		{
@@ -70,7 +75,7 @@ namespace HowardBot
 
 		public void StopAllSounds()
 		{
-			activeAudioOutputs.ForEach(x => x.Stop());
+			activeAudioOutputs.ForEach(x => Stop(x));
 		}
 
 		private List<SoundData> CreateSoundObjects(string dir)
@@ -119,27 +124,33 @@ namespace HowardBot
 		{
 			if (sound != null)
 			{
+				AudioFileReader audioFile = null;
+				WaveOutEvent outputDevice = null;
+
 				new Thread(() =>
 				{
-					using (var audioFile = new AudioFileReader(sound.path))
+					using (audioFile = new AudioFileReader(sound.path))
 					{
-						using (var outputDevice = new WaveOutEvent())
+						using (outputDevice = new WaveOutEvent())
 						{
 							outputDevice.Init(audioFile);
 							outputDevice.Volume = sound.volume;
 							outputDevice.Play();
 							activeAudioOutputs.Add(outputDevice);
 
-							// Keep sound playing for its duration
-							while (outputDevice.PlaybackState == PlaybackState.Playing)
-							{
-								Thread.Sleep(audioFile.TotalTime);
-								activeAudioOutputs.Remove(outputDevice);
-							}
+							Thread.Sleep(audioFile.TotalTime);
+							activeAudioOutputs.Remove(outputDevice);
+							OnStopped?.Invoke();
 						}
 					}
 				}).Start();
 			}
+		}
+
+		private void Stop(WaveOutEvent output)
+		{
+			output.Stop();
+			OnStopped?.Invoke();
 		}
 
 		private class SoundData
