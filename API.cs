@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix;
+using TwitchLib.Api.Helix.Models.ChannelPoints;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Streams.GetStreams;
 using TwitchLib.Api.Helix.Models.Users.GetUsers;
@@ -23,6 +24,7 @@ namespace HowardBot
 
 		// Refs
 		private Stream myCurrentStream;
+		private CustomReward[] myRewards;
 
 		public static API Instance
 		{
@@ -119,6 +121,32 @@ namespace HowardBot
 
 			if (response != null && response.Data.Length > 0)
 				return response.Data[0];
+
+			return null;
+		}
+
+		#endregion
+
+		#region Channel Points
+
+		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/> to get a user's ID from their DisplayName.</param>
+		/// <returns>[CustomReward[]] A CustomReward array containing the custom rewards for the channel; or null if none found.</returns>
+		public async Task<CustomReward[]> GetChannelPointRewards(string userId)
+		{
+			bool myChannel = userId == Bot.ChannelId;
+
+			if (myChannel && myRewards != null)
+				return myRewards;
+
+			var response = await helix.ChannelPoints.GetCustomReward(broadcasterId: userId, accessToken: Bot.PubsubToken);
+
+			if (response != null && response.Data.Length > 0)
+			{
+				if (myChannel)
+					myRewards = response.Data;
+
+				return response.Data;
+			}
 
 			return null;
 		}
