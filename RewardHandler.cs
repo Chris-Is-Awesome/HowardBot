@@ -37,14 +37,14 @@ namespace HowardBot
 
 				effects = new List<RewardEffect>()
 				{
-					{ new VisualEffect("qilʇnɘɘɿɔƧ", screenflipRewardId, 1, 10) },
-					{ new VisualEffect("【 Ｗ Ｉ Ｄ Ｅ】Mode", wideModeRewardId, 2, 10) },
-					{ new VisualEffect("Pinhole", "", 3, 10) },
-					{ new VisualEffect("Pixelate", pixelateRewardId, 4, 10) },
-					{ new VisualEffect("Inverted", "", 5, 10) },
-					{ new VisualEffect("Black & White", "", 6, 10) },
-					{ new VisualEffect("Cell-Shaded", "", 7, 10) },
-					{ new VisualEffect("VHS", "", 8, 10) },
+					{ new VisualEffect("qilʇnɘɘɿɔƧ", screenflipRewardId, 1) },
+					{ new VisualEffect("【 Ｗ Ｉ Ｄ Ｅ】Mode", wideModeRewardId, 2) },
+					{ new VisualEffect("Pinhole", "", 3) },
+					{ new VisualEffect("Pixelate", pixelateRewardId, 4) },
+					{ new VisualEffect("Inverted", "", 5) },
+					{ new VisualEffect("Black & White", "", 6) },
+					{ new VisualEffect("Cell-Shaded", "", 7) },
+					{ new VisualEffect("VHS", "", 8) },
 					{ new AudioEffect("Play a Random Voice Clip", playRandomVoiceClipRewardId) },
 				};
 
