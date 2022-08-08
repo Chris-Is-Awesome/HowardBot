@@ -4,7 +4,7 @@ Features:
 - Fun commands (whoop, bff, trivia, 8ball, etc.)
 - Other commands (discord, youtube, shoutout)
 - Timers (for posting discord & youtube)
-- Custom channel point rewards for cusing visual effects
+- Custom channel point rewards for causing visual effects, playing sound effects, and more
 - Stores chat logs & stream stats to .txt files so I can reference them later
 
 Planned features:
