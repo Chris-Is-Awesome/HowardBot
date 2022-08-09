@@ -1,26 +1,43 @@
-﻿namespace HowardBot.TwitchSucks
-{
-	class Reward
-	{
-		public string Title { get; }
-		public string Id { get; }
-		public int Cost { get; }
-		public string Prompt { get; }
+﻿using TwitchLib.Api.Helix.Models.ChannelPoints;
 
-		public Reward(TwitchLib.Api.Helix.Models.ChannelPoints.CustomReward reward)
+namespace HowardBot.TwitchSucks
+{
+	class Reward : CustomReward
+	{
+		public new bool IsEnabled
 		{
-			Title = reward.Title;
-			Id = reward.Id;
-			Cost = reward.Cost;
-			Prompt = reward.Prompt;
+			get
+			{
+				return base.IsEnabled;
+			}
+			set
+			{
+				base.IsEnabled = value;
+			}
 		}
 
-		public Reward(TwitchLib.PubSub.Models.Responses.Messages.Redemption.Reward reward)
+		public Reward(CustomReward reward)
 		{
-			Title = reward.Title;
-			Id = reward.Id;
+			ShouldRedemptionsSkipQueue = reward.ShouldRedemptionsSkipQueue;
+			IsInStock = reward.IsInStock;
+			IsPaused = reward.IsPaused;
+			GlobalCooldownSetting = reward.GlobalCooldownSetting;
+			MaxPerUserPerStreamSetting = reward.MaxPerUserPerStreamSetting;
+			MaxPerStreamSetting = reward.MaxPerStreamSetting;
+			IsUserInputRequired = reward.IsUserInputRequired;
+			IsEnabled = reward.IsEnabled;
+			RedemptionsRedeemedCurrentStream = reward.RedemptionsRedeemedCurrentStream;
+			BackgroundColor = reward.BackgroundColor;
+			Image = reward.Image;
 			Cost = reward.Cost;
 			Prompt = reward.Prompt;
+			Title = reward.Title;
+			Id = reward.Id;
+			BroadcasterName = reward.BroadcasterName;
+			BroadcasterLogin = reward.BroadcasterLogin;
+			BroadcasterId = reward.BroadcasterId;
+			DefaultImage = reward.DefaultImage;
+			CooldownExpiresAt = reward.CooldownExpiresAt;
 		}
 	}
 }

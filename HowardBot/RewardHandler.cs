@@ -95,7 +95,7 @@ namespace HowardBot
 			if (!activeEffects.Contains(effect) && !activeEffects.Any(x => x.GetType() == effect.GetType()))
 			{
 				Bot.SendMessage(output);
-				Start(new TwitchSucks.Reward(reward), effect);
+				Start(effect.Reward, effect);
 			}
 			// Add effect to queue
 			else
