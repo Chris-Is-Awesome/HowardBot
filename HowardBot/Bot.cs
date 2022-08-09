@@ -14,6 +14,29 @@ namespace HowardBot
 {
 	class Bot
 	{
+		private static Bot _instance;
+
+		private readonly API api;
+		private readonly MessageHandler messageHandler;
+		private readonly RewardHandler rewardHandler;
+		private readonly Stopwatch timer;
+
+		private string chatLogsDir;
+		private string chatLogFileName;
+		private string fullChatLogPath;
+		private DateTime streamStartTime;
+
+		public static Bot Instance { get { return _instance; } }
+		public static AutoHotkeyEngine AHK { get; private set; }
+		public static TwitchPubSub PubSubClient { get; private set; }
+		public static TwitchClient TwitchClient { get; private set; }
+		public static string HowardToken { get; private set; }
+		public static string PubsubToken { get; private set; }
+		public static string ChannelName { get; private set; }
+		public static string ChannelId { get; private set; }
+		public static string ClientId { get; private set; }
+		public static bool AmILive { get; private set; } = true; // Set to true when I'm testing live stuff
+
 		public Bot()
 		{
 			// Make singleton
@@ -60,34 +83,12 @@ namespace HowardBot
 			// Initialize event handlers
 			messageHandler = new(TwitchClient);
 			new AudioPlayer();
-			RewardHandler rewardHandler = new();
+			rewardHandler = new();
 
 			// Connect
 			TwitchClient.Connect();
 			PubSubClient.Connect();
 		}
-
-		private static Bot _instance;
-
-		private readonly API api;
-		private readonly MessageHandler messageHandler;
-		private readonly Stopwatch timer;
-
-		private string chatLogsDir;
-		private string chatLogFileName;
-		private string fullChatLogPath;
-		private DateTime streamStartTime;
-
-		public static Bot Instance { get { return _instance; } }
-		public static AutoHotkeyEngine AHK { get; private set; }
-		public static TwitchPubSub PubSubClient { get; private set; }
-		public static TwitchClient TwitchClient { get; private set; }
-		public static string HowardToken { get; private set; }
-		public static string PubsubToken { get; private set; }
-		public static string ChannelName { get; private set; }
-		public static string ChannelId { get; private set; }
-		public static string ClientId { get; private set; }
-		public static bool AmILive { get; private set; } = true; // Set to true when I'm testing live stuff
 
 		#region Public Methods
 
