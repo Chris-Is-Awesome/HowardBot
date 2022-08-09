@@ -7,7 +7,7 @@ namespace HowardBot.Commands
 	{
 		public TriviaCommand()
 		{
-			data = Utility.DeserializeJSON<List<TriviaData>>(@".\Data\TriviaData.json");
+			data = Utility.DeserializeJSON<List<TriviaData>>(@".\HowardBot\Data\TriviaData.json");
 		}
 
 		private readonly List<TriviaData> data;

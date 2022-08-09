@@ -4,7 +4,7 @@
 	{
 		public WhoopCommand()
 		{
-			failureMessages = Utility.DeserializeJSON<string[]>(@".\Data\WhoopData.json");
+			failureMessages = Utility.DeserializeJSON<string[]>(@".\HowardBot\Data\WhoopData.json");
 		}
 
 		private const int goatInChance = 15;

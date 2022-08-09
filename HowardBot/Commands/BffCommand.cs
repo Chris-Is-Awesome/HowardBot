@@ -7,7 +7,7 @@ namespace HowardBot.Commands
 	{
 		public BffCommand()
 		{
-			data = Utility.DeserializeJSON<Data>(@".\Data\BffData.json");
+			data = Utility.DeserializeJSON<Data>(@".\HowardBot\Data\BffData.json");
 		}
 
 		private readonly Data data;

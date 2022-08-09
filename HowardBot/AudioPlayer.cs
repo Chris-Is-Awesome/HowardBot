@@ -16,8 +16,8 @@ namespace HowardBot
 
 		private readonly List<SoundData> allSongs;
 		private readonly List<SoundData> allSounds;
-		private const string musicDir = @".\Audio\Music\";
-		private const string soundsDir = @".\Audio\Sounds\";
+		private const string musicDir = @".\HowardBot\Audio\Music\";
+		private const string soundsDir = @".\HowardBot\Audio\Sounds\";
 
 		private List<WaveOutEvent> activeAudioOutputs = new List<WaveOutEvent>();
 
