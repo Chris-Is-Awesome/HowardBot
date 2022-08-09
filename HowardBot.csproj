@@ -12,7 +12,7 @@
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="TwitchLib" Version="3.3.0" />
+    <PackageReference Include="TwitchLib" Version="3.4.0" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix;
 using TwitchLib.Api.Helix.Models.ChannelPoints;
+using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Streams.GetStreams;
 using TwitchLib.Api.Helix.Models.Users.GetUsers;
@@ -138,7 +139,7 @@ namespace HowardBot
 			if (myChannel && myRewards != null)
 				return myRewards;
 
-			var response = await helix.ChannelPoints.GetCustomReward(broadcasterId: userId, accessToken: Bot.PubsubToken);
+			var response = await helix.ChannelPoints.GetCustomRewardAsync(broadcasterId: userId, accessToken: Bot.PubsubToken);
 
 			if (response != null && response.Data.Length > 0)
 			{
