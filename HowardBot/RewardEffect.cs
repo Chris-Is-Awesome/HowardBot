@@ -1,5 +1,5 @@
-﻿using System;
-using TwitchLib.Api.Helix.Models.ChannelPoints;
+﻿using HowardBot.TwitchSucks;
+using System;
 
 namespace HowardBot
 {
@@ -11,13 +11,13 @@ namespace HowardBot
 
 		public string Name { get; }
 		public string RewardId { get; }
-		public CustomReward Reward { get; private set; }
+		public Reward Reward { get; private set; }
 
 		/// <summary>
 		/// Creates & initializes a new RewardEffect
 		/// </summary>
 		/// <param name="name">User-friendly name, just used for outputting/debugging</param>
-		/// <param name="rewardId">The ID of the reward from Twitch (int)</param>
+		/// <param name="rewardId">The ID of the reward from Twitch (string)</param>
 		public RewardEffect(string name, string rewardId)
 		{
 			Name = name;
@@ -31,7 +31,12 @@ namespace HowardBot
 			var response = await API.Instance.GetChannelPointRewards(Bot.ChannelId);
 
 			if (response != null)
-				Reward = Array.Find(response, x => x.Id == RewardId);
+			{
+				var reward = Array.Find(response, x => x.Id == RewardId);
+				
+				if (reward != null)
+					Reward = new Reward(Array.Find(response, x => x.Id == RewardId));
+			}
 		}
 	}
 }

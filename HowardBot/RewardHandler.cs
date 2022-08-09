@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using TwitchLib.Api.Helix.Models.ChannelPoints;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 using TwitchLib.PubSub.Models.Responses.Messages;
@@ -13,13 +12,6 @@ namespace HowardBot
 {
 	class RewardHandler
 	{
-		// Reward IDs
-		private const string screenflipRewardId = "595256e2-0c44-403f-8788-73a03192d2df";
-		private const string wideModeRewardId = "25040c6c-431c-47c2-bdc2-476a9796170a";
-		private const string pixelateRewardId = "f642e489-43da-48c9-b8cc-0dd4a01ffd16";
-		private const string randomVisualEffectRewardId = "46490842-681c-467c-a25a-1d62fc71db8e";
-		private const string playRandomVoiceClipRewardId = "1c796bda-34f6-44e3-b823-ce887ab969b6";
-
 		private readonly TwitchPubSub client;
 		private readonly List<RewardEffect> effects;
 
@@ -33,19 +25,17 @@ namespace HowardBot
 		{
 			if (Bot.AmILive)
 			{
-				var response = API.Instance.GetChannelPointRewards(Bot.ChannelId);
-
 				effects = new List<RewardEffect>()
 				{
-					{ new VisualEffect("qilʇnɘɘɿɔƧ", screenflipRewardId, 1) },
-					{ new VisualEffect("【 Ｗ Ｉ Ｄ Ｅ】Mode", wideModeRewardId, 2) },
+					{ new VisualEffect("qilʇnɘɘɿɔƧ", "595256e2-0c44-403f-8788-73a03192d2df", 1) },
+					{ new VisualEffect("【 Ｗ Ｉ Ｄ Ｅ】Mode", "25040c6c-431c-47c2-bdc2-476a9796170a", 2) },
 					{ new VisualEffect("Pinhole", "", 3) },
-					{ new VisualEffect("Pixelate", pixelateRewardId, 4) },
+					{ new VisualEffect("Pixelate", "f642e489-43da-48c9-b8cc-0dd4a01ffd16", 4) },
 					{ new VisualEffect("Inverted", "", 5) },
 					{ new VisualEffect("Black & White", "", 6) },
 					{ new VisualEffect("Cell-Shaded", "", 7) },
 					{ new VisualEffect("VHS", "", 8) },
-					{ new AudioEffect("Play a Random Voice Clip", playRandomVoiceClipRewardId) },
+					{ new AudioEffect("Play a Random Sound", "1c796bda-34f6-44e3-b823-ce887ab969b6") },
 				};
 
 				client = Bot.PubSubClient;
@@ -79,7 +69,7 @@ namespace HowardBot
 				// Parse rewards for custom events
 
 				// If reward is random visual effect
-				if (reward.Id == randomVisualEffectRewardId)
+				if (reward.Id == "46490842-681c-467c-a25a-1d62fc71db8e")
 				{
 					List<RewardEffect> visualEffects = effects.FindAll(x => x.GetType() == typeof(VisualEffect));
 					int randNum = Utility.GetRandomNumberInRange(0, visualEffects.Count - 1);
@@ -133,7 +123,7 @@ namespace HowardBot
 
 					switch(reward.Id)
 					{
-						case playRandomVoiceClipRewardId:
+						case "1c796bda-34f6-44e3-b823-ce887ab969b6":
 							random = true;
 							break;
 					}
@@ -181,7 +171,7 @@ namespace HowardBot
 				else output += " Queue is empty.";
 
 				Bot.SendMessage(output);
-				Start(!string.IsNullOrEmpty(effect.RewardId) ? new TwitchSucks.Reward(effect.Reward) : null, effect);
+				Start(effect.Reward, effect);
 				break;
 			}
 		}
