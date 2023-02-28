@@ -128,7 +128,7 @@ namespace HowardBot
 			string message = chat.Message;
 
 			// If starts with prefix
-			if (message.StartsWith(prefix))
+			if (message.StartsWith(prefix) && message.Length > 1 && char.IsLetterOrDigit(message[1]))
 			{
 				// Split words to get command name and args separately
 				string[] splitMessage = message.Substring(1, message.Length - 1).Split(' ');
@@ -173,7 +173,7 @@ namespace HowardBot
 				}
 				// If command invalid
 				else
-					Bot.SendReply(chat.Id, $"No command named '{commandName}' was found. Either you made a typo or Chris is dumber than a Stupid Bee.");
+					Bot.SendReply(chat.Id, $"No command named '{splitMessage[0]}' was found. Either you made a typo or Chris is dumber than a Stupid Bee.");
 			}
 
 			commandInfo = null;
@@ -237,7 +237,9 @@ namespace HowardBot
 		/// <returns>[string] The name of the command</returns>
 		private string GetCommandName(string text)
 		{
-			return commands.Find(x => x.name == text || x.aliases != null && x.aliases.Contains(text)).name;
+			CommandInfo command = commands.Find(x => x.name == text || x.aliases != null && x.aliases.Contains(text));
+
+			return command != null ? command.name : string.Empty;
 		}
 
 		/// <summary>
