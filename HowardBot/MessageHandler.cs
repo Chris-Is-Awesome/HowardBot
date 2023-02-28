@@ -14,6 +14,8 @@ namespace HowardBot
 	{
 		public MessageHandler(TwitchClient twitchClient)
 		{
+			_instance = this;
+
 			client = twitchClient;
 			client.OnMessageReceived += OnMessageReceived;
 
@@ -25,9 +27,9 @@ namespace HowardBot
 				{ new CommandInfo("8ball", new EightBallCommand(), new string[] { "8b" }, false, true) },
 				{ new CommandInfo("trivia", new TriviaCommand()) },
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
-				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, false, 60, new string[] { "youtube", "info" }, false) },
-				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 60, new string[] { "discord", "info" }, false) },
-				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 60, new string[] { "youtube", "discord" }) },
+				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, false, 0, new string[] { "youtube", "info" }, false) },
+				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 0, new string[] { "discord", "info" }, false) },
+				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 0, new string[] { "youtube", "discord" }) },
 				{ new CommandInfo("help", new HelpCommand()) },
 				{ new CommandInfo("commands", new CommandsCommand()) },
 				{ new CommandInfo("test", new TestCommand(), new string[] { "t" }, false, false, 0, null, true, true, true) },
