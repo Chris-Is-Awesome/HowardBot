@@ -7,7 +7,7 @@ namespace HowardBot.Commands
 	{
 		public override async Task<string> RunAsync(string[] args)
 		{
-			if (args != null)
+			if (args.Length > 0 && args[0].Length > 1)
 			{
 				string arg0 = args[0];
 
