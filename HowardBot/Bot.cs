@@ -1,5 +1,6 @@
 ﻿using AutoHotkey.Interop;
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using TwitchLib.Client;
@@ -248,13 +249,12 @@ namespace HowardBot
 		/// </summary>
 		private void LoadEnvVars()
 		{
-			DotNetEnv.Env.Load();
-			HowardToken = Environment.GetEnvironmentVariable("HOWARD_TOKEN");
-			PubsubToken = Environment.GetEnvironmentVariable("PUBSUB_TOKEN");
-			ChannelName = Environment.GetEnvironmentVariable("CHANNEL_NAME");
-			ChannelId = Environment.GetEnvironmentVariable("CHANNEL_ID");
-			ClientId = Environment.GetEnvironmentVariable("CLIENT_ID");
-			chatLogsDir = Environment.GetEnvironmentVariable("CHAT_LOG_DIRECTORY");
+			HowardToken = ConfigurationManager.AppSettings["HOWARD_TOKEN"];
+			PubsubToken = ConfigurationManager.AppSettings["PUBSUB_TOKEN"];
+			ChannelName = ConfigurationManager.AppSettings["CHANNEL_NAME"];
+			ChannelId = ConfigurationManager.AppSettings["CHANNEL_ID"];
+			ClientId = ConfigurationManager.AppSettings["CLIENT_ID"];
+			chatLogsDir = ConfigurationManager.AppSettings["CHAT_LOG_DIRECTORY"];
 		}
 
 		/// <summary>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HowardBot": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Files\\Work\\Hobbies\\Misc Dev\\HowardBot\\bin\\Debug\\net5.0-windows\\HowardBot.exe"
+    }
+  }
+}

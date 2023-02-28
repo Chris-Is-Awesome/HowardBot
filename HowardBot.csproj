@@ -10,9 +10,85 @@
   <ItemGroup>
     <PackageReference Include="AutoHotkey.Interop" Version="1.0.0.1" />
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
+    <PackageReference Include="Microsoft.VisualStudio.VsixColorCompiler" Version="16.0.0" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="TwitchLib" Version="3.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="HowardBot\Audio\Music\albw_hype_song.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Music\hk_shade.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\grub_free.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_yell_1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_yell_2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_yell_3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\iselda_greet.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\lemm_talk_1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\lemm_talk_2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Hollow Knight\millibelle_talk_1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Zelda\botw_cook_success.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Zelda\botw_small_item.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Zelda\korok_find.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Zelda\loz_secret.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Zelda\oot_boss_clear.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Zelda\oot_navi.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sounds\Zelda\ss_rupoor.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Data\BffData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Data\TriviaData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Data\WhoopData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
