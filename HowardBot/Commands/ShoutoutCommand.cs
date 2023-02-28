@@ -5,8 +5,6 @@ namespace HowardBot.Commands
 {
 	class ShoutoutCommand : Command
 	{
-		public ShoutoutCommand() { }
-
 		public override async Task<string> RunAsync(string[] args)
 		{
 			if (args != null)

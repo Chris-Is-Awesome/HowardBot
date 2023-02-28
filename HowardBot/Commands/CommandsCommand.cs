@@ -4,17 +4,21 @@ namespace HowardBot.Commands
 {
 	class CommandsCommand : Command
 	{
-		public CommandsCommand() { }
+		private List<MessageHandler.CommandInfo> commands;
+		private string output;
 
 		public override string Run(string[] args)
 		{
-			List<MessageHandler.CommandInfo> commands = MessageHandler.Instance.commands;
-			string output = "";
-
-			foreach (MessageHandler.CommandInfo command in commands)
+			// Get commands first time
+			if (commands == null)
 			{
-				if (!command.isDev)
-					output += $"!{command.name} ";
+				commands = MessageHandler.Instance.commands;
+
+				foreach (MessageHandler.CommandInfo command in commands)
+				{
+					if (!command.isDev)
+						output += $"!{command.name} ";
+				}
 			}
 
 			return output;

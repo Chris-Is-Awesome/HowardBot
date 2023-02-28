@@ -22,18 +22,27 @@ namespace HowardBot
 			// Define & initialize commands
 			commands = new List<CommandInfo>()
 			{
-				{ new CommandInfo("whoop", new WhoopCommand(), new string[] { "w" }) },
-				{ new CommandInfo("bff", new BffCommand()) },
-				{ new CommandInfo("8ball", new EightBallCommand(), new string[] { "8b" }, false, true) },
-				{ new CommandInfo("trivia", new TriviaCommand()) },
-				{ new CommandInfo("shoutout", new ShoutoutCommand(), new string[] { "so" }, true) },
-				{ new CommandInfo("discord", new DiscordCommand(), new string[] { "disc" }, false, false, 0, new string[] { "youtube", "info" }, false) },
-				{ new CommandInfo("youtube", new YoutubeCommand(), new string[] { "yt" }, false, false, 0, new string[] { "discord", "info" }, false) },
-				{ new CommandInfo("info", new InfoCommand(), new string[] { "howard" }, false, false, 0, new string[] { "youtube", "discord" }) },
-				{ new CommandInfo("help", new HelpCommand()) },
+				// Utility
 				{ new CommandInfo("commands", new CommandsCommand()) },
-				{ new CommandInfo("test", new TestCommand(), new string[] { "t" }, false, false, 0, null, true, true, true) },
-				{ new CommandInfo("stopaudio", new StopAudioCommand(), new string[] { "stopsongs", "stopsounds" }, false, false, 0, null, true, true, true) }
+				{ new CommandInfo("help", new HelpCommand()) },
+				{ new CommandInfo("info", new InfoCommand(), timerCommandsToAlternate: new string[] { "discord", "youtube" }) },
+
+				// Dev
+				{ new CommandInfo("stopaudio", new StopAudioCommand(), aliases: new string[] { "stopsongs", "stopsounds" }, isDev: true) },
+				{ new CommandInfo("test", new TestCommand(), aliases: new string[] { "t" }, isDev: true) },
+
+				// Self promos
+				{ new CommandInfo("discord", new DiscordCommand(), aliases: new string[] { "disc" }, timerCommandsToAlternate: new string[] { "info", "youtube" }) },
+				{ new CommandInfo("youtube", new YoutubeCommand(), aliases: new string[] { "yt" }, timerCommandsToAlternate: new string[] { "discord", "info" }) },
+
+				// Useful
+				{ new CommandInfo("shoutout", new ShoutoutCommand(), aliases: new string[] { "so" }, async: true) },
+
+				// Fun
+				{ new CommandInfo("8ball", new EightBallCommand(), aliases: new string[] { "8b" }, argsCaseSensitive: true) },
+				{ new CommandInfo("bff", new BffCommand()) },
+				{ new CommandInfo("trivia", new TriviaCommand()) },
+				{ new CommandInfo("whoop", new WhoopCommand(), aliases: new string[] { "w" }) },
 			};
 
 			// Start timer to handle commands on timers

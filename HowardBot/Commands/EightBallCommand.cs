@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace HowardBot.Commands
+﻿namespace HowardBot.Commands
 {
 	class EightBallCommand : Command
 	{
