@@ -6,6 +6,8 @@ namespace HowardBot
     {
         private static void Main()
         {
+            Console.Title = "HowardBot";
+
             Debug.Log($"[Bot started at {DateTime.Now}]");
 
             // Initialize bot

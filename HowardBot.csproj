@@ -5,6 +5,7 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <AssemblyName>HowardBot</AssemblyName>
     <RootNamespace>HowardBot</RootNamespace>
+    <ApplicationIcon>awePog.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
