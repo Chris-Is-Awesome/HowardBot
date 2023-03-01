@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Configuration;
 
 namespace HowardBot.Commands
 {
@@ -6,9 +6,8 @@ namespace HowardBot.Commands
 	{
 		public YoutubeCommand()
 		{
-			DotNetEnv.Env.Load();
-			mainChannelLink = Environment.GetEnvironmentVariable("YOUTUBE_MAIN_LINK");
-			vodsChannelLink = Environment.GetEnvironmentVariable("YOUTUBE_VODS_LINK");
+			mainChannelLink = ConfigurationManager.AppSettings["YOUTUBE_MAIN_LINK"];
+			vodsChannelLink = ConfigurationManager.AppSettings["YOUTUBE_VODS_LINK"];
 		}
 
 		private readonly string mainChannelLink;

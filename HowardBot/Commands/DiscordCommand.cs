@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Configuration;
 
 namespace HowardBot.Commands
 {
@@ -6,8 +6,7 @@ namespace HowardBot.Commands
 	{
 		public DiscordCommand()
 		{
-			DotNetEnv.Env.Load();
-			inviteLink = Environment.GetEnvironmentVariable("DISCORD_INVITE_LINK");
+			inviteLink = ConfigurationManager.AppSettings["DISCORD_INVITE_LINK"];
 		}
 
 		private readonly string inviteLink;
