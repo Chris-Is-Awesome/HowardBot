@@ -25,15 +25,15 @@ namespace HowardBot
 				// Utility
 				{ new CommandInfo("commands", new CommandsCommand()) },
 				{ new CommandInfo("help", new HelpCommand()) },
-				{ new CommandInfo("info", new InfoCommand(), timerCommandsToAlternate: new string[] { "discord", "youtube" }) },
+				{ new CommandInfo("info", new InfoCommand(), timerInterval: 60) },
 
 				// Dev
 				{ new CommandInfo("stopaudio", new StopAudioCommand(), aliases: new string[] { "stopsongs", "stopsounds" }, isDev: true) },
 				{ new CommandInfo("test", new TestCommand(), aliases: new string[] { "t" }, isDev: true) },
 
 				// Self promos
-				{ new CommandInfo("discord", new DiscordCommand(), aliases: new string[] { "disc" }, timerCommandsToAlternate: new string[] { "info", "youtube" }) },
-				{ new CommandInfo("youtube", new YoutubeCommand(), aliases: new string[] { "yt" }, timerCommandsToAlternate: new string[] { "discord", "info" }) },
+				{ new CommandInfo("discord", new DiscordCommand(), aliases: new string[] { "disc" }, timerInterval: 60) },
+				{ new CommandInfo("youtube", new YoutubeCommand(), aliases: new string[] { "yt" }, timerInterval: 60) },
 
 				// Useful
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), aliases: new string[] { "so" }, async: true) },
@@ -46,6 +46,8 @@ namespace HowardBot
 			};
 
 			// Start timer to handle commands on timers
+			timeLastTimerFired = DateTime.Now;
+
 			timer = new Timer((e) =>
 			{
 				CheckTimerCommands();
@@ -62,6 +64,8 @@ namespace HowardBot
 		private readonly char prefix = '!';
 
 		private List<string> uniqueChatters = new List<string>();
+		private DateTime timeLastTimerFired;
+		private CommandInfo lastTimerCommandFired;
 		private int messagesThisStream;
 		private int commandsThisStream;
 
@@ -288,33 +292,28 @@ namespace HowardBot
 			{
 				foreach (CommandInfo commandInfo in timerCommands)
 				{
-					double timeSince = (DateTime.Now - commandInfo.timerLastFired).TotalMinutes;
+					double timeSince = (DateTime.Now - timeLastTimerFired).TotalSeconds;
 
 					// Check if timerInterval time has passed since command last ran
 					if (timeSince >= commandInfo.timerInterval)
 					{
 						CommandInfo commandToRun = commandInfo;
-						DateTime oldestTime = commandToRun.timerLastFired;
 
-						// Check if command alternates with any and run the one that ran the earliest
-						foreach (string commandName in commandInfo.timerCommandsToAlternate)
+						// Alternate timers
+						if (lastTimerCommandFired != null && timerCommands.Count > 1)
 						{
-							CommandInfo altCommand = GetCommandInfo(commandName);
-
-							if (altCommand.timerLastFired < oldestTime)
-							{
-								commandToRun = altCommand;
-								oldestTime = altCommand.timerLastFired;
-							}
-
-							altCommand.timerLastFired = DateTime.Now;
+							int indexOfLastCommand = timerCommands.IndexOf(lastTimerCommandFired);
+							commandToRun = timerCommands[indexOfLastCommand < timerCommands.Count - 1 ? indexOfLastCommand + 1 : 0];
 						}
 
 						// Run command
 						Bot.SendMessage(await DoRunCommand(commandToRun, null));
 
-						// Update timerLastFired to current time
-						commandToRun.timerLastFired = DateTime.Now;
+						// Update lastTimerCommandFired
+						lastTimerCommandFired = commandToRun;
+
+						// Update timeLastTimerFired to current time
+						timeLastTimerFired = DateTime.Now;
 					}
 				}
 			}
@@ -329,15 +328,11 @@ namespace HowardBot
 			public bool async;
 			public bool argsCaseSensitive;
 			public float timerInterval;
-			public string[] timerCommandsToAlternate;
 			public bool sendMessage;
 			public bool reply;
 			public bool isDev;
 
-			// Timer
-			public DateTime timerLastFired;
-
-			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, bool argsCaseSensitive = false, float timerInterval = 0, string[] timerCommandsToAlternate = null, bool reply = true, bool sendMessage = true, bool isDev = false)
+			public CommandInfo(string name, Command command, string[] aliases = null, bool async = false, bool argsCaseSensitive = false, float timerInterval = 0, bool reply = true, bool sendMessage = true, bool isDev = false)
 			{
 				this.name = name;
 				this.command = command;
@@ -345,17 +340,13 @@ namespace HowardBot
 				this.async = async;
 				this.argsCaseSensitive = argsCaseSensitive;
 				this.timerInterval = timerInterval;
-				this.timerCommandsToAlternate = timerCommandsToAlternate;
 				this.sendMessage = sendMessage;
 				this.reply = reply;
 				this.isDev = isDev;
 
 				// Add to list of timers
 				if (timerInterval > 0)
-				{
 					timerCommands.Add(this);
-					timerLastFired = DateTime.Now;
-				}
 			}
 		}
 	}
