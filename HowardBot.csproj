@@ -8,6 +8,14 @@
     <ApplicationIcon>awePog.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>NETSDK1138;NU1701</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>NETSDK1138;NU1701</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoHotkey.Interop" Version="1.0.0.1" />
     <PackageReference Include="DotNetEnv" Version="2.3.0" />
