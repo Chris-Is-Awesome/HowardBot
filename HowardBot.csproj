@@ -24,10 +24,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="HowardBot\Audio\Music\albw_hype_song.mp3">
+    <None Update="HowardBot\Audio\Songs\albw_hype_song.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Music\hk_shade.wav">
+    <None Update="HowardBot\Audio\Songs\hk_shade.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_grub_free.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sound Clips\laugh_track.flac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sound Clips\toilet_flush.flac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Sound Clips\wow.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="HowardBot\Audio\Sounds\Hollow Knight\grub_free.wav">
@@ -66,25 +78,40 @@
     <None Update="HowardBot\Audio\Sounds\Hollow Knight\millibelle_talk_1.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Sounds\Zelda\botw_cook_success.wav">
+    <None Update="HowardBot\Audio\Voice Clips\botw_korok_find.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Sounds\Zelda\botw_small_item.wav">
+    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_talk_1.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Sounds\Zelda\korok_find.wav">
+    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_talk_2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Sounds\Zelda\loz_secret.wav">
+    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_talk_3.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Sounds\Zelda\oot_boss_clear.mp3">
+    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_1.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Sounds\Zelda\oot_navi.wav">
+    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HowardBot\Audio\Sounds\Zelda\ss_rupoor.wav">
+    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_3.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_4.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_iselda_greet.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_lemm_talk_1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_lemm_talk_2.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_millibelle_talk_1.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="HowardBot\Data\BffData.json">

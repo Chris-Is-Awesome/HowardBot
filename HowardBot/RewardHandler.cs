@@ -6,6 +6,7 @@ using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 using TwitchLib.PubSub.Models.Responses.Messages;
 using TwitchLib.PubSub.Models.Responses.Messages.Redemption;
+using SoundType = HowardBot.AudioPlayer.SoundType;
 using Reward = TwitchLib.PubSub.Models.Responses.Messages.Redemption.Reward;
 
 namespace HowardBot
@@ -27,15 +28,40 @@ namespace HowardBot
 			{
 				effects = new List<RewardEffect>()
 				{
-					{ new VisualEffect("qilʇnɘɘɿɔƧ", "595256e2-0c44-403f-8788-73a03192d2df", 1) },
-					{ new VisualEffect("【 Ｗ Ｉ Ｄ Ｅ】Mode", "25040c6c-431c-47c2-bdc2-476a9796170a", 2) },
-					{ new VisualEffect("Pinhole", "", 3) },
-					{ new VisualEffect("Pixelate", "f642e489-43da-48c9-b8cc-0dd4a01ffd16", 4) },
-					{ new VisualEffect("Inverted", "", 5) },
-					{ new VisualEffect("Black & White", "", 6) },
-					{ new VisualEffect("Cell-Shaded", "", 7) },
-					{ new VisualEffect("VHS", "", 8) },
-					{ new AudioEffect("Play a Random Sound", "1c796bda-34f6-44e3-b823-ce887ab969b6") },
+					{ new VisualEffect("qilʇnɘɘɿɔƧ", "595256e2-0c44-403f-8788-73a03192d2df",
+										hotkeyNum: 1) },
+					{ new VisualEffect("【 Ｗ Ｉ Ｄ Ｅ】Mode", "25040c6c-431c-47c2-bdc2-476a9796170a",
+										hotkeyNum: 2) },
+					{ new VisualEffect("Pinhole", "", // ID not needed
+										hotkeyNum: 3) },
+					{ new VisualEffect("Pixelated", "f642e489-43da-48c9-b8cc-0dd4a01ffd16",
+										hotkeyNum: 4) },
+					{ new VisualEffect("Inverted", "", // ID not needed
+										hotkeyNum: 5) },
+					{ new VisualEffect("Black & White", "", // ID not needed
+										hotkeyNum: 6) },
+					{ new VisualEffect("Cell-Shaded", "", // ID not needed
+										hotkeyNum: 7) },
+					{ new VisualEffect("VHS", "", // ID not needed
+										hotkeyNum: 8) },
+					{ new AudioEffect("Play a Random Voice Clip", "1c796bda-34f6-44e3-b823-ce887ab969b6",
+										type: SoundType.VoiceClip,
+										random: true) },
+					{ new AudioEffect("much wow", "d6836624-a08f-4a83-8041-9ba10dcf30fa",
+										type: SoundType.SoundClip,
+										soundName: "wow") },
+					{ new AudioEffect("Flush", "41395e27-f0b9-4f34-b70b-267db5303e3f",
+										type: SoundType.SoundClip,
+										soundName: "toilet_flush") },
+					{ new AudioEffect("Laugh", "89bc31b9-04b1-443a-9362-d35e7fb28e02",
+										type: SoundType.SoundClip,
+										soundName: "laugh_track") },
+					{ new AudioEffect("Play Hype Song", "9100d7d2-debe-49de-a310-55411fcfec05",
+										type: SoundType.Song,
+										soundName: "albw_hype_song") },
+					{ new AudioEffect("Play Spoopy Music", "b1575d9e-594c-429f-a511-9e7d35fb5e85",
+										type: SoundType.Song,
+										soundName: "hk_shade") },
 				};
 
 				client = Bot.PubSubClient;
@@ -118,24 +144,19 @@ namespace HowardBot
 					break;
 				case AudioEffect audioEffect:
 
-					AudioEffect.SoundType type = AudioEffect.SoundType.Sound;
-					bool random = false;
-
-					switch(reward.Id)
-					{
-						case "1c796bda-34f6-44e3-b823-ce887ab969b6":
-							random = true;
-							break;
-					}
-
-					audioEffect.StartFunc.Invoke(type, random);
+					if (audioEffect.random)
+						audioEffect.StartRandomSoundFunc.Invoke(audioEffect.type);
+					else
+						audioEffect.StartSoundFunc.Invoke(audioEffect.type, audioEffect.soundName);
 
 					break;
+
 				case InputEffect inputEffect:
 
 					inputEffect.StartFunc.Invoke(reward.Prompt);
 
 					break;
+
 				default:
 					Debug.LogError($"Tried to start reward effect '{effect.Name}' with an unknown effect type.");
 					invalid = true;

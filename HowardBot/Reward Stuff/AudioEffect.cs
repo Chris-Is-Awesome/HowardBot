@@ -1,35 +1,38 @@
-﻿namespace HowardBot
+﻿using SoundType = HowardBot.AudioPlayer.SoundType;
+
+namespace HowardBot
 {
 	class AudioEffect : RewardEffect
 	{
-		public delegate void EffectFunc(SoundType type, bool random);
+		public readonly SoundType type;
+		public readonly string soundName;
+		public readonly bool random;
 
-		public EffectFunc StartFunc { get { return Start; } }
+		private AudioPlayer player;
 
-		public enum SoundType
+		public delegate void RandomSoundFunc(SoundType type);
+		public delegate void SoundFunc(SoundType type, string name);
+
+		public RandomSoundFunc StartRandomSoundFunc { get { return StartRandomSound; } }
+		public SoundFunc StartSoundFunc { get { return StartSound; } }
+
+		public AudioEffect(string name, string rewardId, SoundType type, string soundName = "", bool random = false) : base(name, rewardId)
 		{
-			Sound,
-			Song
+			player = AudioPlayer.Instance;
+			player.OnStopped += Stop;
+			this.type = type;
+			this.soundName = soundName;
+			this.random = random;
 		}
 
-		public AudioEffect(string name, string rewardId) : base(name, rewardId) { }
-
-		private void Start(SoundType type, bool random)
+		private void StartRandomSound(SoundType type)
 		{
-			AudioPlayer player = AudioPlayer.Instance;
+			player.PlayRandomSound(type);
+		}
 
-			if (type == SoundType.Sound)
-				if (random)
-					player.PlayRandomSound();
-				//else
-					//player.PlaySound();
-			else
-				if (random)
-					player.PlayRandomSong();
-				//else
-					//player.PlaySong();
-				
-			player.OnStopped += Stop;
+		private void StartSound(SoundType type, string name)
+		{
+			player.PlaySound(type, name);
 		}
 
 		private void Stop()

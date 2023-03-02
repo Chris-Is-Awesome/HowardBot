@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace HowardBot
 {
@@ -14,18 +13,21 @@ namespace HowardBot
 
 		private static AudioPlayer _instance;
 
+		private const string songsDir = @".\HowardBot\Audio\Songs";
+		private const string soundClipsDir = @".\HowardBot\Audio\Sound Clips";
+		private const string voiceClipsDir = @".\HowardBot\Audio\Voice Clips";
 		private readonly List<SoundData> allSongs;
-		private readonly List<SoundData> allSounds;
-		private const string musicDir = @".\HowardBot\Audio\Music\";
-		private const string soundsDir = @".\HowardBot\Audio\Sounds\";
+		private readonly List<SoundData> allSoundClips;
+		private readonly List<SoundData> allVoiceClips;
 
 		private List<WaveOutEvent> activeAudioOutputs = new List<WaveOutEvent>();
 
 		public AudioPlayer()
 		{
 			_instance = this;
-			allSongs = CreateSoundObjects(musicDir);
-			allSounds = CreateSoundObjects(soundsDir);
+			allSongs = CreateSoundObjects(songsDir);
+			allSoundClips = CreateSoundObjects(soundClipsDir);
+			allVoiceClips = CreateSoundObjects(voiceClipsDir);
 		}
 
 		public static AudioPlayer Instance
@@ -39,38 +41,24 @@ namespace HowardBot
 			}
 		}
 
-		public void PlaySong(string songName)
+		public enum SoundType
 		{
-			PlaySound(GetSong(songName.ToLower()));
+			Song,
+			SoundClip,
+			VoiceClip
 		}
 
-		public void PlaySound(string soundName)
+		public void PlayRandomSound(SoundType type)
 		{
-			PlaySound(GetSound(soundName.ToLower()));
+			List<SoundData> allSounds = GetSoundsList(type);
+			int randIndex = Utility.GetRandomNumberInRange(0, allSounds.Count - 1);
+			PlaySound(allSounds[randIndex]);
 		}
 
-		public void PlayRandomSong()
+		public void PlaySound(SoundType type, string name)
 		{
-			if (allSongs == null || allSongs.Count < 1)
-			{
-				Debug.LogError($"Tried to play a random song, but there are no songs in the directory '{musicDir}'");
-				return;
-			}
-
-			SoundData sound = allSongs[Utility.GetRandomNumberInRange(0, allSongs.Count - 1)];
-			PlaySound(sound);
-		}
-
-		public void PlayRandomSound()
-		{
-			if (allSounds == null || allSounds.Count < 1)
-			{
-				Debug.LogError($"Tried to play a random sound, but there are no sounds in the directory '{soundsDir}'");
-				return;
-			}
-
-			SoundData sound = allSounds[Utility.GetRandomNumberInRange(0, allSounds.Count - 1)];
-			PlaySound(sound);
+			if (TryGetSound(type, name, out SoundData sound))
+				PlaySound(sound);
 		}
 
 		public void StopAllSounds()
@@ -80,44 +68,41 @@ namespace HowardBot
 
 		private List<SoundData> CreateSoundObjects(string dir)
 		{
-			List<SoundData> sounds = new List<SoundData>();
+			List<SoundData> sounds = new();
 			string[] files = Directory.GetFiles(dir, "", SearchOption.AllDirectories);
 
 			foreach (string file in files)
 			{
 				string name = file.Substring(file.LastIndexOf('\\') + 1, (file.LastIndexOf('.') - file.LastIndexOf('\\')) - 1);
-				sounds.Add(new SoundData(name, file, 1));
+				sounds.Add(new SoundData(name, file));
 			}
 
 			return sounds;
 		}
 
-		private SoundData GetSong(string songName)
+		private bool TryGetSound(SoundType type, string name, out SoundData sound)
 		{
-			if (allSongs == null || allSongs.Count < 1)
+			List<SoundData> allSounds = GetSoundsList(type);
+			sound = allSounds.Find(x => x.name == name);
+
+			if (sound == null)
 			{
-				Debug.LogError($"Tried to get a song, but there are no songs in the directory '{musicDir}'");
-				return null;
+				Debug.LogError($"No sound of type '{type}' with name '{name}' was found");
+				return false;
 			}
 
-			SoundData song = allSongs.Find(x => x.name == songName);
-
-			if (song == null) Debug.LogError($"No sound with name '{songName}' was found. A typo perhaps?", false);
-			return song;
+			return true;
 		}
 
-		private SoundData GetSound(string soundName)
+		private List<SoundData> GetSoundsList(SoundType type)
 		{
-			if (allSounds == null || allSounds.Count < 1)
+			return type switch
 			{
-				Debug.LogError($"Tried to get a sound, but there are no sounds in the directory '{soundsDir}'");
-				return null;
-			}
-
-			SoundData sound = allSounds.Find(x => x.name == soundName);
-
-			if (sound == null) Debug.LogError($"No sound with name '{soundName}' was found. A typo perhaps?", false);
-			return sound;
+				SoundType.Song => allSongs,
+				SoundType.SoundClip => allSoundClips,
+				SoundType.VoiceClip => allVoiceClips,
+				_ => null,
+			};
 		}
 
 		private void PlaySound(SoundData sound)
@@ -134,7 +119,6 @@ namespace HowardBot
 						using (outputDevice = new WaveOutEvent())
 						{
 							outputDevice.Init(audioFile);
-							outputDevice.Volume = sound.volume;
 							outputDevice.Play();
 							activeAudioOutputs.Add(outputDevice);
 
@@ -157,13 +141,11 @@ namespace HowardBot
 		{
 			public readonly string name;
 			public readonly string path;
-			public readonly float volume;
 
-			public SoundData(string name, string path, float volume = 1)
+			public SoundData(string name, string path)
 			{
 				this.name = name.ToLower();
 				this.path = path;
-				this.volume = volume;
 			}
 		}
 	}
