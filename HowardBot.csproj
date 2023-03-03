@@ -2,25 +2,58 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>HowardBot</AssemblyName>
     <RootNamespace>HowardBot</RootNamespace>
     <ApplicationIcon>awePog.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>NETSDK1138;NU1701</NoWarn>
+    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>NETSDK1138;NU1701</NoWarn>
+    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Reference Aseemblies\**" />
+    <EmbeddedResource Remove="Reference Aseemblies\**" />
+    <None Remove="Reference Aseemblies\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoHotkey.Interop" Version="1.0.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="TwitchLib" Version="3.5.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="TwitchLib.Client" Version="3.3.1" />
+    <PackageReference Include="TwitchLib.PubSub" Version="3.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TwitchLib.Api">
+      <HintPath>Reference Aseemblies\TwitchLib.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="TwitchLib.Api.Core">
+      <HintPath>Reference Aseemblies\TwitchLib.Api.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="TwitchLib.Api.Core.Enums">
+      <HintPath>Reference Aseemblies\TwitchLib.Api.Core.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="TwitchLib.Api.Core.Interfaces">
+      <HintPath>Reference Aseemblies\TwitchLib.Api.Core.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="TwitchLib.Api.Core.Models">
+      <HintPath>Reference Aseemblies\TwitchLib.Api.Core.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="TwitchLib.Api.Helix">
+      <HintPath>Reference Aseemblies\TwitchLib.Api.Helix.dll</HintPath>
+    </Reference>
+    <Reference Include="TwitchLib.Api.Helix.Models">
+      <HintPath>Reference Aseemblies\TwitchLib.Api.Helix.Models.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
