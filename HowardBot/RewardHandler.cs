@@ -59,10 +59,19 @@ namespace HowardBot
 
 			foreach (RewardData.Reward reward in rewardData.rewards)
 			{
+				// Add audio effects
 				if (reward.audioData != null)
 					effects.Add(new AudioEffect(reward, reward.audioData));
-				else if (reward.visualData != null && enableAll)
-					effects.Add(new VisualEffect(reward, reward.visualData));
+
+				if (enableAll)
+				{
+					// Add visual effects
+					if (reward.visualData != null)
+						effects.Add(new VisualEffect(reward, reward.visualData));
+					// Add input effects
+					else
+						effects.Add(new InputEffect(reward));
+				}
 			}
 		}
 
@@ -73,7 +82,7 @@ namespace HowardBot
 			if (response != null)
 			{
 				string title = response.Title.ToLower();
-				bool titleCheck = title.Contains("dev") || title.Contains("science") || title.Contains("speedrun");
+				bool titleCheck = title.Contains("dev") || title.Contains("science") || title.Contains("speedrun") || title.Contains("Race");
 				bool tagsCheck = response.Tags.Any(x => x == "Speedrun" || x == "Programming");
 				bool gameCheck = response.GameName == "Science & Technology";
 
@@ -115,19 +124,19 @@ namespace HowardBot
 				{
 					List<RewardEffect> visualEffects = effects.FindAll(x => x.GetType() == typeof(VisualEffect) && ((VisualEffect)x).HotkeyNum >= 0);
 					int randNum = Utility.GetRandomNumberInRange(0, visualEffects.Count - 1);
-					TryEffect(visualEffects[randNum], reward, userWhoRedeemed, true);
+					TryEffect(visualEffects[randNum], reward, userWhoRedeemed, true, userInput);
 				}
 				else
 				{
 					RewardEffect effect = effects.Find(x => x.Reward.Title == reward.Title);
 
 					if (effect != null)
-					TryEffect(effect, reward, userWhoRedeemed, false);
+					TryEffect(effect, reward, userWhoRedeemed, false, userInput);
 				}
 			}
 		}
 
-		private void TryEffect(RewardEffect effect, Reward reward, User userWhoRedeemed, bool random)
+		private void TryEffect(RewardEffect effect, Reward reward, User userWhoRedeemed, bool random, string userInput)
 		{
 			string output = $"{userWhoRedeemed.DisplayName} redeemed {reward.Title}";
 			if (random) output += $" - {effect.Reward.Title}";
@@ -137,7 +146,7 @@ namespace HowardBot
 			if (!activeEffects.Contains(effect) && !activeEffects.Any(x => x.GetType() == effect.GetType()))
 			{
 				Bot.SendMessage(output);
-				Start(effect);
+				Start(effect, userInput);
 			}
 			// Add effect to queue
 			else
@@ -147,7 +156,7 @@ namespace HowardBot
 			}
 		}
 
-		public void Start(RewardEffect effect)
+		public void Start(RewardEffect effect, string userInput = "")
 		{
 			bool invalid = false;
 
@@ -156,8 +165,8 @@ namespace HowardBot
 				case VisualEffect visualEffect:
 
 					visualEffect.StartFunc.Invoke();
-
 					break;
+
 				case AudioEffect audioEffect:
 
 					if (audioEffect.random)
@@ -166,7 +175,14 @@ namespace HowardBot
 						audioEffect.StartSoundFunc.Invoke(audioEffect.type, audioEffect.name);
 
 					break;
+
+				case InputEffect inputEffect:
+
+					inputEffect.StartFunc.Invoke(userInput);
+					break;
+
 				default:
+
 					Debug.LogError($"Tried to start reward effect '{effect.Reward.Title}' with an unknown effect type.");
 					invalid = true;
 					break;

@@ -1,6 +1,18 @@
 {
 	"rewards": [
 		{
+			"title": "[INPUT] Press a Button",
+			"description": "",
+			"cost": 200,
+			"isEnabled": true,
+			"backgroundColor": "#b32e2e",
+			"isTextRequired": true,
+			"globalCooldownSeconds": 0,
+			"maxRedemptionsPerStream": 0,
+			"maxRedemptionsPerUserPerStream": 0,
+			"skipRequestQueue": true
+		},
+		{
 			"title": "[SFX] Laugh",
 			"description": "Laugh at me, or with me",
 			"cost": 1000,

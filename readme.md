@@ -14,5 +14,4 @@ Planned features:
 - Utility commands (update title/game/tags, uptime)
 - Pokemon command to catch random pokemon once a day? (would use PokeAPI)
 
-
 Open source to act as an example for those learning how to use TwitchLib or how to make a Twitch bot.

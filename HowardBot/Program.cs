@@ -51,7 +51,7 @@ namespace HowardBot
 
             //do your cleanup here
             Cleanup();
-			Thread.Sleep(1500); //simulate some cleanup delay
+			Thread.Sleep(10000); //simulate some cleanup delay
 
 			Console.WriteLine("Cleanup complete, shutting down now");
             Bot.SendMessage("/me Gracefully enters the barn and goes to sleep.");
