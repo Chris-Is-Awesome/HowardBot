@@ -52,17 +52,38 @@ namespace HowardBot
 			effects.Clear();
 		}
 
-		private void CreateCustomRewards()
+		private async void CreateCustomRewards()
 		{
 			RewardData rewardData = Utility.DeserializeJSON<RewardData>(@".\HowardBot\Data\RewardData.json");
+			bool enableAll = await EnableAllRewards();
 
 			foreach (RewardData.Reward reward in rewardData.rewards)
 			{
 				if (reward.audioData != null)
 					effects.Add(new AudioEffect(reward, reward.audioData));
-				else if (reward.visualData != null)
+				else if (reward.visualData != null && enableAll)
 					effects.Add(new VisualEffect(reward, reward.visualData));
 			}
+		}
+
+		private async Task<bool> EnableAllRewards()
+		{
+			var response = await API.Instance.GetChannelInfo(Bot.ChannelId);
+
+			if (response != null)
+			{
+				string title = response.Title.ToLower();
+				bool titleCheck = title.Contains("dev") || title.Contains("science") || title.Contains("speedrun");
+				bool tagsCheck = response.Tags.Any(x => x == "Speedrun" || x == "Programming");
+				bool gameCheck = response.GameName == "Science & Technology";
+
+				if (tagsCheck || titleCheck || gameCheck)
+					return false;
+
+				return true;
+			}
+
+			return false;
 		}
 
 		// When a user redeems a channel point reward
