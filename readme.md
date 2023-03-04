@@ -10,10 +10,9 @@ Features:
 - Stores chat logs & stream stats to .txt files so I can reference them later
 
 Planned features:
-- Toggle game-specific rewards based on game/tags
+- Twitch Plays (reward for pressing user-specified input)
 - Utility commands (update title/game/tags, uptime)
 - Pokemon command to catch random pokemon once a day? (would use PokeAPI)
-- Twitch Plays (reward for pressing user-specified input)
 
 
-Open source to act as an example for those learning how to use TwitchLib or how to make a Twitch bot. Anyone's welcome to add Howard to their channel (you'll need to create your own `.env` file and change some things (documentation for this will come when I'm more done with the project), all I ask is you credit me in bio or in a bot timer command and link to this original repo. But while it's in WIP state I obviously wouldn't recommend adding this bot to your channel.
+Open source to act as an example for those learning how to use TwitchLib or how to make a Twitch bot.
