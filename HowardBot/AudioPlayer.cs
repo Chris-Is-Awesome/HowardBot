@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace HowardBot
 {
-	class AudioPlayer
+	public class AudioPlayer
 	{
 		public delegate void Func();
 

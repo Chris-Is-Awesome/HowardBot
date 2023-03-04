@@ -150,6 +150,9 @@
     <None Update="HowardBot\Data\BffData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="HowardBot\Data\RewardData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="HowardBot\Data\TriviaData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

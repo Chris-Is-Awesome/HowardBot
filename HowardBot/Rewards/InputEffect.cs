@@ -1,8 +1,8 @@
 ﻿using AutoHotkey.Interop;
 
-namespace HowardBot
+namespace HowardBot.Rewards
 {
-	class InputEffect : RewardEffect
+	public class InputEffect : RewardEffect
 	{
 		public delegate void EffectFunc(string userInput);
 
@@ -10,7 +10,7 @@ namespace HowardBot
 
 		public EffectFunc StartFunc { get { return Start; } }
 
-		public InputEffect(string name, string rewardId) : base(name, rewardId)
+		public InputEffect(RewardHandler.RewardData.Reward rewardData) : base(rewardData)
 		{
 			ahk = Bot.AHK;
 		}

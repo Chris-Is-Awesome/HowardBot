@@ -1,11 +1,11 @@
 ﻿using SoundType = HowardBot.AudioPlayer.SoundType;
 
-namespace HowardBot
+namespace HowardBot.Rewards
 {
-	class AudioEffect : RewardEffect
+	public class AudioEffect : RewardEffect
 	{
 		public readonly SoundType type;
-		public readonly string soundName;
+		public readonly string name;
 		public readonly bool random;
 
 		private AudioPlayer player;
@@ -16,13 +16,13 @@ namespace HowardBot
 		public RandomSoundFunc StartRandomSoundFunc { get { return StartRandomSound; } }
 		public SoundFunc StartSoundFunc { get { return StartSound; } }
 
-		public AudioEffect(string name, string rewardId, SoundType type, string soundName = "", bool random = false) : base(name, rewardId)
+		public AudioEffect(RewardHandler.RewardData.Reward rewardData, EffectData effectData) : base(rewardData)
 		{
 			player = AudioPlayer.Instance;
 			player.OnStopped += Stop;
-			this.type = type;
-			this.soundName = soundName;
-			this.random = random;
+			type = effectData.type;
+			name = effectData.name;
+			random = effectData.random;
 		}
 
 		private void StartRandomSound(SoundType type)
@@ -38,6 +38,20 @@ namespace HowardBot
 		private void Stop()
 		{
 			onEffectStop?.Invoke(this);
+		}
+
+		public class EffectData
+		{
+			public readonly SoundType type;
+			public readonly string name;
+			public readonly bool random;
+
+			public EffectData(SoundType type, string name = "", bool random = false)
+			{
+				this.type = type;
+				this.name = name;
+				this.random = random;
+			}
 		}
 	}
 }
