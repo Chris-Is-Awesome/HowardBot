@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using AutoHotkey.Interop;
+﻿using AutoHotkey.Interop;
+using System.Threading.Tasks;
 
-namespace HowardBot
+namespace HowardBot.Rewards
 {
-	class VisualEffect : RewardEffect
+	public class VisualEffect : RewardEffect
 	{
 		public delegate Task EffectFunc();
 
@@ -13,10 +13,10 @@ namespace HowardBot
 		public float Duration { get; }
 		public EffectFunc StartFunc { get { return Start; } }
 
-		public VisualEffect(string name, string rewardId, int hotkeyNum, float duration = 60) : base(name, rewardId)
+		public VisualEffect(RewardHandler.RewardData.Reward rewardData, EffectData effectData) : base(rewardData)
 		{
-			HotkeyNum = hotkeyNum;
-			Duration = duration;
+			HotkeyNum = effectData.hotkeyNum;
+			Duration = effectData.duration;
 
 			ahk = Bot.AHK;
 		}
@@ -40,6 +40,18 @@ namespace HowardBot
 			ahk.ExecRaw($"Send {{Ctrl up}} {{0 up}} {{{HotkeyNum} up}}");
 
 			onEffectStop?.Invoke(this);
+		}
+
+		public class EffectData
+		{
+			public readonly int hotkeyNum;
+			public readonly float duration;
+
+			public EffectData(int hotkeyNum, float duration = 60)
+			{
+				this.hotkeyNum = hotkeyNum;
+				this.duration = duration;
+			}
 		}
 	}
 }

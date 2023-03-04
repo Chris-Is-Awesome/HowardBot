@@ -51,7 +51,7 @@ namespace HowardBot
 			timer = new Timer((e) =>
 			{
 				CheckTimerCommands();
-			}, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
+			}, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
 		}
 
 		public readonly List<CommandInfo> commands;
@@ -292,7 +292,7 @@ namespace HowardBot
 			{
 				foreach (CommandInfo commandInfo in timerCommands)
 				{
-					double timeSince = (DateTime.Now - timeLastTimerFired).TotalSeconds;
+					double timeSince = (DateTime.Now - timeLastTimerFired).TotalMinutes;
 
 					// Check if timerInterval time has passed since command last ran
 					if (timeSince >= commandInfo.timerInterval)
