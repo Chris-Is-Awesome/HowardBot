@@ -1,4 +1,5 @@
 ﻿using AutoHotkey.Interop;
+using System.Collections.Generic;
 
 namespace HowardBot.Rewards
 {
@@ -7,6 +8,10 @@ namespace HowardBot.Rewards
 		public delegate void EffectFunc(string userInput);
 
 		private readonly AutoHotkeyEngine ahk;
+		private readonly List<string> btnNames = new()
+		{
+			""
+		};
 
 		public EffectFunc StartFunc { get { return Start; } }
 
@@ -15,9 +20,23 @@ namespace HowardBot.Rewards
 			ahk = Bot.AHK;
 		}
 
-		private void Start(string userInput)
+		private async void Start(string userInput)
 		{
+			ahk.ExecRaw($"Send {{{userInput} down}}");
+			await Utility.WaitForMilliseconds(1000);
+			ahk.ExecRaw($"Send {{{userInput} up}}");
 			Stop();
+			return;
+
+			// Parse user input
+			if (btnNames.Contains(userInput.ToLower()))
+			{
+				ahk.ExecRaw($"Send {{userInput}}");
+				return;
+			}
+
+			Stop();
+			return;
 		}
 
 		private void Stop()
