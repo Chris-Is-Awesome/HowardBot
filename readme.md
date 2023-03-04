@@ -10,7 +10,6 @@ Features:
 - Stores chat logs & stream stats to .txt files so I can reference them later
 
 Planned features:
-- Twitch Plays (reward for pressing user-specified input)
 - Utility commands (update title/game/tags, uptime)
 - Pokemon command to catch random pokemon once a day? (would use PokeAPI)
 

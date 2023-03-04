@@ -62,16 +62,9 @@ namespace HowardBot
 				// Add audio effects
 				if (reward.audioData != null)
 					effects.Add(new AudioEffect(reward, reward.audioData));
-
-				if (enableAll)
-				{
-					// Add visual effects
-					if (reward.visualData != null)
-						effects.Add(new VisualEffect(reward, reward.visualData));
-					// Add input effects
-					else
-						effects.Add(new InputEffect(reward));
-				}
+				// Add visual effects
+				else if (reward.visualData != null && enableAll)
+					effects.Add(new VisualEffect(reward, reward.visualData));
 			}
 		}
 
@@ -174,11 +167,6 @@ namespace HowardBot
 					else
 						audioEffect.StartSoundFunc.Invoke(audioEffect.type, audioEffect.name);
 
-					break;
-
-				case InputEffect inputEffect:
-
-					inputEffect.StartFunc.Invoke(userInput);
 					break;
 
 				default:
