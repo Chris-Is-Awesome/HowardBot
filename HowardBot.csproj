@@ -63,6 +63,18 @@
     <None Update="HowardBot\Audio\Songs\hk_shade.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="HowardBot\Audio\Voice Clips\ahit_hatkid_intro_boop_a.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\ahit_snatcher_fool.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_dung_def_roar_02.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_grimm_talk_03.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="HowardBot\Audio\Voice Clips\hk_grub_free.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -145,6 +157,27 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="HowardBot\Audio\Voice Clips\hk_millibelle_talk_1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_miner_idle_hum.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_moth_seer_generic_02.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_moth_seer_generic_08.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_zote_02.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_zote_battle_roar.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_zote_complain_combined.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HowardBot\Audio\Voice Clips\hk_zote_summon_roar.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="HowardBot\Data\BffData.json">

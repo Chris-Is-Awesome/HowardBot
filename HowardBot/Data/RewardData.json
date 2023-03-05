@@ -3,7 +3,7 @@
 		{
 			"title": "[SFX] Laugh",
 			"description": "Laugh at me, or with me",
-			"cost": 1000,
+			"cost": 500,
 			"isEnabled": true,
 			"backgroundColor": "#46C6E3",
 			"isTextRequired": false,
@@ -17,19 +17,19 @@
 			}
 		},
 		{
-			"title": "[SFX] Play a Random Voice Clip",
-			"description": "Plays a random sound from one of my favorite games, including some from Zelda, Hollow Knight, and more!",
+			"title": "[SFX] Flush",
+			"description": "This tells me what you think of my content",
 			"cost": 500,
 			"isEnabled": true,
 			"backgroundColor": "#46C6E3",
 			"isTextRequired": false,
-			"globalCooldownSeconds": 0,
+			"globalCooldownSeconds": 60,
 			"maxRedemptionsPerStream": 0,
 			"maxRedemptionsPerUserPerStream": 0,
 			"skipRequestQueue": true,
 			"audioData": {
-				"type": "VoiceClip",
-				"random": true
+				"type": "SoundClip",
+				"name": "toilet_flush"
 			}
 		},
 		{
@@ -49,25 +49,25 @@
 			}
 		},
 		{
-			"title": "[SFX] Flush",
-			"description": "This tells me what you think of my content",
-			"cost": 1000,
+			"title": "[SFX] Play a Random Voice Clip",
+			"description": "Plays a random sound from one of my favorite games, including some from Zelda, Hollow Knight, and more!",
+			"cost": 250,
 			"isEnabled": true,
 			"backgroundColor": "#46C6E3",
 			"isTextRequired": false,
-			"globalCooldownSeconds": 60,
+			"globalCooldownSeconds": 0,
 			"maxRedemptionsPerStream": 0,
 			"maxRedemptionsPerUserPerStream": 0,
 			"skipRequestQueue": true,
 			"audioData": {
-				"type": "SoundClip",
-				"name": "toilet_flush"
+				"type": "VoiceClip",
+				"random": true
 			}
 		},
 		{
 			"title": "[SFX] Play Spoopy Music",
 			"description": "And suddenly you get an intense feeling of lingering regret...",
-			"cost": 2500,
+			"cost": 1000,
 			"isEnabled": true,
 			"backgroundColor": "#46C6E3",
 			"isTextRequired": false,
@@ -83,7 +83,7 @@
 		{
 			"title": "[SFX] Play Hype Song",
 			"description": "hypehypehypehypehypehypehypehypehype",
-			"cost": 5000,
+			"cost": 1000,
 			"isEnabled": true,
 			"backgroundColor": "#46C6E3",
 			"isTextRequired": false,
@@ -103,13 +103,13 @@
 			"isEnabled": true,
 			"backgroundColor": "#4bad37",
 			"isTextRequired": false,
-			"globalCooldownSeconds": 0,
+			"globalCooldownSeconds": 300,
 			"maxRedemptionsPerStream": 0,
 			"maxRedemptionsPerUserPerStream": 0,
 			"skipRequestQueue": true,
 			"visualData": {
 				"hotkeyNum": -1,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
@@ -119,13 +119,13 @@
 			"isEnabled": true,
 			"backgroundColor": "#4bad37",
 			"isTextRequired": false,
-			"globalCooldownSeconds": 0,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
+			"globalCooldownSeconds": 300,
+			"maxRedemptionsPerStream": 6,
+			"maxRedemptionsPerUserPerStream": 3,
 			"skipRequestQueue": true,
 			"visualData": {
 				"hotkeyNum": 4,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
@@ -135,29 +135,29 @@
 			"isEnabled": true,
 			"backgroundColor": "#4bad37",
 			"isTextRequired": false,
-			"globalCooldownSeconds": 0,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
+			"globalCooldownSeconds": 300,
+			"maxRedemptionsPerStream": 6,
+			"maxRedemptionsPerUserPerStream": 3,
 			"skipRequestQueue": true,
 			"visualData": {
 				"hotkeyNum": 2,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
 			"title": "[VFX] qilʇnɘɘɿɔƧ",
 			"description": "(╯°□°）╯︵ ┻━┻ but with a screen. Lasts for 60 seconds.",
-			"cost": 2500,
+			"cost": 2000,
 			"isEnabled": true,
 			"backgroundColor": "#4bad37",
 			"isTextRequired": false,
-			"globalCooldownSeconds": 1200,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
+			"globalCooldownSeconds": 300,
+			"maxRedemptionsPerStream": 6,
+			"maxRedemptionsPerUserPerStream": 3,
 			"skipRequestQueue": true,
 			"visualData": {
 				"hotkeyNum": 1,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
@@ -165,7 +165,7 @@
 			"title": "[VFX] Pinhole",
 			"visualData": {
 				"hotkeyNum": 3,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
@@ -173,7 +173,7 @@
 			"title": "[VFX] Inversion",
 			"visualData": {
 				"hotkeyNum": 5,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
@@ -181,7 +181,7 @@
 			"title": "[VFX] Black & White",
 			"visualData": {
 				"hotkeyNum": 6,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
@@ -189,7 +189,7 @@
 			"title": "[VFX] Cell-Shaded",
 			"visualData": {
 				"hotkeyNum": 7,
-				"duration": 2
+				"duration": 60
 			}
 		},
 		{
@@ -197,7 +197,7 @@
 			"title": "[VFX] VHS",
 			"visualData": {
 				"hotkeyNum": 8,
-				"duration": 2
+				"duration": 60
 			}
 		}
 	]
