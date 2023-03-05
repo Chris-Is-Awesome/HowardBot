@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -57,141 +57,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="HowardBot\Audio\Songs\albw_hype_song.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Songs\hk_shade.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\ahit_hatkid_intro_boop_a.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\ahit_snatcher_fool.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_dung_def_roar_02.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_grimm_talk_03.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_grub_free.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sound Clips\laugh_track.flac">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sound Clips\toilet_flush.flac">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sound Clips\wow.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\grub_free.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_talk_4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_yell_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_yell_2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\hornet_yell_3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\iselda_greet.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\lemm_talk_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\lemm_talk_2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Sounds\Hollow Knight\millibelle_talk_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\botw_korok_find.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_talk_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_talk_2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_talk_3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_3.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_hornet_yell_4.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_iselda_greet.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_lemm_talk_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_lemm_talk_2.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_millibelle_talk_1.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_miner_idle_hum.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_moth_seer_generic_02.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_moth_seer_generic_08.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_zote_02.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_zote_battle_roar.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_zote_complain_combined.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Audio\Voice Clips\hk_zote_summon_roar.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Data\BffData.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Data\RewardData.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Data\TriviaData.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="HowardBot\Data\WhoopData.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+	  <Content Include="HowardBot\Audio\**">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="HowardBot\Data\**">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
   </ItemGroup>
 
 </Project>
