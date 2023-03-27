@@ -33,6 +33,7 @@ namespace HowardBot
 
 				// Self promos
 				{ new CommandInfo("discord", new DiscordCommand(), aliases: new string[] { "disc" }, timerInterval: 60) },
+				{ new CommandInfo("event", new EventCommand(), timerInterval: 60) },
 				{ new CommandInfo("youtube", new YoutubeCommand(), aliases: new string[] { "yt" }, timerInterval: 60) },
 
 				// Useful
