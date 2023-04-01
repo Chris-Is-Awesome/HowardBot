@@ -211,7 +211,7 @@ namespace HowardBot
 			AmILive = false;
 
 			TimeSpan duration = StreamUptime;
-			string durationStr = $"{(int)duration.TotalHours} hours {(int)(duration.TotalMinutes / 60)} minutes {(int)((duration.TotalSeconds /60) / 60)} seconds";
+			string durationStr = $"{duration.Hours} hours {duration.Minutes} minutes {duration.Seconds} seconds";
 
 			ReplaceLineInFile("Ended at", "Ended at: " + DateTime.Now.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt"));
 			ReplaceLineInFile("Duration", $"Duration: {durationStr}");
