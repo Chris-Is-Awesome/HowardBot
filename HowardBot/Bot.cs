@@ -3,12 +3,10 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
-using TwitchLib.Communication.Events;
 using TwitchLib.Communication.Models;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
@@ -18,6 +16,7 @@ namespace HowardBot
 	class Bot
 	{
 		private static Bot _instance;
+		private static DateTime streamStartTime;
 
 		private readonly API api;
 		private readonly MessageHandler messageHandler;
@@ -27,7 +26,6 @@ namespace HowardBot
 		private string chatLogsDir;
 		private string chatLogFileName;
 		private string fullChatLogPath;
-		private DateTime streamStartTime;
 
 		public static Bot Instance { get { return _instance; } }
 		public static AutoHotkeyEngine AHK { get; private set; }
@@ -39,6 +37,13 @@ namespace HowardBot
 		public static string ChannelId { get; private set; }
 		public static string ClientId { get; private set; }
 		public static bool AmILive { get; private set; } = true; // Set to true when I'm testing live stuff
+		public static TimeSpan StreamUptime
+		{
+			get
+			{
+				return DateTime.Now - streamStartTime;
+			}
+		}
 
 		public Bot()
 		{
@@ -125,7 +130,7 @@ namespace HowardBot
 			{
 				using (StreamWriter sw = File.AppendText(fullChatLogPath))
 				{
-					sw.WriteLine($"{Utility.Timestamp} {text}");
+					sw.WriteLine($"{StreamUptime} {text}");
 				}
 			}
 		}
@@ -205,12 +210,11 @@ namespace HowardBot
 		{
 			AmILive = false;
 
-			DateTime endTime = DateTime.Now;
-			TimeSpan duration = endTime - streamStartTime;
-			string durationStr = $"{(int)duration.TotalHours} hours {(int)duration.TotalMinutes} minutes {(int)duration.TotalSeconds} seconds";
+			TimeSpan duration = StreamUptime;
+			string durationStr = $"{(int)duration.TotalHours} hours {(int)(duration.TotalMinutes / 60)} minutes {(int)((duration.TotalSeconds /60) / 60)} seconds";
 
-			ReplaceLineInFile("Ended at", endTime.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt"));
-			ReplaceLineInFile("Stream duration", $"Stream duration: {durationStr}");
+			ReplaceLineInFile("Ended at", "Ended at: " + DateTime.Now.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt"));
+			ReplaceLineInFile("Duration", $"Duration: {durationStr}");
 
 			// Terminate bot
 			Environment.Exit(0);
@@ -276,7 +280,7 @@ namespace HowardBot
 				sw.WriteLine($"Game: {response.GameName}");
 				sw.WriteLine($"Started at: {streamStartTime.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt")}");
 				sw.WriteLine("Ended at: TBD");
-				sw.WriteLine("Stream duration: TBD\n");;
+				sw.WriteLine("Duration: TBD\n");;
 				sw.WriteLine("Messages sent: 0");
 				sw.WriteLine("Unique chatters: 0");
 				sw.WriteLine("Bot commands used: 0\n");
