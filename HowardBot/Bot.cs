@@ -130,7 +130,7 @@ namespace HowardBot
 			{
 				using (StreamWriter sw = File.AppendText(fullChatLogPath))
 				{
-					sw.WriteLine($"{StreamUptime} {text}");
+					sw.WriteLine($"[{StreamUptime.ToString("hh:mm:ss")}] {text}");
 				}
 			}
 		}
