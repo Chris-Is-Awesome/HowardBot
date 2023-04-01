@@ -271,7 +271,7 @@ namespace HowardBot
 			messagesThisStream++;
 			if (commandInfo != null) commandsThisStream++;
 
-			if (!uniqueChatters.Contains(chat.DisplayName))
+			if (!uniqueChatters.Contains(chat.DisplayName) && chat.Username != Bot.ChannelName)
 				uniqueChatters.Add(chat.DisplayName);
 
 			// Log text
