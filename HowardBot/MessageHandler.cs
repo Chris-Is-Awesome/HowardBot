@@ -10,13 +10,25 @@ using TwitchLib.Client.Models;
 
 namespace HowardBot
 {
-	class MessageHandler
+	class MessageHandler : Singleton<MessageHandler>
 	{
-		public MessageHandler(TwitchClient twitchClient)
-		{
-			_instance = this;
+		public readonly List<CommandInfo> commands;
 
-			client = twitchClient;
+		private static List<CommandInfo> timerCommands = new();
+
+		private readonly TwitchClient client;
+		private readonly Timer timer;
+		private readonly char prefix = '!';
+
+		private List<string> uniqueChatters = new();
+		private DateTime timeLastTimerFired;
+		private CommandInfo lastTimerCommandFired;
+		private int messagesThisStream;
+		private int commandsThisStream;
+
+		public MessageHandler()
+		{
+			client = Bot.TwitchClient;
 			client.OnMessageReceived += OnMessageReceived;
 
 			// Define & initialize commands
@@ -55,34 +67,6 @@ namespace HowardBot
 			}, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
 		}
 
-		public readonly List<CommandInfo> commands;
-
-		private static MessageHandler _instance;
-		private static List<CommandInfo> timerCommands = new List<CommandInfo>();
-
-		private readonly TwitchClient client;
-		private readonly Timer timer;
-		private readonly char prefix = '!';
-
-		private List<string> uniqueChatters = new List<string>();
-		private DateTime timeLastTimerFired;
-		private CommandInfo lastTimerCommandFired;
-		private int messagesThisStream;
-		private int commandsThisStream;
-
-		public static MessageHandler Instance
-		{
-			get
-			{
-				if (_instance == null)
-					_instance = new MessageHandler(Bot.TwitchClient);
-
-				return _instance;
-			}
-		}
-
-		private delegate void CommandFunc(string[] args);
-
 		/// <summary>
 		/// Manually run a bot command by name.
 		/// </summary>
@@ -114,11 +98,11 @@ namespace HowardBot
 					else
 						await DoRunCommand(commandInfo, args);
 
-					if (Bot.AmILive) LogMessage(chat, commandInfo);
+					if (Bot.UsingChatLog) LogMessage(chat, commandInfo);
 				}
 			}
 			else
-				if (Bot.AmILive) LogMessage(chat, null);
+				if (Bot.UsingChatLog) LogMessage(chat, null);
 		}
 
 		/// <summary>
@@ -271,7 +255,7 @@ namespace HowardBot
 			messagesThisStream++;
 			if (commandInfo != null) commandsThisStream++;
 
-			if (!uniqueChatters.Contains(chat.DisplayName) && chat.Username != Bot.ChannelName)
+			if (!uniqueChatters.Contains(chat.DisplayName))
 				uniqueChatters.Add(chat.DisplayName);
 
 			// Log text
@@ -319,6 +303,8 @@ namespace HowardBot
 				}
 			}
 		}
+
+		private delegate void CommandFunc(string[] args);
 
 		public class CommandInfo
 		{

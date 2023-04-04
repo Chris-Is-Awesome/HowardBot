@@ -10,32 +10,21 @@ using TwitchLib.Api.Helix.Models.Users.GetUsers;
 
 namespace HowardBot
 {
-	class API
+	class API : Singleton<API>
 	{
-		public API(string clientId, string token)
-		{
-			TwitchAPI api = new TwitchAPI();
-			api.Settings.ClientId = clientId;
-			api.Settings.AccessToken = token;
-			helix = api.Helix;
-		}
-
-		private static API _instance;
 		private readonly Helix helix;
 
 		// Refs
 		private Stream myCurrentStream;
 		private CustomReward[] myRewards;
 
-		public static API Instance
+		public API()
 		{
-			get
-			{
-				if (_instance == null)
-					_instance = new API(Bot.ClientId, Bot.HowardToken);
+			TwitchAPI api = new();
 
-				return _instance;
-			}
+			api.Settings.ClientId = Bot.ClientId;
+			api.Settings.AccessToken = Bot.HowardToken;
+			helix = api.Helix;
 		}
 
 		#region Users

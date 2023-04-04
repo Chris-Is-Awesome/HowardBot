@@ -12,32 +12,39 @@ using Reward = TwitchLib.PubSub.Models.Responses.Messages.Redemption.Reward;
 
 namespace HowardBot
 {
-	public class RewardHandler
+	public class RewardHandler : Singleton<RewardHandler>
 	{
-		private static RewardHandler _instance;
-
+		private const string rewardDataPath = @".\HowardBot\Data\RewardData.json";
 		private readonly TwitchPubSub client;
 		private readonly List<RewardEffect> effects = new();
 
 		private Timer timer;
-		private List<RewardEffect> activeEffects = new List<RewardEffect>();
-		private List<RewardEffect> effectsInQueue = new List<RewardEffect>();
+		private List<RewardEffect> activeEffects = new();
+		private List<RewardEffect> effectsInQueue = new();
 		private int redemptionsThisStream;
 		private int pointsSpentThisStream;
 
-		public static RewardHandler Instance { get { return _instance; } }
-
 		public RewardHandler()
 		{
-			_instance = this;
+			client = Bot.PubSubClient;
 
-			if (Bot.AmILive)
+			client.ListenToChannelPoints(Bot.ChannelId);
+			client.OnChannelPointsRewardRedeemed += OnRewardRedeemed;
+		}
+
+		public async Task CreateCustomRewards()
+		{
+			RewardData rewardData = Utility.DeserializeJSON<RewardData>(rewardDataPath);
+			bool enableAll = await EnableAllRewards();
+
+			foreach (RewardData.Reward reward in rewardData.rewards)
 			{
-				CreateCustomRewards();
-
-				client = Bot.PubSubClient;
-				client.ListenToChannelPoints(Bot.ChannelId);
-				client.OnChannelPointsRewardRedeemed += OnRewardRedeemed;
+				// Add audio effects
+				if (reward.audioData != null)
+					effects.Add(new AudioEffect(reward, reward.audioData));
+				// Add visual effects
+				else if (reward.visualData != null && enableAll)
+					effects.Add(new VisualEffect(reward, reward.visualData));
 			}
 		}
 
@@ -50,22 +57,6 @@ namespace HowardBot
 			}
 
 			effects.Clear();
-		}
-
-		private async void CreateCustomRewards()
-		{
-			RewardData rewardData = Utility.DeserializeJSON<RewardData>(@".\HowardBot\Data\RewardData.json");
-			bool enableAll = await EnableAllRewards();
-
-			foreach (RewardData.Reward reward in rewardData.rewards)
-			{
-				// Add audio effects
-				if (reward.audioData != null)
-					effects.Add(new AudioEffect(reward, reward.audioData));
-				// Add visual effects
-				else if (reward.visualData != null && enableAll)
-					effects.Add(new VisualEffect(reward, reward.visualData));
-			}
 		}
 
 		private async Task<bool> EnableAllRewards()

@@ -32,7 +32,7 @@ namespace HowardBot
             Debug.Log($"[Bot started at {DateTime.Now}]");
 
             // Initialize bot
-            new Bot();
+            Bot bot = Bot.Instance;
 
             // Stuff (idk)
 			_handler += new EventHandler(Handler);

@@ -13,21 +13,22 @@ using TwitchLib.PubSub.Events;
 
 namespace HowardBot
 {
-	class Bot
+	class Bot : Singleton<Bot>
 	{
-		private static Bot _instance;
 		private static DateTime streamStartTime;
 
 		private readonly API api;
+		private readonly AudioPlayer audioPlayer;
 		private readonly MessageHandler messageHandler;
 		private readonly RewardHandler rewardHandler;
 		private readonly Stopwatch timer;
 
+		private bool hasCreatedLogFile;
+		private bool hasCreatedCustomRewards;
 		private string chatLogsDir;
 		private string chatLogFileName;
 		private string fullChatLogPath;
 
-		public static Bot Instance { get { return _instance; } }
 		public static AutoHotkeyEngine AHK { get; private set; }
 		public static TwitchPubSub PubSubClient { get; private set; }
 		public static TwitchClient TwitchClient { get; private set; }
@@ -36,7 +37,7 @@ namespace HowardBot
 		public static string ChannelName { get; private set; }
 		public static string ChannelId { get; private set; }
 		public static string ClientId { get; private set; }
-		public static bool AmILive { get; private set; } = true; // Set to true when I'm testing live stuff
+		public static bool AmILive { get; private set; } = false; // Set to true to test reward redemptions
 		public static TimeSpan StreamUptime
 		{
 			get
@@ -45,20 +46,18 @@ namespace HowardBot
 			}
 		}
 
+		// Testing
+		public static bool UsingChatLog { get; private set; } = false;
+		private bool UsingCustomRewards { get; set; } = false;
+
 		public Bot()
 		{
-			// Make singleton
-			_instance = this;
-
 			// Start timer
 			timer = new Stopwatch();
 			timer.Start();
 
 			// Load env vars
 			LoadEnvVars();
-
-			// Initialize API
-			api = API.Instance;
 
 			// Initialize Twitch client
 			ConnectionCredentials credentials = new ConnectionCredentials("The_Goat_Howard", HowardToken);
@@ -85,13 +84,12 @@ namespace HowardBot
 
 			PubSubClient.ListenToVideoPlayback(ChannelId);
 
-			// Initialize AHK
+			// Initialize the rest
+			api = API.Instance;
+			messageHandler = MessageHandler.Instance;
+			rewardHandler = RewardHandler.Instance;
+			audioPlayer = AudioPlayer.Instance;
 			AHK = AutoHotkeyEngine.Instance;
-
-			// Initialize event handlers
-			messageHandler = new(TwitchClient);
-			new AudioPlayer();
-			rewardHandler = new();
 
 			// Connect
 			TwitchClient.Connect();
@@ -130,7 +128,7 @@ namespace HowardBot
 			{
 				using (StreamWriter sw = File.AppendText(fullChatLogPath))
 				{
-					sw.WriteLine($"[{StreamUptime.ToString("hh:mm:ss")}] {text}");
+					sw.WriteLine($"[{StreamUptime.ToString(@"hh\:mm\:ss")}] {text}");
 				}
 			}
 		}
@@ -166,6 +164,8 @@ namespace HowardBot
 		private void OnConnected(object sender, OnConnectedArgs e)
 		{
 			Debug.Log($">> Connected to Twitch!");
+
+			DoWhenStreamStartsOrBotConnects();
 		}
 
 		// When bot is connected to PubSub service
@@ -195,7 +195,7 @@ namespace HowardBot
 			Debug.Log("Event log:", false);
 			SendMessage("/me Rushes out of barn and violently tackles everyone.");
 
-			RecheckIfLive();
+			CheckIfLive();
 		}
 
 		// When my stream is started
@@ -234,7 +234,7 @@ namespace HowardBot
 		/// <summary>
 		/// Recheck if I'm live in case where PubSub OnStreamStarted event doesn't run (eg. in case of bot crash during stream)
 		/// </summary>
-		private async void RecheckIfLive()
+		private async void CheckIfLive()
 		{
 			await Utility.WaitForSeconds(10);
 
@@ -245,8 +245,31 @@ namespace HowardBot
 				if (response != null)
 				{
 					AmILive = true;
-					Debug.Log("Bot reconnected, detected stream as live");
+					DoWhenStreamStartsOrBotConnects();
 				}
+			}
+
+			CheckIfLive();
+		}
+
+		/// <summary>
+		/// All the things to do when straem starts or bot connects
+		/// </summary>
+		private async void DoWhenStreamStartsOrBotConnects()
+		{
+			if (!hasCreatedLogFile && (AmILive || (!AmILive && UsingChatLog)))
+				CreateLogFile();
+
+			if (!hasCreatedCustomRewards && (AmILive || (!AmILive && UsingCustomRewards)))
+			{
+				await rewardHandler.CreateCustomRewards();
+				hasCreatedCustomRewards = true;
+			}
+
+			if (AmILive)
+			{
+				UsingChatLog = true;
+				Debug.Log("Stream detected, have fun!");
 			}
 		}
 
@@ -289,6 +312,7 @@ namespace HowardBot
 				sw.WriteLine("----------------------------------------------------------------------------------------------------\n");
 			}
 
+			hasCreatedLogFile = true;
 			Debug.Log($"Created chat log '{chatLogFileName}'");
 		}
 

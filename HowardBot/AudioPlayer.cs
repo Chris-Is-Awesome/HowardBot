@@ -5,13 +5,11 @@ using System.Threading;
 
 namespace HowardBot
 {
-	public class AudioPlayer
+	public class AudioPlayer : Singleton<AudioPlayer>
 	{
 		public delegate void Func();
 
 		public event Func OnStopped;
-
-		private static AudioPlayer _instance;
 
 		private const string songsDir = @".\HowardBot\Audio\Songs";
 		private const string soundClipsDir = @".\HowardBot\Audio\Sound Clips";
@@ -20,25 +18,13 @@ namespace HowardBot
 		private readonly List<SoundData> allSoundClips;
 		private readonly List<SoundData> allVoiceClips;
 
-		private List<WaveOutEvent> activeAudioOutputs = new List<WaveOutEvent>();
+		private List<WaveOutEvent> activeAudioOutputs = new();
 
 		public AudioPlayer()
 		{
-			_instance = this;
 			allSongs = CreateSoundObjects(songsDir);
 			allSoundClips = CreateSoundObjects(soundClipsDir);
 			allVoiceClips = CreateSoundObjects(voiceClipsDir);
-		}
-
-		public static AudioPlayer Instance
-		{
-			get
-			{
-				if (_instance == null)
-					_instance = new AudioPlayer();
-
-				return _instance;
-			}
 		}
 
 		public enum SoundType
