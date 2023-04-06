@@ -202,7 +202,7 @@ namespace HowardBot
 		private void OnStreamStarted(object sender, OnStreamUpArgs e)
 		{
 			AmILive = true;
-			CreateLogFile();
+			DoWhenStreamStartsOrBotConnects();
 		}
 
 		// When my stream has ended
@@ -215,9 +215,6 @@ namespace HowardBot
 
 			ReplaceLineInFile("Ended at", "Ended at: " + DateTime.Now.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt"));
 			ReplaceLineInFile("Duration", $"Duration: {durationStr}");
-
-			// Terminate bot
-			Environment.Exit(0);
 		}
 
 		// When someone raids my channel
