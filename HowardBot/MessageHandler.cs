@@ -1,9 +1,9 @@
-﻿using HowardBot.Commands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HowardBot.Commands;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -38,6 +38,7 @@ namespace HowardBot
 				{ new CommandInfo("commands", new CommandsCommand()) },
 				{ new CommandInfo("help", new HelpCommand()) },
 				{ new CommandInfo("info", new InfoCommand(), timerInterval: 60) },
+				//{ new CommandInfo("disrupt", new DisruptCommand(), timerInterval: 60) },
 
 				// Dev
 				{ new CommandInfo("stopaudio", new StopAudioCommand(), aliases: new string[] { "stopsongs", "stopsounds" }, isDev: true) },
@@ -45,8 +46,8 @@ namespace HowardBot
 
 				// Self promos
 				{ new CommandInfo("discord", new DiscordCommand(), aliases: new string[] { "disc" }, timerInterval: 60) },
-				{ new CommandInfo("event", new EventCommand(), timerInterval: 60) },
-				{ new CommandInfo("youtube", new YoutubeCommand(), aliases: new string[] { "yt" }, timerInterval: 60) },
+				//{ new CommandInfo("event", new EventCommand(), timerInterval: 60) },
+				{ new CommandInfo("youtube", new YoutubeCommand(), aliases: new string[] { "yt" }) },
 
 				// Useful
 				{ new CommandInfo("shoutout", new ShoutoutCommand(), aliases: new string[] { "so" }, async: true) },

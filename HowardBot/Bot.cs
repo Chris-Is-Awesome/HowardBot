@@ -1,8 +1,8 @@
-﻿using AutoHotkey.Interop;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using AutoHotkey.Interop;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -222,6 +222,7 @@ namespace HowardBot
 		{
 			SendMessage($"{e.RaidNotification.DisplayName} brought {e.RaidNotification.MsgParamViewerCount} goats into the barn! 🐐");
 			messageHandler.RunCommand("shoutout", new string[] { e.RaidNotification.UserId });
+			AppendToLogFile($"[RAID] {e.RaidNotification.DisplayName} raided with {e.RaidNotification.MsgParamViewerCount} viewers!");
 		}
 
 		#endregion
@@ -235,15 +236,12 @@ namespace HowardBot
 		{
 			await Utility.WaitForSeconds(10);
 
-			if (!AmILive)
-			{
-				var response = await api.GetStreamForUser(ChannelId);
+			var response = await api.GetStreamForUser(ChannelId);
 
-				if (response != null)
-				{
-					AmILive = true;
-					DoWhenStreamStartsOrBotConnects();
-				}
+			if (response != null)
+			{
+				AmILive = true;
+				DoWhenStreamStartsOrBotConnects();
 			}
 
 			CheckIfLive();
@@ -263,11 +261,8 @@ namespace HowardBot
 				hasCreatedCustomRewards = true;
 			}
 
-			if (AmILive)
-			{
+			if (AmILive && !UsingChatLog)
 				UsingChatLog = true;
-				Debug.Log("Stream detected, have fun!");
-			}
 		}
 
 		/// <summary>
@@ -300,7 +295,7 @@ namespace HowardBot
 				sw.WriteLine($"Game: {response.GameName}");
 				sw.WriteLine($"Started at: {streamStartTime.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt")}");
 				sw.WriteLine("Ended at: TBD");
-				sw.WriteLine("Duration: TBD\n");;
+				sw.WriteLine("Duration: TBD\n"); ;
 				sw.WriteLine("Messages sent: 0");
 				sw.WriteLine("Unique chatters: 0");
 				sw.WriteLine("Bot commands used: 0\n");

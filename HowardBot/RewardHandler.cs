@@ -1,9 +1,9 @@
-﻿using HowardBot.Rewards;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HowardBot.Rewards;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 using TwitchLib.PubSub.Models.Responses.Messages;
@@ -101,7 +101,7 @@ namespace HowardBot
 					}, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
 				}
 
-				// Parse rewards for custom events
+				// Parse rewards for custom event
 
 				// If reward is random visual effect
 				if (reward.Title.EndsWith("Random Visual Effect"))
@@ -110,12 +110,12 @@ namespace HowardBot
 					int randNum = Utility.GetRandomNumberInRange(0, visualEffects.Count - 1);
 					TryEffect(visualEffects[randNum], reward, userWhoRedeemed, true, userInput);
 				}
-				else
+				else if (reward.Title.StartsWith('['))
 				{
 					RewardEffect effect = effects.Find(x => x.Reward.Title == reward.Title);
 
 					if (effect != null)
-					TryEffect(effect, reward, userWhoRedeemed, false, userInput);
+						TryEffect(effect, reward, userWhoRedeemed, false, userInput);
 				}
 			}
 		}
