@@ -24,6 +24,7 @@ namespace HowardBot
 		public async Task<bool> Connect(ConnectionArgs args)
 		{
 			await obs.ConnectAsync(hostname: args.Host, port: args.Port, password: args.Password);
+			await Utility.WaitForMilliseconds(1);
 			return connected;
 		}
 
@@ -32,6 +33,7 @@ namespace HowardBot
 		/// </summary>
 		public void Disconnect()
 		{
+			OnDisconnecting();
 			obs.Disconnect();
 		}
 
@@ -48,11 +50,13 @@ namespace HowardBot
 				else if (obs.ConnectionState == ConnectionState.Disconnected)
 				{
 					// If authentication was unsuccessful
-					if (!authSuccess)
+					if (!authSuccess && !connected)
 						Debug.LogWarning($"Couldn't connect to OBS Websocket — Authentication failed.\nDouble check the following:\n1. Password and port are correct, and host should be 'localhost',\n2. WebSocket server is enabled, and\n3. OBS is running");
 
-					OnDisconnected();
+					connected = false;
 				}
+				else if (obs.ConnectionState == ConnectionState.Disconnecting)
+					OnDisconnecting();
 
 				if (authSuccess)
 					OnConnected();
@@ -62,11 +66,12 @@ namespace HowardBot
 		private void OnConnected()
 		{
 			connected = true;
+			obs.SetSourceFilterEnabled("Backgrounds", "test", true);
 		}
 
-		private void OnDisconnected()
+		private void OnDisconnecting()
 		{
-			connected = false;
+			obs.SetSourceFilterEnabled("Backgrounds", "test", false);
 		}
 
 		public struct ConnectionArgs

@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using AutoHotkey.Interop;
 
 namespace HowardBot
@@ -52,6 +53,17 @@ namespace HowardBot
 		}
 
 		#region Public Methods
+
+		public static async Task OnBotClose()
+		{
+			TwitchHandler.SendMessage("/me Gracefully enters the barn and goes to sleep.");
+
+			if (OBSHandler != null)
+				OBSHandler.Disconnect();
+
+			if (RewardHandler != null)
+				await RewardHandler.DeleteCustomRewards();
+		}
 
 		/// <summary>
 		/// Appends text to the chat log file

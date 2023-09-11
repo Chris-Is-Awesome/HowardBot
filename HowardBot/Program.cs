@@ -53,22 +53,21 @@ namespace HowardBot
 			Cleanup();
 			Thread.Sleep(2500); //simulate some cleanup delay
 
-			Console.WriteLine("Cleanup complete, shutting down now");
-			TwitchHandler.SendMessage("/me Gracefully enters the barn and goes to sleep.");
-
-			//allow main to run off
-			exitSystem = true;
-
-			//shutdown right away so there are no lingering threads
-			Environment.Exit(-1);
-
 			return true;
 		}
 
 		private static async void Cleanup()
 		{
 			Debug.Log("Cleaning up...");
-			await Bot.RewardHandler.DeleteCustomRewards();
+			await Bot.OnBotClose();
+
+			Debug.Log("Cleanup complete, shutting down now");
+
+			//allow main to run off
+			exitSystem = true;
+
+			//shutdown right away so there are no lingering threads
+			Environment.Exit(-1);
 		}
 	}
 }
