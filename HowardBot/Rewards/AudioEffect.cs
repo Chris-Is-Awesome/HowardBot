@@ -18,7 +18,7 @@ namespace HowardBot.Rewards
 
 		public AudioEffect(RewardHandler.RewardData.Reward rewardData, EffectData effectData) : base(rewardData)
 		{
-			player = AudioPlayer.Instance;
+			player = Bot.AudioPlayer;
 			player.OnStopped += Stop;
 			type = effectData.type;
 			name = effectData.name;

@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="OBSClient" Version="1.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="TwitchLib.Client" Version="3.3.1" />
     <PackageReference Include="TwitchLib.PubSub" Version="3.2.6" />

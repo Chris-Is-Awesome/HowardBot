@@ -6,15 +6,15 @@ using System.Threading;
 
 namespace HowardBot
 {
-    class Program
-    {
-        static bool exitSystem = false;
+	class Program
+	{
+		static bool exitSystem = false;
 
-        [DllImport("Kernel32")]
-        private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+		[DllImport("Kernel32")]
+		private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
 
-        private delegate bool EventHandler(CtrlType sig);
-        static EventHandler _handler;
+		private delegate bool EventHandler(CtrlType sig);
+		static EventHandler _handler;
 
 		enum CtrlType
 		{
@@ -26,35 +26,35 @@ namespace HowardBot
 		}
 
 		private static void Main()
-        {
-            Console.Title = "HowardBot";
+		{
+			Console.Title = "HowardBot";
 
-            Debug.Log($"[Bot started at {DateTime.Now}]");
+			Debug.Log($"[Bot started at {DateTime.Now}]", false);
 
-            // Initialize bot
-            Bot bot = Bot.Instance;
+			// Initialize bot
+			Bot bot = Bot.Instance;
 
-            // Stuff (idk)
+			// Stuff (idk)
 			_handler += new EventHandler(Handler);
 			SetConsoleCtrlHandler(_handler, true);
 
 			// Keep persistent
 			while (!exitSystem)
-            {
-                Thread.Sleep(500);
-            }
-        }
+			{
+				Thread.Sleep(500);
+			}
+		}
 
-        private static bool Handler(CtrlType sig)
-        {
+		private static bool Handler(CtrlType sig)
+		{
 			Console.WriteLine("Exiting system due to external CTRL-C, or process kill, or shutdown");
 
-            //do your cleanup here
-            Cleanup();
+			//do your cleanup here
+			Cleanup();
 			Thread.Sleep(2500); //simulate some cleanup delay
 
 			Console.WriteLine("Cleanup complete, shutting down now");
-            Bot.SendMessage("/me Gracefully enters the barn and goes to sleep.");
+			TwitchHandler.SendMessage("/me Gracefully enters the barn and goes to sleep.");
 
 			//allow main to run off
 			exitSystem = true;
@@ -65,10 +65,10 @@ namespace HowardBot
 			return true;
 		}
 
-        private static async void Cleanup()
-        {
-            Debug.Log("Cleaning up...");
-            await RewardHandler.Instance.DeleteCustomRewards();
+		private static async void Cleanup()
+		{
+			Debug.Log("Cleaning up...");
+			await Bot.RewardHandler.DeleteCustomRewards();
 		}
-    }
+	}
 }

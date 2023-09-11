@@ -3,119 +3,55 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using AutoHotkey.Interop;
-using TwitchLib.Client;
-using TwitchLib.Client.Events;
-using TwitchLib.Client.Models;
-using TwitchLib.Communication.Clients;
-using TwitchLib.Communication.Models;
-using TwitchLib.PubSub;
-using TwitchLib.PubSub.Events;
 
 namespace HowardBot
 {
 	class Bot : Singleton<Bot>
 	{
-		private static DateTime streamStartTime;
+		private readonly Stopwatch initTimer;
+		private readonly bool testCustomRewards = true; // Set to true to test reward redemptions
+		private bool connectedToOBS;
+		private bool hasStarted; // Used to know if the bot has done initialization already in case of a reconnect
+		private string streamLogsDir;
+		private string streamLogFileName;
+		private string streamLogFullPath;
+		private DateTime streamStartTime;
 
-		private readonly API api;
-		private readonly AudioPlayer audioPlayer;
-		private readonly MessageHandler messageHandler;
-		private readonly RewardHandler rewardHandler;
-		private readonly Stopwatch timer;
-
-		private bool hasCreatedLogFile;
-		private bool hasCreatedCustomRewards;
-		private string chatLogsDir;
-		private string chatLogFileName;
-		private string fullChatLogPath;
-
+		public static bool AmILive { get; private set; }
+		public static bool IsInChannel { get; private set; }
 		public static AutoHotkeyEngine AHK { get; private set; }
-		public static TwitchPubSub PubSubClient { get; private set; }
-		public static TwitchClient TwitchClient { get; private set; }
+		public static API API { get; private set; }
+		public static AudioPlayer AudioPlayer { get; private set; }
+		public static MessageHandler MessageHandler { get; private set; }
+		public static TwitchHandler TwitchHandler { get; private set; }
+		public static RewardHandler RewardHandler { get; private set; }
+		private static OBSHandler OBSHandler { get; set; }
+
 		public static string HowardToken { get; private set; }
 		public static string PubsubToken { get; private set; }
 		public static string ChannelName { get; private set; }
 		public static string ChannelId { get; private set; }
 		public static string ClientId { get; private set; }
-		public static bool AmILive { get; private set; } = false; // Set to true to test reward redemptions
-		public static TimeSpan StreamUptime
-		{
-			get
-			{
-				return DateTime.Now - streamStartTime;
-			}
-		}
-
-		// Testing
-		public static bool UsingChatLog { get; private set; } = false;
-		private bool UsingCustomRewards { get; set; } = false;
+		public TimeSpan StreamUptime { get { return DateTime.Now - streamStartTime; } }
 
 		public Bot()
 		{
-			// Start timer
-			timer = new Stopwatch();
-			timer.Start();
+			initTimer = new Stopwatch();
+			initTimer.Start();
 
-			// Load env vars
 			LoadEnvVars();
 
-			// Initialize Twitch client
-			ConnectionCredentials credentials = new ConnectionCredentials("The_Goat_Howard", HowardToken);
-			var clientOptions = new ClientOptions
-			{
-				MessagesAllowedInPeriod = 750,
-				ThrottlingPeriod = TimeSpan.FromSeconds(30)
-			};
-			WebSocketClient customClient = new WebSocketClient(clientOptions);
-			TwitchClient = new TwitchClient(customClient);
-			TwitchClient.Initialize(credentials, "ChrisIsAwesome");
-
-			// Initialize PubSub client
-			PubSubClient = new TwitchPubSub();
-
-			// Base event subscriptions
-			TwitchClient.OnConnected += OnConnected;
-			TwitchClient.OnJoinedChannel += OnJoinedChannel;
-			TwitchClient.OnRaidNotification += OnRaid;
-			PubSubClient.OnPubSubServiceConnected += OnPubSubConnected;
-			PubSubClient.OnListenResponse += OnListenResponse;
-			PubSubClient.OnStreamUp += OnStreamStarted;
-			PubSubClient.OnStreamDown += OnStreamEnded;
-
-			PubSubClient.ListenToVideoPlayback(ChannelId);
-
-			// Initialize the rest
-			api = API.Instance;
-			messageHandler = MessageHandler.Instance;
-			rewardHandler = RewardHandler.Instance;
-			audioPlayer = AudioPlayer.Instance;
 			AHK = AutoHotkeyEngine.Instance;
+			API = API.Instance;
+			AudioPlayer = AudioPlayer.Instance;
+			TwitchHandler = TwitchHandler.Instance;
 
-			// Connect
-			TwitchClient.Connect();
-			PubSubClient.Connect();
+			// Subscriptions
+			TwitchHandler.OnConnectionChange += OnTwitchConnectionChange;
+			TwitchHandler.OnStreamStateChange += OnStreamStateChange;
 		}
 
 		#region Public Methods
-
-		/// <summary>
-		/// Sends a message to chat as the bot.
-		/// </summary>
-		/// <param name="message">The text to send</param>
-		public static void SendMessage(string message)
-		{
-			TwitchClient.SendMessage(ChannelName, message);
-		}
-
-		/// <summary>
-		/// Replies to a user in chat as the bot.
-		/// </summary>
-		/// <param name="messageId">The ID of the message to reply to</param>
-		/// <param name="message">The text to send</param>
-		public static void SendReply(string messageId, string message)
-		{
-			TwitchClient.SendReply(ChannelName, messageId, message);
-		}
 
 		/// <summary>
 		/// Appends text to the chat log file
@@ -124,9 +60,9 @@ namespace HowardBot
 		public void AppendToLogFile(string text)
 		{
 			// If file exists
-			if (File.Exists(fullChatLogPath))
+			if (File.Exists(streamLogFullPath))
 			{
-				using (StreamWriter sw = File.AppendText(fullChatLogPath))
+				using (StreamWriter sw = File.AppendText(streamLogFullPath))
 				{
 					sw.WriteLine($"[{StreamUptime.ToString(@"hh\:mm\:ss")}] {text}");
 				}
@@ -141,9 +77,9 @@ namespace HowardBot
 		public void ReplaceLineInFile(string startOfLineText, string newText)
 		{
 			// If file exists
-			if (File.Exists(fullChatLogPath))
+			if (File.Exists(streamLogFullPath))
 			{
-				string[] lines = File.ReadAllLines(fullChatLogPath);
+				string[] lines = File.ReadAllLines(streamLogFullPath);
 				string lineToReplace = Array.Find(lines, x => x.StartsWith(startOfLineText));
 				int indexToReplace = Array.IndexOf(lines, lineToReplace);
 
@@ -151,119 +87,97 @@ namespace HowardBot
 				if (indexToReplace >= 0)
 				{
 					lines[indexToReplace] = newText;
-					File.WriteAllLines(fullChatLogPath, lines);
+					File.WriteAllLines(streamLogFullPath, lines);
 				}
 			}
 		}
 
 		#endregion
 
-		#region Event Methods
-
-		// When bot is connected to Twitch
-		private void OnConnected(object sender, OnConnectedArgs e)
+		/// <summary>
+		/// Runs when the bot has connected to Twitch and has joined my channel
+		/// </summary>
+		/// <param name="connectedToPubSub">True if the PubSub connection was successful, false otherwise</param>
+		private async void OnTwitchConnectionChange(bool connected)
 		{
-			Debug.Log($">> Connected to Twitch!");
+			IsInChannel = connected;
 
-			DoWhenStreamStartsOrBotConnects();
+			if (IsInChannel && !hasStarted)
+			{
+				TwitchHandler.SendMessage("/me Rushes out of barn and violently tackles everyone.");
+
+				MessageHandler = MessageHandler.Instance;
+
+				// Connect to OBS
+				OBSHandler.ConnectionArgs obsConnectArgs = new()
+				{
+					Host = "localhost",
+					Port = 4455,
+					Password = Utility.LoadEnvVar("OBS_WEBSOCKET_PASS")
+				};
+				OBSHandler = OBSHandler.Instance;
+				connectedToOBS = await OBSHandler.Connect(obsConnectArgs);
+
+				if (AmILive || testCustomRewards)
+					OnStreamStateChange(true);
+
+				Debug.Log($"[Initialization took {initTimer.Elapsed.Milliseconds}ms]", false);
+
+				OutputStatus();
+
+				Debug.Log("\nEvent log:", false);
+
+				hasStarted = true;
+			}
 		}
 
-		// When bot is connected to PubSub service
-		private void OnPubSubConnected(object sender, EventArgs e)
+		private async void OnStreamStateChange(bool started)
 		{
-			Debug.Log(">> Connected to PubSub!");
-			PubSubClient.SendTopics(PubsubToken);
+			AmILive = started;
+
+			// If stream started, or if testing custom channel point rewards
+			if (started)
+			{
+				streamStartTime = DateTime.Now;
+
+				// Create custom channel point rewards
+				RewardHandler = RewardHandler.Instance;
+				await RewardHandler.CreateCustomRewards();
+
+				// Only create log file if I'm really live, not when testing custom channel point rewards
+				if (!testCustomRewards)
+					CreateLogFile();
+			}
+
+			// If stream ended
+			if (!started)
+			{
+				TimeSpan duration = StreamUptime;
+				string durationStr = $"{duration.Hours} hours {duration.Minutes} minutes {duration.Seconds} seconds";
+
+				ReplaceLineInFile("Ended at", "Ended at: " + DateTime.Now.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt"));
+				ReplaceLineInFile("Duration", $"Duration: {durationStr}");
+			}
 		}
 
-		// When bot tries to connect to a PubSub topic
-		private void OnListenResponse(object sender, OnListenResponseArgs e)
+		private void OutputStatus()
 		{
-			if (!e.Successful)
-				Debug.LogError($">> Failed to listen to <{e.Topic}> ({e.Response.Error})");
-			else
-				Debug.Log($">> Listening to PubSub topic <{e.Topic}>...");
+			string[] status = new string[]
+			{
+				"Connected to Twitch: ",
+				"Connected to OBS: ",
+				"Joined channel: "
+			};
+
+			status[0] += IsInChannel ? '\u2713' : '\u00d7';
+			status[1] += connectedToOBS ? '\u2713' : '\u00d7';
+			status[2] += IsInChannel ? '\u2713' : '\u00d7';
+
+			foreach (string str in status)
+				Debug.Log(str, false, str.EndsWith('\u2713') ? ConsoleColor.Green : ConsoleColor.Red, false);
 		}
-
-		// When bot has connected to my channel and is ready for action
-		private void OnJoinedChannel(object sender, OnJoinedChannelArgs e)
-		{
-			// Stop timer
-			timer.Stop();
-
-			// Howard is ready for action!
-			Debug.Log($">> Joined channel {e.Channel} as {e.BotUsername}!\n[Connection took {timer.Elapsed.Milliseconds}ms]");
-			Debug.Log("Event log:", false);
-			SendMessage("/me Rushes out of barn and violently tackles everyone.");
-
-			CheckIfLive();
-		}
-
-		// When my stream is started
-		private void OnStreamStarted(object sender, OnStreamUpArgs e)
-		{
-			AmILive = true;
-			DoWhenStreamStartsOrBotConnects();
-		}
-
-		// When my stream has ended
-		private void OnStreamEnded(object sender, OnStreamDownArgs e)
-		{
-			AmILive = false;
-
-			TimeSpan duration = StreamUptime;
-			string durationStr = $"{duration.Hours} hours {duration.Minutes} minutes {duration.Seconds} seconds";
-
-			ReplaceLineInFile("Ended at", "Ended at: " + DateTime.Now.ToString("dddd, MMMM dd, yyyy, h:mm:ss tt"));
-			ReplaceLineInFile("Duration", $"Duration: {durationStr}");
-		}
-
-		// When someone raids my channel
-		private void OnRaid(object sender, OnRaidNotificationArgs e)
-		{
-			SendMessage($"{e.RaidNotification.DisplayName} brought {e.RaidNotification.MsgParamViewerCount} goats into the barn! 🐐");
-			messageHandler.RunCommand("shoutout", new string[] { e.RaidNotification.UserId });
-			AppendToLogFile($"[RAID] {e.RaidNotification.DisplayName} raided with {e.RaidNotification.MsgParamViewerCount} viewers!");
-		}
-
-		#endregion
 
 		#region Private Methods
-
-		/// <summary>
-		/// Recheck if I'm live in case where PubSub OnStreamStarted event doesn't run (eg. in case of bot crash during stream)
-		/// </summary>
-		private async void CheckIfLive()
-		{
-			await Utility.WaitForSeconds(10);
-
-			var response = await api.GetStreamForUser(ChannelId);
-
-			if (response != null)
-			{
-				AmILive = true;
-				DoWhenStreamStartsOrBotConnects();
-			}
-
-			CheckIfLive();
-		}
-
-		/// <summary>
-		/// All the things to do when straem starts or bot connects
-		/// </summary>
-		private async void DoWhenStreamStartsOrBotConnects()
-		{
-			if (!hasCreatedLogFile && (AmILive || (!AmILive && UsingChatLog)))
-				CreateLogFile();
-
-			if (!hasCreatedCustomRewards && (AmILive || (!AmILive && UsingCustomRewards)))
-			{
-				await rewardHandler.CreateCustomRewards();
-				hasCreatedCustomRewards = true;
-			}
-
-			if (AmILive && !UsingChatLog)
-				UsingChatLog = true;
-		}
 
 		/// <summary>
 		/// Loads environment variables from the .env file.
@@ -275,7 +189,7 @@ namespace HowardBot
 			ChannelName = ConfigurationManager.AppSettings["CHANNEL_NAME"];
 			ChannelId = ConfigurationManager.AppSettings["CHANNEL_ID"];
 			ClientId = ConfigurationManager.AppSettings["CLIENT_ID"];
-			chatLogsDir = ConfigurationManager.AppSettings["CHAT_LOG_DIRECTORY"];
+			streamLogsDir = ConfigurationManager.AppSettings["CHAT_LOG_DIRECTORY"];
 		}
 
 		/// <summary>
@@ -283,13 +197,12 @@ namespace HowardBot
 		/// </summary>
 		private async void CreateLogFile()
 		{
-			var response = await api.GetChannelInfo(ChannelId);
-			streamStartTime = DateTime.Now;
+			var response = await API.GetChannelInfo(ChannelId);
 			string timestamp = streamStartTime.ToString("MM/dd/yyyy HH:mm").Replace('/', '-').Replace(':', '-').Replace(' ', '_');
-			chatLogFileName = $"{timestamp}.txt";
-			fullChatLogPath = $"{chatLogsDir}\\{chatLogFileName}";
+			streamLogFileName = $"{timestamp}.txt";
+			streamLogFullPath = $"{streamLogsDir}\\{streamLogFileName}";
 
-			using (StreamWriter sw = File.CreateText(fullChatLogPath))
+			using (StreamWriter sw = File.CreateText(streamLogFullPath))
 			{
 				sw.WriteLine($"Title: {response.Title}");
 				sw.WriteLine($"Game: {response.GameName}");
@@ -304,8 +217,7 @@ namespace HowardBot
 				sw.WriteLine("----------------------------------------------------------------------------------------------------\n");
 			}
 
-			hasCreatedLogFile = true;
-			Debug.Log($"Created chat log '{chatLogFileName}'");
+			Debug.Log($"Created chat log '{streamLogFileName}'", true, ConsoleColor.Cyan);
 		}
 
 		#endregion

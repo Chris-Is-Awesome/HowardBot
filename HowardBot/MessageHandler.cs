@@ -28,7 +28,7 @@ namespace HowardBot
 
 		public MessageHandler()
 		{
-			client = Bot.TwitchClient;
+			client = TwitchHandler.TwitchClient;
 			client.OnMessageReceived += OnMessageReceived;
 
 			// Define & initialize commands
@@ -76,7 +76,7 @@ namespace HowardBot
 		public async void RunCommand(string commandName, string[] args = null)
 		{
 			if (TryParseCommand($"!{commandName}", out CommandInfo commandInfo))
-				Bot.SendMessage(await DoRunCommand(commandInfo, args));
+				TwitchHandler.SendMessage(await DoRunCommand(commandInfo, args));
 		}
 
 		// When a message is sent to chat
@@ -89,21 +89,23 @@ namespace HowardBot
 			{
 				if (!commandInfo.isDev || (commandInfo.isDev && chat.UserId == Bot.ChannelId))
 				{
-					Debug.Log($"[Chat - Command] Command '{commandInfo.name}' executed by '{chat.DisplayName}'.");
-
 					if (commandInfo.sendMessage)
 						if (commandInfo.reply)
-							Bot.SendReply(chat.Id, await DoRunCommand(commandInfo, args));
+						{
+							TwitchHandler.SendReply(chat.Id, await DoRunCommand(commandInfo, args));
+						}
 						else
-							Bot.SendMessage(await DoRunCommand(commandInfo, args));
+							TwitchHandler.SendMessage(await DoRunCommand(commandInfo, args));
 					else
 						await DoRunCommand(commandInfo, args);
 
-					if (Bot.UsingChatLog) LogMessage(chat, commandInfo);
+					if (Bot.AmILive) LogMessage(chat, commandInfo);
+
+					Debug.Log($"[Chat - Command] Command '{commandInfo.name}' executed by '{chat.DisplayName}'.");
 				}
 			}
 			else
-				if (Bot.UsingChatLog) LogMessage(chat, null);
+				if (Bot.AmILive) LogMessage(chat, null);
 		}
 
 		/// <summary>
@@ -144,14 +146,14 @@ namespace HowardBot
 						if (args[0] == "enable" && !command.Enabled)
 						{
 							command.Enabled = true;
-							Bot.SendReply(chat.Id, $"The command {commandName} has been enabled.");
+							TwitchHandler.SendReply(chat.Id, $"The command {commandName} has been enabled.");
 						}
 						// Disable
 						else if (args[0] == "disable" && command.Enabled)
 						{
 							command.Enabled = false;
 							justDisabled = true;
-							Bot.SendReply(chat.Id, $"The command {commandName} has been disabled.");
+							TwitchHandler.SendReply(chat.Id, $"The command {commandName} has been disabled.");
 						}
 					}
 
@@ -159,17 +161,16 @@ namespace HowardBot
 					if (command.Enabled)
 						return true;
 					else if (!justDisabled)
-						Bot.SendReply(chat.Id, $"The command '{commandName}' is disabled.");
+						TwitchHandler.SendReply(chat.Id, $"The command '{commandName}' is disabled.");
 				}
 				// If command invalid
 				else
-					Bot.SendReply(chat.Id, $"No command named '{splitMessage[0]}' was found. Either you made a typo or Chris is dumber than a Stupid Bee.");
+					TwitchHandler.SendReply(chat.Id, $"No command named '{splitMessage[0]}' was found. Either you made a typo or Chris is dumber than a Stupid Bee.");
 			}
 
 			commandInfo = null;
 			args = null;
 			return false;
-
 		}
 
 		/// <summary>
@@ -293,7 +294,7 @@ namespace HowardBot
 						}
 
 						// Run command
-						Bot.SendMessage(await DoRunCommand(commandToRun, null));
+						TwitchHandler.SendMessage(await DoRunCommand(commandToRun, null));
 
 						// Update lastTimerCommandFired
 						lastTimerCommandFired = commandToRun;

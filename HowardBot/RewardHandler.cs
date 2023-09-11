@@ -26,8 +26,7 @@ namespace HowardBot
 
 		public RewardHandler()
 		{
-			client = Bot.PubSubClient;
-
+			client = TwitchHandler.Instance.PubSubClient;
 			client.ListenToChannelPoints(Bot.ChannelId);
 			client.OnChannelPointsRewardRedeemed += OnRewardRedeemed;
 		}
@@ -129,14 +128,14 @@ namespace HowardBot
 			// Start effect if effect isn't already active or effect type isn't active
 			if (!activeEffects.Contains(effect) && !activeEffects.Any(x => x.GetType() == effect.GetType()))
 			{
-				Bot.SendMessage(output);
+				TwitchHandler.SendMessage(output);
 				Start(effect, userInput);
 			}
 			// Add effect to queue
 			else
 			{
 				effectsInQueue.Add(effect);
-				Bot.SendMessage(output += $" Only one effect of each type can be active at once, so {effect.Reward.Title} will be added to the end of the queue at position {effectsInQueue.Count}");
+				TwitchHandler.SendMessage(output += $" Only one effect of each type can be active at once, so {effect.Reward.Title} will be added to the end of the queue at position {effectsInQueue.Count}");
 			}
 		}
 
@@ -195,7 +194,7 @@ namespace HowardBot
 				}
 				else output += " Queue is empty.";
 
-				Bot.SendMessage(output);
+				TwitchHandler.SendMessage(output);
 				Start(effect);
 				break;
 			}

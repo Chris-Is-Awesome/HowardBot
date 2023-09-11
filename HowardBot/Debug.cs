@@ -10,12 +10,17 @@ namespace HowardBot
 		/// </summary>
 		/// <param name="message">The message to log</param>
 		/// <param name="includeTimestamp">If the timestamp should be included.</param>
-		public static void Log(object message, bool includeTimestamp = true)
+		public static void Log(object message, bool includeTimestamp = true, ConsoleColor color = ConsoleColor.White, bool addNewLine = true)
 		{
-			if (includeTimestamp)
-				Console.WriteLine($"{Utility.Timestamp} {message}\n");
-			else
-				Console.WriteLine(message + "\n");
+			string output = includeTimestamp ? $"{Utility.Timestamp} {message}" : message.ToString();
+
+			// Add new line
+			if (addNewLine)
+				output += "\n";
+
+			Console.ForegroundColor = color;
+			Console.WriteLine(output);
+			Console.ResetColor();
 		}
 
 		/// <summary>
