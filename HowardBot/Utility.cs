@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace HowardBot
 {
@@ -57,8 +58,17 @@ namespace HowardBot
 			using (StreamReader file = File.OpenText(filePath))
 			{
 				JsonSerializer serializer = new JsonSerializer();
-				return  (T)serializer.Deserialize(file, typeof(T));
+				return (T)serializer.Deserialize(file, typeof(T));
 			}
+		}
+
+		/// <summary>
+		/// Returns the environment variable with the given name, or empty string if none is found.
+		/// </summary>
+		/// <param name="varName">The name of the environment variable to retrieve</param>
+		public static string LoadEnvVar(string varName)
+		{
+			return ConfigurationManager.AppSettings[varName];
 		}
 	}
 }
