@@ -1,15 +1,15 @@
 ﻿namespace HowardBot.Rewards
 {
-	public class RewardEffect
+	public class RewardEffect_OLD
 	{
-		public delegate void Func(RewardEffect effect);
+		public delegate void Func(RewardEffect_OLD effect);
 		public Func onEffectStop;
 
-		public Reward Reward { get; }
+		public Reward_OLD Reward { get; }
 
-		public RewardEffect(RewardHandler.RewardData.Reward rewardData)
+		public RewardEffect_OLD(RewardHandler_OLD.RewardData.Reward rewardData)
 		{
-			Reward = new Reward()
+			Reward = new Reward_OLD()
 			{
 				OnTwitch = !rewardData.noTwitchReward,
 				Title = rewardData.title,

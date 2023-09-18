@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TwitchLib.Client;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
@@ -16,7 +17,7 @@ namespace HowardBot
 		private readonly string channelId;
 
 		public delegate void ConnectionFunc(bool connected);
-		public delegate void StreamFunc(bool started);
+		public delegate Task StreamFunc(bool started);
 
 		public static event ConnectionFunc OnConnectionChange;
 		public static event StreamFunc OnStreamStateChange;
@@ -79,7 +80,10 @@ namespace HowardBot
 		public static void SendReply(string replyToId, string message)
 		{
 			if (Bot.IsInChannel)
+			{
 				twitch.SendReply("chrisisawesome", replyToId, message);
+				Debug.Log(message);
+			}
 		}
 
 		private void OnConnectionError(object sender, TwitchLib.Client.Events.OnConnectionErrorArgs e)

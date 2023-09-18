@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>HowardBot</AssemblyName>
-    <RootNamespace>HowardBot</RootNamespace>
+    <RootNamespace></RootNamespace>
     <ApplicationIcon>awePog.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -64,6 +64,10 @@
 	  <Content Include="HowardBot\Data\**">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="HowardBot\Data\RewardData.json" />
   </ItemGroup>
 
 </Project>

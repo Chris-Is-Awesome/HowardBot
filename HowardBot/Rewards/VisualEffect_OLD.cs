@@ -1,9 +1,9 @@
-﻿using AutoHotkey.Interop;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AutoHotkey.Interop;
 
 namespace HowardBot.Rewards
 {
-	public class VisualEffect : RewardEffect
+	public class VisualEffect_OLD : RewardEffect_OLD
 	{
 		public delegate Task EffectFunc();
 
@@ -13,7 +13,7 @@ namespace HowardBot.Rewards
 		public float Duration { get; }
 		public EffectFunc StartFunc { get { return Start; } }
 
-		public VisualEffect(RewardHandler.RewardData.Reward rewardData, EffectData effectData) : base(rewardData)
+		public VisualEffect_OLD(RewardHandler_OLD.RewardData.Reward rewardData, EffectData effectData) : base(rewardData)
 		{
 			HotkeyNum = effectData.hotkeyNum;
 			Duration = effectData.duration;

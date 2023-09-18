@@ -50,7 +50,7 @@ namespace HowardBot
 				else if (obs.ConnectionState == ConnectionState.Disconnected)
 				{
 					// If authentication was unsuccessful
-					if (!authSuccess && !connected)
+					if (!authSuccess && !connected && !Bot.TestLiveStuff)
 						Debug.LogWarning($"Couldn't connect to OBS Websocket — Authentication failed.\nDouble check the following:\n1. Password and port are correct, and host should be 'localhost',\n2. WebSocket server is enabled, and\n3. OBS is running");
 
 					connected = false;
@@ -66,12 +66,12 @@ namespace HowardBot
 		private void OnConnected()
 		{
 			connected = true;
-			obs.SetSourceFilterEnabled("Backgrounds", "test", true);
+			//obs.SetSourceFilterEnabled("Backgrounds", "test", true);
 		}
 
 		private void OnDisconnecting()
 		{
-			obs.SetSourceFilterEnabled("Backgrounds", "test", false);
+			//obs.SetSourceFilterEnabled("Backgrounds", "test", false);
 		}
 
 		public struct ConnectionArgs

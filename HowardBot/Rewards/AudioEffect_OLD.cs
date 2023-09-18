@@ -2,7 +2,7 @@
 
 namespace HowardBot.Rewards
 {
-	public class AudioEffect : RewardEffect
+	public class AudioEffect_OLD : RewardEffect_OLD
 	{
 		public readonly SoundType type;
 		public readonly string name;
@@ -16,7 +16,7 @@ namespace HowardBot.Rewards
 		public RandomSoundFunc StartRandomSoundFunc { get { return StartRandomSound; } }
 		public SoundFunc StartSoundFunc { get { return StartSound; } }
 
-		public AudioEffect(RewardHandler.RewardData.Reward rewardData, EffectData effectData) : base(rewardData)
+		public AudioEffect_OLD(RewardHandler_OLD.RewardData.Reward rewardData, EffectData effectData) : base(rewardData)
 		{
 			player = Bot.AudioPlayer;
 			player.OnStopped += Stop;

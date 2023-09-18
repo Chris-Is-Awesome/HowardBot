@@ -4,6 +4,7 @@ using TwitchLib.Api;
 using TwitchLib.Api.Helix;
 using TwitchLib.Api.Helix.Models.ChannelPoints;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
+using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.Channels.GetChannelInformation;
 using TwitchLib.Api.Helix.Models.Streams.GetStreams;
 using TwitchLib.Api.Helix.Models.Users.GetUsers;
@@ -125,22 +126,22 @@ namespace HowardBot
 		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/></param>
 		/// <param name="reward">The custom reward object with all the properties set</param>
 		/// <returns>The new custom channel point reward</returns>
-		public async Task<CustomReward[]> CreateCustomReward(string userId, Rewards.Reward reward)
+		public async Task<CustomReward[]> CreateCustomReward(string userId, Rewards.CustomReward reward)
 		{
 			CreateCustomRewardsRequest newRewardRequest = new()
 			{
 				Title = reward.Title,
 				Prompt = reward.Description,
 				Cost = reward.Cost,
-				IsEnabled = reward.IsEnabled,
+				IsEnabled = reward.Enabled,
 				BackgroundColor = reward.BackgroundColor,
-				IsUserInputRequired = reward.IsTextRequired,
+				IsUserInputRequired = reward.IsInputRequired,
 				IsGlobalCooldownEnabled = reward.GlobalCooldownSeconds > 0,
 				GlobalCooldownSeconds = reward.GlobalCooldownSeconds,
 				IsMaxPerStreamEnabled = reward.MaxRedemptionsPerStream > 0,
 				MaxPerStream = reward.MaxRedemptionsPerStream,
-				IsMaxPerUserPerStreamEnabled = reward.MaxRedemptionsPerUserPerStream > 0,
-				MaxPerUserPerStream = reward.MaxRedemptionsPerUserPerStream,
+				IsMaxPerUserPerStreamEnabled = reward.MaxRedemptionsPerUser > 0,
+				MaxPerUserPerStream = reward.MaxRedemptionsPerUser,
 				ShouldRedemptionsSkipRequestQueue = reward.SkipRequestQueue
 			};
 
@@ -150,13 +151,32 @@ namespace HowardBot
 		}
 
 		/// <summary>
+		/// Enables/disables the custom reward. Note that this only works for rewards created from the bot because Twitch is bad.
+		/// </summary>
+		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/></param>
+		/// <param name="rewardId">The ID for the reward</param>
+		/// <param name="enabled">Should the reward be enabled?</param>
+		/// <returns>The modified custom channel point reward</returns>
+		public async Task<CustomReward[]> ToggleCustomReward(string userId, string rewardId, bool enabled)
+		{
+			UpdateCustomRewardRequest updateRequest = new()
+			{
+				IsEnabled = enabled
+			};
+
+			var response = await helix.ChannelPoints.UpdateCustomRewardAsync(broadcasterId: userId, rewardId: rewardId, request: updateRequest, accessToken: Bot.PubsubToken);
+
+			return response.Data;
+		}
+
+		/// <summary>
 		/// Deletes the custom channel point reward from Twitch
 		/// </summary>
 		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/></param>
-		/// <param name="reward">The custom reward object with all the properties set</param>
-		public async Task DeleteCustomReward(string userId, Rewards.Reward reward)
+		/// <param name="rewardId">The ID for the reward</param>
+		public async Task DeleteCustomReward(string userId, string rewardId)
 		{
-			await helix.ChannelPoints.DeleteCustomRewardAsync(broadcasterId: userId, reward.Id, Bot.PubsubToken);
+			await helix.ChannelPoints.DeleteCustomRewardAsync(broadcasterId: userId, rewardId, Bot.PubsubToken);
 		}
 
 		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/> to get a user's ID from their DisplayName.</param>

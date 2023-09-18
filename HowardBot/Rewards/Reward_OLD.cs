@@ -1,11 +1,9 @@
-﻿using TwitchLib.Api.Helix.Models.ChannelPoints;
-
-namespace HowardBot.Rewards
+﻿namespace HowardBot.Rewards
 {
 	/// <summary>
 	/// Class for handling custom & existing channel point rewards
 	/// </summary>
-	public class Reward
+	public class Reward_OLD
 	{
 		private string _title;
 		private string _description;
@@ -226,17 +224,15 @@ namespace HowardBot.Rewards
 
 		#endregion
 
-		private CustomReward reward;
+		private TwitchLib.Api.Helix.Models.ChannelPoints.CustomReward reward;
 
 		/// <summary>
 		/// Adds the custom reward to Twitch
 		/// </summary>
 		public async void AddRewardToTwitch()
 		{
-			var response = await API.Instance.CreateCustomReward(Bot.ChannelId, this);
-
-			if (response != null)
-				reward = response[0];
+			reward = null;
+			await Utility.WaitForSeconds(0);
 		}
 	}
 }

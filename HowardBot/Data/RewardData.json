@@ -1,203 +1,74 @@
 {
 	"rewards": [
+		// Brakeslide
 		{
-			"title": "[SFX] Laugh",
-			"description": "Laugh at me, or with me",
-			"cost": 500,
-			"isEnabled": true,
-			"backgroundColor": "#46C6E3",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 60,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
-			"skipRequestQueue": true,
-			"audioData": {
-				"type": "SoundClip",
-				"name": "laugh_track"
+			"id": "4a77c5e8-3a0c-4686-be6d-f83e2560ceeb",
+			"enableForGames": [
+				"The Legend of Zelda: Twilight Princess",
+				"The Legend of Zelda: The Wind Waker"
+			]
+		},
+		// Laugh
+		{
+			"id": "968f20ce-0172-49a1-8e25-8ae05484f63a",
+			"rewardType": "Audio",
+			"data": {
+				"soundName": "laugh_track",
+				"soundType": "SoundClip"
 			}
 		},
+		// Random voice clip
 		{
-			"title": "[SFX] Flush",
-			"description": "This tells me what you think of my content",
-			"cost": 500,
-			"isEnabled": true,
-			"backgroundColor": "#46C6E3",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 60,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
-			"skipRequestQueue": true,
-			"audioData": {
-				"type": "SoundClip",
-				"name": "toilet_flush"
-			}
-		},
-		{
-			"title": "[SFX] much wow",
-			"description": "wow much",
-			"cost": 500,
-			"isEnabled": true,
-			"backgroundColor": "#46C6E3",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 0,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
-			"skipRequestQueue": true,
-			"audioData": {
-				"type": "SoundClip",
-				"name": "wow"
-			}
-		},
-		{
-			"title": "[SFX] Play a Random Voice Clip",
-			"description": "Plays a random sound from one of my favorite games, including some from Zelda, Hollow Knight, and more!",
-			"cost": 250,
-			"isEnabled": true,
-			"backgroundColor": "#46C6E3",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 0,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
-			"skipRequestQueue": true,
-			"audioData": {
-				"type": "VoiceClip",
+			"id": "40a5a20f-4d7e-4ab4-bc34-5b8630c70720",
+			"rewardType": "Audio",
+			"data": {
+				"soundType": "VoiceClip",
 				"random": true
 			}
 		},
+		// Hype song
 		{
-			"title": "[SFX] Play Spoopy Music",
-			"description": "And suddenly you get an intense feeling of lingering regret...",
-			"cost": 1000,
-			"isEnabled": true,
-			"backgroundColor": "#46C6E3",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 1800,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
-			"skipRequestQueue": true,
-			"audioData": {
-				"type": "Song",
-				"name": "hk_shade"
+			"id": "27fc1bd6-dc18-472c-a75c-b7a35e42321d",
+			"rewardType": "Audio",
+			"data": {
+				"soundName": "albw_hype_song",
+				"soundType": "Song"
 			}
 		},
+		// Random visual effect
 		{
-			"title": "[SFX] Play Hype Song",
-			"description": "hypehypehypehypehypehypehypehypehype",
-			"cost": 1000,
-			"isEnabled": true,
-			"backgroundColor": "#46C6E3",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 3600,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
-			"skipRequestQueue": true,
-			"audioData": {
-				"type": "Song",
-				"name": "albw_hype_song"
+			"id": "612ab06f-3422-4018-ae05-4cb3704e22b5",
+			"interactive": true,
+			"rewardType": "OBS",
+			"data": {
+				"filter": "random"
 			}
 		},
+		// Screenflip
 		{
-			"title": "[VFX] Random Visual Effect",
-			"description": "Picks a random visual effect and applies it to the game feed for myself and the viewers! The more expensive pixelate, screenflip, and wide mode are included in the pool.",
-			"cost": 750,
-			"isEnabled": true,
-			"backgroundColor": "#4bad37",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 300,
-			"maxRedemptionsPerStream": 0,
-			"maxRedemptionsPerUserPerStream": 0,
-			"skipRequestQueue": true,
-			"visualData": {
-				"hotkeyNum": -1,
-				"duration": 60
+			"id": "904ded81-69c0-41ba-be76-5f493bfe8646",
+			"interactive": true,
+			"rewardType": "OBS",
+			"data": {
+				"filter": "games/flip"
 			}
 		},
+		// Wide mode
 		{
-			"title": "[VFX] Pixelate",
-			"description": "Pixelates the screen for 60 seconds",
-			"cost": 1000,
-			"isEnabled": true,
-			"backgroundColor": "#4bad37",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 300,
-			"maxRedemptionsPerStream": 6,
-			"maxRedemptionsPerUserPerStream": 3,
-			"skipRequestQueue": true,
-			"visualData": {
-				"hotkeyNum": 4,
-				"duration": 60
+			"id": "93862aab-91b3-4d8c-ab61-935600dd8f46",
+			"interactive":  true,
+			"rewardType": "OBS",
+			"data": {
+				"filter": "games/wide"
 			}
 		},
+		// Black & White
 		{
-			"title": "[VFX]【﻿Ｗ　Ｉ　Ｄ　Ｅ】Mode",
-			"description": "░█──░█ ▀█▀ ░█▀▀▄ ░█▀▀▀\n░█░█░█ ░█─ ░█─░█ ░█▀▀▀\n░█▄▀▄█ ▄█▄ ░█▄▄▀ ░█▄▄▄ for 60 seconds",
-			"cost": 1500,
-			"isEnabled": true,
-			"backgroundColor": "#4bad37",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 300,
-			"maxRedemptionsPerStream": 6,
-			"maxRedemptionsPerUserPerStream": 3,
-			"skipRequestQueue": true,
-			"visualData": {
-				"hotkeyNum": 2,
-				"duration": 60
-			}
-		},
-		{
-			"title": "[VFX] qilʇnɘɘɿɔƧ",
-			"description": "(╯°□°）╯︵ ┻━┻ but with a screen. Lasts for 60 seconds.",
-			"cost": 2000,
-			"isEnabled": true,
-			"backgroundColor": "#4bad37",
-			"isTextRequired": false,
-			"globalCooldownSeconds": 300,
-			"maxRedemptionsPerStream": 6,
-			"maxRedemptionsPerUserPerStream": 3,
-			"skipRequestQueue": true,
-			"visualData": {
-				"hotkeyNum": 1,
-				"duration": 60
-			}
-		},
-		{
-			"noTwitchReward": true,
-			"title": "[VFX] Pinhole",
-			"visualData": {
-				"hotkeyNum": 3,
-				"duration": 60
-			}
-		},
-		{
-			"noTwitchReward": true,
-			"title": "[VFX] Inversion",
-			"visualData": {
-				"hotkeyNum": 5,
-				"duration": 60
-			}
-		},
-		{
-			"noTwitchReward": true,
-			"title": "[VFX] Black & White",
-			"visualData": {
-				"hotkeyNum": 6,
-				"duration": 60
-			}
-		},
-		{
-			"noTwitchReward": true,
-			"title": "[VFX] Cell-Shaded",
-			"visualData": {
-				"hotkeyNum": 7,
-				"duration": 60
-			}
-		},
-		{
-			"noTwitchReward": true,
-			"title": "[VFX] VHS",
-			"visualData": {
-				"hotkeyNum": 8,
-				"duration": 60
+			"id": "98607df7-b914-40cb-8ca6-483ba0977438",
+			"interactive": true,
+			"rewardType": "OBS",
+			"data": {
+				"filter": "games/b&w"
 			}
 		}
 	]
