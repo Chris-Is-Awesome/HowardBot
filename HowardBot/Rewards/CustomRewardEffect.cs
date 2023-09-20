@@ -19,6 +19,11 @@
 			IsActive = true;
 		}
 
+		public CustomRewardEffect Clone()
+		{
+			return (CustomRewardEffect)MemberwiseClone();
+		}
+
 		protected virtual void OnEffectDone()
 		{
 			IsActive = false;

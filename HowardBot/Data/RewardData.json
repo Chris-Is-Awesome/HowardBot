@@ -41,7 +41,17 @@
 			"interactive": true,
 			"rewardType": "OBS",
 			"data": {
-				"filter": "random"
+				"source": "Games",
+				"filter": "Random"
+			}
+		},
+		// Pick visual effect
+		{
+			"id": "a3a28e7f-bd4c-4d2e-a767-903a960042fa",
+			"interactive": true,
+			"rewardType": "OBS",
+			"data": {
+				"source": "Games"
 			}
 		},
 		// Screenflip
@@ -50,25 +60,18 @@
 			"interactive": true,
 			"rewardType": "OBS",
 			"data": {
-				"filter": "games/flip"
+				"source": "Games",
+				"filter": "Screenflip"
 			}
 		},
 		// Wide mode
 		{
 			"id": "93862aab-91b3-4d8c-ab61-935600dd8f46",
-			"interactive":  true,
-			"rewardType": "OBS",
-			"data": {
-				"filter": "games/wide"
-			}
-		},
-		// Black & White
-		{
-			"id": "98607df7-b914-40cb-8ca6-483ba0977438",
 			"interactive": true,
 			"rewardType": "OBS",
 			"data": {
-				"filter": "games/b&w"
+				"source": "Games",
+				"filter": "Wide"
 			}
 		}
 	]

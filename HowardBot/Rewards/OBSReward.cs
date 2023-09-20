@@ -1,27 +1,54 @@
-﻿namespace HowardBot.Rewards
+﻿using System.Threading;
+
+namespace HowardBot.Rewards
 {
 	class OBSReward : CustomRewardEffect
 	{
 		private readonly OBSHandler obs;
+		private string randomFilter;
 
-		public string Filter { get; init; }
-		public int Duration { get; init; } = 60;
+		public string Source { get; init; }
+		public string Filter { get; set; }
+		public int Duration { get; init; } = 10;
 
 		public OBSReward()
 		{
-			obs = Bot.OBSHandler;
+			obs = OBSHandler.Instance;
 		}
 
 		protected override void StartEffect(string userInput)
 		{
-			Debug.Log($"Started OBS effect with duration of {Duration} seconds!");
-			DoEffect();
+			new Thread(() =>
+			{
+				ToggleFilter(true, userInput);
+				string filterToggled = randomFilter != null ? randomFilter : Filter;
+				TwitchHandler.SendMessage($"Activated {filterToggled}! Will last for {Duration} seconds.");
+
+				Thread.Sleep(Duration * 1000);
+
+				ToggleFilter(false, userInput);
+				TwitchHandler.SendMessage($"Deactivated {filterToggled} effect.");
+				OnEffectDone();
+			}).Start();
 		}
 
-		private async void DoEffect()
+		private void ToggleFilter(bool enable, string filter)
 		{
-			await Utility.WaitForSeconds(3);
-			OnEffectDone();
+			if (!string.IsNullOrEmpty(filter))
+				Filter = filter;
+
+			if (Filter == "Random")
+			{
+				if (enable)
+					randomFilter = obs.ToggleRandomFilter(Source).FilterName;
+				else if (randomFilter != null)
+				{
+					obs.ToggleFilter(Source, randomFilter, false);
+					randomFilter = null;
+				}
+			}
+			else
+				obs.ToggleFilter(Source, Filter, enable);
 		}
 	}
 }

@@ -174,6 +174,23 @@ namespace HowardBot.Rewards
 		}
 
 		/// <summary>
+		/// Updates this custom reward on Twitch
+		/// </summary>
+		/// <returns>True if the custom reward was successfully updated on Twitch; false otherwise</returns>
+		public async Task<bool> UpdateOnTwitch(string id, API.UpdateRewardRequest request)
+		{
+			var response = await API.Instance.UpdateCustomReward(Bot.ChannelId, id, request);
+
+			if (response != null)
+			{
+				TwitchReward = response[0];
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
 		/// Enables this reward on Twitch and stores the reference to the Twitch reward
 		/// </summary>
 		/// <param name="twitchReward">The reward object from Twitch</param>
@@ -193,6 +210,11 @@ namespace HowardBot.Rewards
 		{
 			var response = await API.Instance.ToggleCustomReward(Bot.ChannelId, TwitchReward.Id, false);
 			return response != null;
+		}
+
+		public CustomReward Clone()
+		{
+			return (CustomReward)MemberwiseClone();
 		}
 
 		public readonly struct RewardJSONObject

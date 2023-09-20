@@ -42,13 +42,30 @@ namespace HowardBot
 
 			foreach (CustomReward reward in rewards)
 			{
+				// If the reward requires OBS but OBS hook isn't active, skip it
+				if (reward.RewardType == CustomReward.Type.OBS && !OBSHandler.Instance.IsConnected)
+					continue;
+
 				// Gets the reward object from Twitch
 				var twitchReward = twitchRewards.FirstOrDefault(x => x.Id == reward.Id);
 
-				// If reward is already on Twitch, enable it
-				if (twitchReward != null)
+				// If reward is already on Twitch
+				if (twitchReward != null && reward.DoEnable)
 				{
-					if (reward.DoEnable)
+					// Update reward
+					if (reward.GlobalCooldownSeconds != twitchReward.GlobalCooldownSetting.GlobalCooldownSeconds)
+					{
+						API.UpdateRewardRequest request = new()
+						{
+							Enabled = true,
+							GlobalCooldownSeconds = reward.GlobalCooldownSeconds
+						};
+
+						await reward.UpdateOnTwitch(twitchReward.Id, request);
+						Debug.Log($"Updated {twitchReward.Title}!");
+					}
+					// Enable reward
+					else
 						await reward.Enable(twitchReward);
 				}
 				// If reward is not on Twitch, add it
@@ -63,7 +80,11 @@ namespace HowardBot
 		public async Task DisableCustomRewards()
 		{
 			foreach (CustomReward reward in rewards)
-				await reward.Disable();
+			{
+				// If reward is active, disable it
+				if (reward.TwitchReward != null)
+					await reward.Disable();
+			}
 		}
 
 		/// <summary>
@@ -124,6 +145,8 @@ namespace HowardBot
 				}
 				else
 					LogRedemption(redemption, false);
+
+				//TwitchHandler.SendMessage($"{reward.Title}'s ID is {reward.Id}");
 			}
 		}
 
@@ -156,6 +179,8 @@ namespace HowardBot
 		/// </summary>
 		private void StartEffect(CustomReward reward, Redemption redemption, bool startedFromQueue)
 		{
+			reward = reward.Clone();
+			reward.Effect = reward.Effect.Clone();
 			reward.Effect.TriggerEffect(redemption.UserInput);
 			reward.Effect.OnEffectFinished += OnRewardEffectFinished;
 			rewardsActive.Add(reward);
@@ -209,12 +234,12 @@ namespace HowardBot
 		private bool CanStartEffect(CustomReward reward, bool fromQueue = false)
 		{
 			/* Can NOT start effect if:
-			// - The reward is already active, OR
-			// - The reward is an OBS one, OR
+			// - The reward is already active and is not random visual effect, OR
+			// - The reward is an OBS, OR
 			// - The reward is an audio one AND there's an audio already playing or in the queue
 			*/
 
-			if (rewardsActive.Contains(reward))
+			if (rewardsActive.Contains(reward) && reward.Id != "612ab06f-3422-4018-ae05-4cb3704e22b5")
 				return false;
 
 			if (reward.RewardType == CustomReward.Type.OBS)

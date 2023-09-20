@@ -169,6 +169,73 @@ namespace HowardBot
 			return response.Data;
 		}
 
+		public async Task<CustomReward[]> UpdateCustomReward(string userId, string rewardId, UpdateRewardRequest request)
+		{
+			UpdateCustomRewardRequest updateRequest = new();
+			if (!string.IsNullOrEmpty(request.Title))
+				updateRequest.Title = request.Title;
+			if (string.IsNullOrEmpty(request.Description))
+				updateRequest.Prompt = request.Description;
+			if (request.Enabled != null)
+				updateRequest.IsEnabled = request.Enabled;
+			if (request.Cost != null)
+				updateRequest.Cost = request.Cost;
+			if (!string.IsNullOrEmpty(request.BackgroundColor))
+				updateRequest.BackgroundColor = request.BackgroundColor;
+			if (request.GlobalCooldownSeconds != null)
+			{
+				updateRequest.IsGlobalCooldownEnabled = true;
+				updateRequest.GlobalCooldownSeconds = request.GlobalCooldownSeconds;
+			}
+			if (request.MaxRedemptionsPerStream != null)
+			{
+				updateRequest.IsMaxPerStreamEnabled = true;
+				updateRequest.MaxPerStream = request.MaxRedemptionsPerStream;
+			}
+			if (request.MaxRedemptionsPerUser != null)
+			{
+				updateRequest.IsMaxPerUserPerStreamEnabled = true;
+				updateRequest.MaxPerUserPerStream = request.MaxRedemptionsPerUser;
+			}
+			if (request.SkipRequestQueue != null)
+				updateRequest.ShouldRedemptionsSkipRequestQueue = request.SkipRequestQueue;
+
+			var response = await helix.ChannelPoints.UpdateCustomRewardAsync(broadcasterId: userId, rewardId: rewardId, request: updateRequest, accessToken: Bot.PubsubToken);
+
+			return response.Data;
+		}
+
+		/// <summary>
+		/// Updates the custom reward. Note that this only works for rewards created from the bot because Twitch is bad.
+		/// </summary>
+		/// <param name="userId">The ID for the user. Can use <see cref="GetUserByName(string)"/></param>
+		/// <param name="rewardId">The ID for the reward</param>
+		/// <param name="reward">The new CustomReward with which to base the update off of</param>
+		/// <returns></returns>
+		public async Task<CustomReward[]> UpdateCustomReward(string userId, string rewardId, Rewards.CustomReward reward)
+		{
+			UpdateCustomRewardRequest updateRequest = new()
+			{
+				Title = reward.Title,
+				Prompt = reward.Description,
+				Cost = reward.Cost,
+				IsEnabled = reward.Enabled,
+				BackgroundColor = reward.BackgroundColor,
+				IsUserInputRequired = reward.IsInputRequired,
+				IsGlobalCooldownEnabled = reward.GlobalCooldownSeconds > 0,
+				GlobalCooldownSeconds = reward.GlobalCooldownSeconds,
+				IsMaxPerStreamEnabled = reward.MaxRedemptionsPerStream > 0,
+				MaxPerStream = reward.MaxRedemptionsPerStream,
+				IsMaxPerUserPerStreamEnabled = reward.MaxRedemptionsPerUser > 0,
+				MaxPerUserPerStream = reward.MaxRedemptionsPerUser,
+				ShouldRedemptionsSkipRequestQueue = reward.SkipRequestQueue
+			};
+
+			var response = await helix.ChannelPoints.UpdateCustomRewardAsync(broadcasterId: userId, rewardId: rewardId, request: updateRequest, accessToken: Bot.PubsubToken);
+
+			return response.Data;
+		}
+
 		/// <summary>
 		/// Deletes the custom channel point reward from Twitch
 		/// </summary>
@@ -199,6 +266,19 @@ namespace HowardBot
 			}
 
 			return null;
+		}
+
+		public struct UpdateRewardRequest
+		{
+			public string Title { get; set; }
+			public string Description { get; set; }
+			public bool? Enabled { get; set; }
+			public int? Cost { get; set; }
+			public string BackgroundColor { get; set; }
+			public int? GlobalCooldownSeconds { get; set; }
+			public int? MaxRedemptionsPerStream { get; set; }
+			public int? MaxRedemptionsPerUser { get; set; }
+			public bool? SkipRequestQueue { get; set; }
 		}
 
 		#endregion
