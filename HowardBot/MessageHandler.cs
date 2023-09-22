@@ -42,7 +42,8 @@ namespace HowardBot
 
 				// Dev
 				{ new CommandInfo("stopaudio", new StopAudioCommand(), aliases: new string[] { "stopsongs", "stopsounds" }, isDev: true) },
-				{ new CommandInfo("test", new TestCommand(), aliases: new string[] { "t" }, isDev: true) },
+				{ new CommandInfo("togglerewards", new ToggleRewardsCommand(), isDev: true, async: true) },
+				{ new CommandInfo("test", new TestCommand(), aliases: new string[] { "t" }, isDev: true, async: true) },
 
 				// Self promos
 				{ new CommandInfo("discord", new DiscordCommand(), aliases: new string[] { "disc" }, timerInterval: 60) },
@@ -92,10 +93,12 @@ namespace HowardBot
 					if (commandInfo.sendMessage)
 						if (commandInfo.reply)
 						{
-							TwitchHandler.SendReply(chat.Id, await DoRunCommand(commandInfo, args));
+							string test = await DoRunCommand(commandInfo, args);
+							TwitchHandler.SendReply(chat.Id, test);
 						}
 						else
 							TwitchHandler.SendMessage(await DoRunCommand(commandInfo, args));
+
 					else
 						await DoRunCommand(commandInfo, args);
 
@@ -149,7 +152,7 @@ namespace HowardBot
 							TwitchHandler.SendReply(chat.Id, $"The command {commandName} has been enabled.");
 						}
 						// Disable
-						else if (args[0] == "disable" && command.Enabled)
+						else if (args[0] == "disable" && command.Enabled && commandName != "togglerewards")
 						{
 							command.Enabled = false;
 							justDisabled = true;

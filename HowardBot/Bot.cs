@@ -10,7 +10,6 @@ namespace HowardBot
 	class Bot : Singleton<Bot>
 	{
 		private readonly Stopwatch initTimer;
-		private readonly bool testCustomRewards = true; // Set to true to test reward redemptions
 		private bool connectedToOBS;
 		private bool hasStarted; // Used to know if the bot has done initialization already in case of a reconnect
 		private string streamLogsDir;
@@ -18,15 +17,19 @@ namespace HowardBot
 		private string streamLogFullPath;
 		private DateTime streamStartTime;
 
+		/// <summary>
+		/// Set to true to test live events without needing to be live
+		/// </summary>
+		public static bool TestLiveStuff { get; } = true; // Set to true to test reward redemptions
 		public static bool AmILive { get; private set; }
 		public static bool IsInChannel { get; private set; }
 		public static AutoHotkeyEngine AHK { get; private set; }
 		public static API API { get; private set; }
 		public static AudioPlayer AudioPlayer { get; private set; }
 		public static MessageHandler MessageHandler { get; private set; }
+		public static OBSHandler OBSHandler { get; set; }
 		public static TwitchHandler TwitchHandler { get; private set; }
 		public static RewardHandler RewardHandler { get; private set; }
-		private static OBSHandler OBSHandler { get; set; }
 
 		public static string HowardToken { get; private set; }
 		public static string PubsubToken { get; private set; }
@@ -62,7 +65,7 @@ namespace HowardBot
 				OBSHandler.Disconnect();
 
 			if (RewardHandler != null)
-				await RewardHandler.DeleteCustomRewards();
+				await RewardHandler.DisableCustomRewards();
 		}
 
 		/// <summary>
@@ -110,7 +113,7 @@ namespace HowardBot
 		/// Runs when the bot has connected to Twitch and has joined my channel
 		/// </summary>
 		/// <param name="connectedToPubSub">True if the PubSub connection was successful, false otherwise</param>
-		private async void OnTwitchConnectionChange(bool connected)
+		private void OnTwitchConnectionChange(bool connected)
 		{
 			IsInChannel = connected;
 
@@ -119,6 +122,7 @@ namespace HowardBot
 				TwitchHandler.SendMessage("/me Rushes out of barn and violently tackles everyone.");
 
 				MessageHandler = MessageHandler.Instance;
+				RewardHandler = RewardHandler.Instance;
 
 				// Connect to OBS
 				OBSHandler.ConnectionArgs obsConnectArgs = new()
@@ -128,12 +132,13 @@ namespace HowardBot
 					Password = Utility.LoadEnvVar("OBS_WEBSOCKET_PASS")
 				};
 				OBSHandler = OBSHandler.Instance;
-				connectedToOBS = await OBSHandler.Connect(obsConnectArgs);
+				connectedToOBS = OBSHandler.Connect(obsConnectArgs).Wait(300);
 
-				if (AmILive || testCustomRewards)
+				if (AmILive || TestLiveStuff)
 					OnStreamStateChange(true);
 
-				Debug.Log($"[Initialization took {initTimer.Elapsed.Milliseconds}ms]", false);
+				initTimer.Stop();
+				Debug.Log($"[Initialization took {initTimer.ElapsedMilliseconds}ms]", false);
 
 				OutputStatus();
 
@@ -143,7 +148,7 @@ namespace HowardBot
 			}
 		}
 
-		private async void OnStreamStateChange(bool started)
+		private void OnStreamStateChange(bool started)
 		{
 			AmILive = started;
 
@@ -152,12 +157,8 @@ namespace HowardBot
 			{
 				streamStartTime = DateTime.Now;
 
-				// Create custom channel point rewards
-				RewardHandler = RewardHandler.Instance;
-				await RewardHandler.CreateCustomRewards();
-
 				// Only create log file if I'm really live, not when testing custom channel point rewards
-				if (!testCustomRewards)
+				if (!TestLiveStuff)
 					CreateLogFile();
 			}
 

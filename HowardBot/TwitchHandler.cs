@@ -79,7 +79,10 @@ namespace HowardBot
 		public static void SendReply(string replyToId, string message)
 		{
 			if (Bot.IsInChannel)
+			{
 				twitch.SendReply("chrisisawesome", replyToId, message);
+				Debug.Log(message);
+			}
 		}
 
 		private void OnConnectionError(object sender, TwitchLib.Client.Events.OnConnectionErrorArgs e)

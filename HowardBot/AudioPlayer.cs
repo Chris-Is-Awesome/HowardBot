@@ -1,7 +1,7 @@
-﻿using NAudio.Wave;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using NAudio.Wave;
 
 namespace HowardBot
 {
@@ -34,17 +34,17 @@ namespace HowardBot
 			VoiceClip
 		}
 
-		public void PlayRandomSound(SoundType type)
+		public void PlayRandomSound(SoundType type, float volume)
 		{
 			List<SoundData> allSounds = GetSoundsList(type);
 			int randIndex = Utility.GetRandomNumberInRange(0, allSounds.Count - 1);
-			PlaySound(allSounds[randIndex]);
+			PlaySound(allSounds[randIndex], volume);
 		}
 
-		public void PlaySound(SoundType type, string name)
+		public void PlaySound(SoundType type, string name, float volume)
 		{
 			if (TryGetSound(type, name, out SoundData sound))
-				PlaySound(sound);
+				PlaySound(sound, volume);
 		}
 
 		public void StopAllSounds()
@@ -91,7 +91,7 @@ namespace HowardBot
 			};
 		}
 
-		private void PlaySound(SoundData sound)
+		private void PlaySound(SoundData sound, float volume)
 		{
 			if (sound != null)
 			{
@@ -105,6 +105,7 @@ namespace HowardBot
 						using (outputDevice = new WaveOutEvent())
 						{
 							outputDevice.Init(audioFile);
+							outputDevice.Volume = volume / 2;
 							outputDevice.Play();
 							activeAudioOutputs.Add(outputDevice);
 
