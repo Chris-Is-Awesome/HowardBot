@@ -9,7 +9,7 @@ namespace HowardBot.Rewards
 
 		public string Source { get; init; }
 		public string Filter { get; set; }
-		public int Duration { get; init; } = 10;
+		public int Duration { get; init; } = 90; // Seconds
 
 		public OBSReward()
 		{

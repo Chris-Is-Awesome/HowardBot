@@ -19,6 +19,7 @@ namespace HowardBot
 		{
 			obs = new ObsClient();
 			obs.PropertyChanged += OnPropertyChanged;
+			obs.CurrentProgramSceneChanged += OnSceneChanged;
 		}
 
 		/// <summary>
@@ -131,6 +132,17 @@ namespace HowardBot
 
 				if (authSuccess)
 					OnConnected();
+			}
+		}
+
+		private async Task OnSceneChanged(object sender, OBSStudioClient.Events.SceneNameEventArgs e)
+		{
+			if (Bot.AmILive)
+			{
+				if (e.SceneName == "Gaming")
+					await RewardHandler.Instance.EnableCustomRewards();
+				else
+					await RewardHandler.Instance.DisableCustomRewards();
 			}
 		}
 

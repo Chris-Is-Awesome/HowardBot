@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using TwitchLib.Client;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Clients;
@@ -17,7 +16,7 @@ namespace HowardBot
 		private readonly string channelId;
 
 		public delegate void ConnectionFunc(bool connected);
-		public delegate Task StreamFunc(bool started);
+		public delegate void StreamFunc(bool started);
 
 		public static event ConnectionFunc OnConnectionChange;
 		public static event StreamFunc OnStreamStateChange;

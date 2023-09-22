@@ -11,7 +11,6 @@ namespace HowardBot.Rewards
 		private readonly string _title = "A reward has no title...";
 		private readonly string _description = "A reward has no description...";
 		private readonly string _id;
-		private readonly bool _doEnable = true;
 		private readonly int _cost = 100;
 		private readonly string _backgroundColor = "#000000";
 		private readonly bool _isInputRequired = false;
@@ -56,14 +55,6 @@ namespace HowardBot.Rewards
 		{
 			get { return TwitchReward != null ? TwitchReward.Id : _id; }
 			init { _id = value; }
-		}
-		/// <summary>
-		/// Should the reward be enabled when stream starts?
-		/// </summary>
-		public bool DoEnable
-		{
-			get { return _doEnable; }
-			init { _doEnable = value; }
 		}
 		/// <summary>
 		/// The channel point cost for the reward
@@ -135,7 +126,7 @@ namespace HowardBot.Rewards
 		/// <summary>
 		/// Should this reward only be enabled for specific games? If so, it'll be enabled for the games in here
 		/// </summary>
-		public List<string> EnableForGames { get; init; } = new();
+		public List<string> EnableForGames { get; init; }
 		/// <summary>
 		/// The type of the reward
 		/// </summary>

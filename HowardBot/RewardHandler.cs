@@ -35,42 +35,43 @@ namespace HowardBot
 		/// <summary>
 		/// Creates all the custom channel point rewards and adds them to Twitch
 		/// </summary>
-		public async Task CreateCustomRewards()
+		public async Task EnableCustomRewards(bool enableAll = false)
 		{
 			// Get all channel point rewards currently on Twitch
 			var twitchRewards = await API.Instance.GetChannelPointRewards(Bot.ChannelId);
 
 			foreach (CustomReward reward in rewards)
 			{
-				// If the reward requires OBS but OBS hook isn't active, skip it
-				if (reward.RewardType == CustomReward.Type.OBS && !OBSHandler.Instance.IsConnected)
-					continue;
+				bool canEnableReward = enableAll || await CanEnableReward(reward);
 
-				// Gets the reward object from Twitch
-				var twitchReward = twitchRewards.FirstOrDefault(x => x.Id == reward.Id);
-
-				// If reward is already on Twitch
-				if (twitchReward != null && reward.DoEnable)
+				if (canEnableReward)
 				{
-					// Update reward
-					if (reward.GlobalCooldownSeconds != twitchReward.GlobalCooldownSetting.GlobalCooldownSeconds)
-					{
-						API.UpdateRewardRequest request = new()
-						{
-							Enabled = true,
-							GlobalCooldownSeconds = reward.GlobalCooldownSeconds
-						};
+					// Gets the reward object from Twitch
+					var twitchReward = twitchRewards.FirstOrDefault(x => x.Id == reward.Id);
 
-						await reward.UpdateOnTwitch(twitchReward.Id, request);
-						Debug.Log($"Updated {twitchReward.Title}!");
+					// If reward is already on Twitch
+					if (twitchReward != null)
+					{
+						// Update reward
+						if (reward.GlobalCooldownSeconds != twitchReward.GlobalCooldownSetting.GlobalCooldownSeconds)
+						{
+							API.UpdateRewardRequest request = new()
+							{
+								Enabled = true,
+								GlobalCooldownSeconds = reward.GlobalCooldownSeconds
+							};
+
+							await reward.UpdateOnTwitch(twitchReward.Id, request);
+							Debug.Log($"Updated {twitchReward.Title}!");
+						}
+						// Enable reward
+						else
+							await reward.Enable(twitchReward);
 					}
-					// Enable reward
+					// If reward is not on Twitch, add it
 					else
-						await reward.Enable(twitchReward);
+						await reward.AddToTwitch();
 				}
-				// If reward is not on Twitch, add it
-				else
-					await reward.AddToTwitch();
 			}
 		}
 
@@ -225,6 +226,35 @@ namespace HowardBot
 			Bot.Instance.ReplaceLineInFile("Channel point redemptions", $"Channel point redemptions: {redemptionsThisStream}");
 			Bot.Instance.ReplaceLineInFile("Channel points spent", $"Channel points spent: {pointsSpentThisStream}");
 			Bot.Instance.AppendToLogFile($"[Redemption] {redemption.User.DisplayName} redeemed {reward.Title}");
+		}
+
+		private async Task<bool> CanEnableReward(CustomReward reward)
+		{
+			// If the reward requires OBS but OBS hook isn't active, don't enable it
+			if (reward.RewardType == CustomReward.Type.OBS && !OBSHandler.Instance.IsConnected)
+				return false;
+
+			// If the reward is not interactive, enable it
+			if (!reward.Interactive)
+				return true;
+
+			// Get channel info
+			var response = await API.Instance.GetChannelInfo(Bot.ChannelId);
+
+			if (response != null)
+			{
+				// If the stream is interactive
+				if (response.Tags.Contains("Randomizer"))
+				{
+					if (reward.Title == "Do a Brakeslide!")
+						Debug.Log(reward.EnableForGames[0]);
+					// If playing a game that allows the reward, enable it
+					if (reward.EnableForGames == null || reward.EnableForGames.Contains(response.GameName))
+						return true;
+				}
+			}
+
+			return false;
 		}
 
 		/// <summary>

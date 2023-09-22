@@ -113,7 +113,7 @@ namespace HowardBot
 		/// Runs when the bot has connected to Twitch and has joined my channel
 		/// </summary>
 		/// <param name="connectedToPubSub">True if the PubSub connection was successful, false otherwise</param>
-		private async void OnTwitchConnectionChange(bool connected)
+		private void OnTwitchConnectionChange(bool connected)
 		{
 			IsInChannel = connected;
 
@@ -135,7 +135,7 @@ namespace HowardBot
 				connectedToOBS = OBSHandler.Connect(obsConnectArgs).Wait(300);
 
 				if (AmILive || TestLiveStuff)
-					await OnStreamStateChange(true);
+					OnStreamStateChange(true);
 
 				initTimer.Stop();
 				Debug.Log($"[Initialization took {initTimer.ElapsedMilliseconds}ms]", false);
@@ -148,7 +148,7 @@ namespace HowardBot
 			}
 		}
 
-		private async Task OnStreamStateChange(bool started)
+		private void OnStreamStateChange(bool started)
 		{
 			AmILive = started;
 
@@ -156,7 +156,6 @@ namespace HowardBot
 			if (started)
 			{
 				streamStartTime = DateTime.Now;
-				await RewardHandler.CreateCustomRewards();
 
 				// Only create log file if I'm really live, not when testing custom channel point rewards
 				if (!TestLiveStuff)

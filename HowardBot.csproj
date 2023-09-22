@@ -67,6 +67,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="HowardBot\Audio\Voice Clips\er_melina.wav" />
+    <None Remove="HowardBot\Audio\Voice Clips\tp_midna_yawn.wav" />
     <None Remove="HowardBot\Data\RewardData.json" />
   </ItemGroup>
 
