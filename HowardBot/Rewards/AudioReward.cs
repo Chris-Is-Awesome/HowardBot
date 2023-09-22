@@ -17,9 +17,9 @@
 		protected override void StartEffect(string userInput)
 		{
 			if (Random)
-				player.PlayRandomSound(SoundType);
+				player.PlayRandomSound(SoundType, Volume);
 			else
-				player.PlaySound(SoundType, SoundName);
+				player.PlaySound(SoundType, SoundName, Volume);
 
 			player.OnStopped += OnEffectDone;
 		}
