@@ -1,10 +1,10 @@
-﻿using System;
+﻿using HowardBot.Rewards;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using HowardBot.Rewards;
-using Newtonsoft.Json.Linq;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Models.Responses.Messages.Redemption;
 
@@ -228,6 +228,11 @@ namespace HowardBot
 			Bot.Instance.AppendToLogFile($"[Redemption] {redemption.User.DisplayName} redeemed {reward.Title}");
 		}
 
+		/// <summary>
+		/// Checks if the reward can be enabled
+		/// </summary>
+		/// <param name="reward">The reward to check</param>
+		/// <returns>True if reward can be enabled, false otherwise</returns>
 		private async Task<bool> CanEnableReward(CustomReward reward)
 		{
 			// If the reward requires OBS but OBS hook isn't active, don't enable it
@@ -241,18 +246,13 @@ namespace HowardBot
 			// Get channel info
 			var response = await API.Instance.GetChannelInfo(Bot.ChannelId);
 
-			if (response != null)
-			{
-				// If the stream is interactive
-				if (response.Tags.Contains("Randomizer"))
-				{
-					if (reward.Title == "Do a Brakeslide!")
-						Debug.Log(reward.EnableForGames[0]);
-					// If playing a game that allows the reward, enable it
-					if (reward.EnableForGames == null || reward.EnableForGames.Contains(response.GameName))
-						return true;
-				}
-			}
+			// If stream is not interactive, don't enable interactive rewards
+			if (response == null || !response.Tags.Contains("Interactive"))
+				return false;
+
+			// If stream is interactive and playing a game that allows the reward, enable it
+			if (reward.EnableForGames == null || reward.EnableForGames.Contains(response.GameName))
+				return true;
 
 			return false;
 		}
