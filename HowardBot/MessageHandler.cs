@@ -1,9 +1,9 @@
-﻿using System;
+﻿using HowardBot.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using HowardBot.Commands;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -93,8 +93,8 @@ namespace HowardBot
 					if (commandInfo.sendMessage)
 						if (commandInfo.reply)
 						{
-							string test = await DoRunCommand(commandInfo, args);
-							TwitchHandler.SendReply(chat.Id, test);
+							string text = await DoRunCommand(commandInfo, args);
+							TwitchHandler.SendReply(chat.Id, text);
 						}
 						else
 							TwitchHandler.SendMessage(await DoRunCommand(commandInfo, args));
