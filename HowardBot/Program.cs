@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 
 // Shoutout to this post: https://stackoverflow.com/a/22996552/20961168 for allowing cleanup before exit
@@ -27,6 +28,8 @@ namespace HowardBot
 
 		private static void Main()
 		{
+			AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
+
 			Console.Title = "HowardBot";
 
 			Debug.Log($"[Bot started at {DateTime.Now}]", false);
@@ -68,6 +71,21 @@ namespace HowardBot
 
 			//shutdown right away so there are no lingering threads
 			Environment.Exit(-1);
+		}
+
+		// Create crash log in the event of a crash
+		private static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			TwitchHandler.SendMessage("/me *crashes*");
+			Exception ex = (Exception)e.ExceptionObject;
+			string timestamp = DateTime.Now.ToString("MM-dd-yy_HH-mm-ss");
+			string fileName = $"HowardBot_Crash_{timestamp}.txt";
+			string stack = ex.StackTrace.Replace(Utility.CurrentDirectory + @"\", "");
+			StringBuilder output = new();
+			output.AppendLine($"Unhandled exception occurred in {ex.Source} at {DateTime.Now}!");
+			output.AppendLine($"Message: {ex.Message}");
+			output.AppendLine($"Stack:\n{stack}");
+			Utility.WriteToFile($@"{Utility.CurrentDirectory}\Crash Logs", fileName, output.ToString());
 		}
 	}
 }
