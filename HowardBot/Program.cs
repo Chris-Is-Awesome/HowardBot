@@ -15,7 +15,7 @@ namespace HowardBot
 		private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
 
 		private delegate bool EventHandler(CtrlType sig);
-		static EventHandler _handler;
+		static EventHandler _closeHandler;
 
 		enum CtrlType
 		{
@@ -37,9 +37,8 @@ namespace HowardBot
 			// Initialize bot
 			Bot bot = Bot.Instance;
 
-			// Stuff (idk)
-			_handler += new EventHandler(Handler);
-			SetConsoleCtrlHandler(_handler, true);
+			_closeHandler += new EventHandler(HandleCloseEvent);
+			SetConsoleCtrlHandler(_closeHandler, true);
 
 			// Keep persistent
 			while (!exitSystem)
@@ -48,13 +47,11 @@ namespace HowardBot
 			}
 		}
 
-		private static bool Handler(CtrlType sig)
+		private static bool HandleCloseEvent(CtrlType sig)
 		{
-			Console.WriteLine("Exiting system due to external CTRL-C, or process kill, or shutdown");
+			Debug.Log("Closing due to CTRL+C or process termination");
 
-			//do your cleanup here
 			Cleanup();
-			Thread.Sleep(2500); //simulate some cleanup delay
 
 			return true;
 		}
@@ -63,13 +60,12 @@ namespace HowardBot
 		{
 			Debug.Log("Cleaning up...");
 			await Bot.OnBotClose();
-
 			Debug.Log("Cleanup complete, shutting down now");
 
-			//allow main to run off
+			// Allow main to run off
 			exitSystem = true;
 
-			//shutdown right away so there are no lingering threads
+			// Shutdown right away so there are no lingering threads
 			Environment.Exit(-1);
 		}
 
