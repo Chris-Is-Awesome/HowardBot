@@ -108,5 +108,36 @@ namespace HowardBot
 				Debug.Log($"Something went wrong when writing to file at path '{fullPath}'\n{ex.Message}");
 			}
 		}
+
+		/// <summary>
+		/// Awaits the task with an optional timeout
+		/// </summary>
+		/// <param name="task">The task to await</param>
+		/// <param name="timeout">The time to wait before timeout</param>
+		/// <returns>True if task completed successfully, false otherwise</returns>
+		public static async Task<bool> AwaitWithTimeout(Task task, TimeSpan timeout)
+		{
+			try
+			{
+				if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
+				{
+					// Task completed before timeout
+					await task;
+					return true;
+				}
+			}
+			catch (TimeoutException ex)
+			{
+				// Timeout happened
+				Debug.Log($"{ex.Message}\n\n{ex.StackTrace}");
+			}
+			catch (Exception ex)
+			{
+				// Exception happened
+				Debug.Log($"{ex.Message}\n\n{ex.StackTrace}");
+			}
+
+			return false;
+		}
 	}
 }

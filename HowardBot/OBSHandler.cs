@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using OBSStudioClient;
+﻿using OBSStudioClient;
 using OBSStudioClient.Classes;
 using OBSStudioClient.Enums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace HowardBot
 {
@@ -51,11 +52,27 @@ namespace HowardBot
 			// If toggling Howard
 			if (filter == "Howard DVD")
 			{
-				int id = await obs.GetSceneItemId("Gaming", "HowardDVD");
-				await obs.SetSceneItemEnabled("Gaming", id, enable);
+				Task<int> getSceneItemIdTask = obs.GetSceneItemId("Gaming", "HowardDVD");
+				bool getSceneItemIdTaskCompleted = await Utility.AwaitWithTimeout(getSceneItemIdTask, TimeSpan.FromSeconds(5));
+
+				if (!getSceneItemIdTaskCompleted)
+					SendTimeoutMessage($"get scene item ID for {filter}");
+
+				Task toggleSceneItemTask = obs.SetSceneItemEnabled("Gaming", getSceneItemIdTask.Result, enable);
+				bool toggleSceneItemTaskCompleted = await Utility.AwaitWithTimeout(toggleSceneItemTask, TimeSpan.FromSeconds(5));
+
+				if (!toggleSceneItemTaskCompleted)
+					SendTimeoutMessage($"apply filter {filter}");
 			}
 			else
-				await obs.SetSourceFilterEnabled(source, filter, enable);
+			{
+				Task toggleFilterTask = obs.SetSourceFilterEnabled(source, filter, enable);
+				bool toggleFilterTaskCompleted = await Utility.AwaitWithTimeout(toggleFilterTask, TimeSpan.FromSeconds(5));
+
+				// If OBS timed out
+				if (!toggleFilterTaskCompleted)
+					SendTimeoutMessage($"apply filter {filter}");
+			}
 
 			GameFilter gameFilter = gameFilters.Find(x => x.filter.FilterName == filter);
 			int index = gameFilters.IndexOf(gameFilter);
@@ -163,6 +180,11 @@ namespace HowardBot
 
 			for (int i = 0; i < filters.Length; i++)
 				gameFilters.Add(new GameFilter(filters[i]));
+		}
+
+		private void SendTimeoutMessage(string message)
+		{
+			TwitchHandler.SendMessage($"OBS timed out while trying to {message}. Sorry!");
 		}
 
 		public struct ConnectionArgs
