@@ -1,16 +1,13 @@
-[WIP]
+## About
+A custom bot for my [Twitch chat](https://www.twitch.tv/chrisisawesome).
+Howard is any goat in Zelda: Twilight Princess that fails to go into the barn for no apparent reason.
 
-A bot for my Twitch chat. Is a good boy when he wants to be.
-
-Features:
+## Features
 - Fun commands (whoop, bff, trivia, 8ball, etc.)
 - Other commands (discord, youtube, shoutout)
-- Timers (for posting discord & youtube)
 - Custom channel point rewards for causing visual effects, playing sound effects, and more
+- Timers (for posting discord & youtube)
 - Stores chat logs & stream stats to .txt files so I can reference them later
 
-Planned features:
-- Utility commands (update title/game/tags, uptime)
-- Pokemon command to catch random pokemon once a day? (would use PokeAPI)
-
-Open source to act as an example for those learning how to use TwitchLib or how to make a Twitch bot.
+## License
+This project is available under the [MIT license](/LICENSE).
