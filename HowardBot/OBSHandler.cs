@@ -152,7 +152,7 @@ namespace HowardBot
 			}
 		}
 
-		private async Task OnSceneChanged(object sender, OBSStudioClient.Events.SceneNameEventArgs e)
+		private async void OnSceneChanged(object sender, OBSStudioClient.Events.SceneNameEventArgs e)
 		{
 			if (Bot.AmILive)
 			{
